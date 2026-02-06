@@ -1,6 +1,6 @@
 ---
 permalink: /security/formal-verification/
-summary: 针对 OpenClaw 最高风险路径的机器检查安全模型。
+summary: 针对 StarforgeOS 最高风险路径的机器检查安全模型。
 title: 形式化验证（安全模型）
 x-i18n:
   generated_at: "2026-02-03T07:49:03Z"
@@ -13,22 +13,22 @@ x-i18n:
 
 # 形式化验证（安全模型）
 
-本页跟踪 OpenClaw 的**形式化安全模型**（目前是 TLA+/TLC；根据需要会增加更多）。
+本页跟踪 StarforgeOS 的**形式化安全模型**（目前是 TLA+/TLC；根据需要会增加更多）。
 
 > 注意：一些较旧的链接可能引用以前的项目名称。
 
-**目标（北极星）：** 在明确的假设下，提供机器检查的论证，证明 OpenClaw 执行其预期的安全策略（授权、会话隔离、工具限制和错误配置安全）。
+**目标（北极星）：** 在明确的假设下，提供机器检查的论证，证明 StarforgeOS 执行其预期的安全策略（授权、会话隔离、工具限制和错误配置安全）。
 
 **目前是什么：** 一个可执行的、攻击者驱动的**安全回归套件**：
 
 - 每个声明都有一个在有限状态空间上运行的模型检查。
 - 许多声明有一个配对的**负面模型**，为现实的错误类别生成反例轨迹。
 
-**目前还不是什么：** 证明"OpenClaw 在所有方面都是安全的"或完整的 TypeScript 实现是正确的。
+**目前还不是什么：** 证明"StarforgeOS 在所有方面都是安全的"或完整的 TypeScript 实现是正确的。
 
 ## 模型存放位置
 
-模型维护在单独的仓库中：[vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models)。
+模型维护在单独的仓库中：[vignesh07/starforgeos-formal-models](https://github.com/vignesh07/starforgeos-formal-models)。
 
 ## 重要注意事项
 
@@ -46,8 +46,8 @@ x-i18n:
 入门：
 
 ```bash
-git clone https://github.com/vignesh07/openclaw-formal-models
-cd openclaw-formal-models
+git clone https://github.com/vignesh07/starforgeos-formal-models
+cd starforgeos-formal-models
 
 # 需要 Java 11+（TLC 在 JVM 上运行）。
 # 仓库附带一个固定版本的 `tla2tools.jar`（TLA+ 工具）并提供 `bin/tlc` + Make 目标。

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import type { OpenClawConfig } from "starforgeos/plugin-sdk";
 import { RefreshingAuthProvider, StaticAuthProvider } from "@twurple/auth";
 import { ChatClient, LogLevel } from "@twurple/chat";
 import type { ChannelLogSink, TwitchAccountConfig, TwitchChatMessage } from "./types.js";
@@ -92,7 +92,7 @@ export class TwitchClientManager {
 
     if (!tokenResolution.token) {
       this.logger.error(
-        `Missing Twitch token for account ${account.username} (set channels.twitch.accounts.${account.username}.token or OPENCLAW_TWITCH_ACCESS_TOKEN for default)`,
+        `Missing Twitch token for account ${account.username} (set channels.twitch.accounts.${account.username}.token or STARFORGEOS_TWITCH_ACCESS_TOKEN for default)`,
       );
       throw new Error("Missing Twitch token");
     }

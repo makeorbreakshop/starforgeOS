@@ -3,7 +3,7 @@ import type {
   OpenClawConfig,
   ReplyPayload,
   RuntimeEnv,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   createReplyPrefixOptions,
   createTypingCallbacks,
@@ -16,7 +16,7 @@ import {
   resolveControlCommandGate,
   resolveChannelMediaMaxBytes,
   type HistoryEntry,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import WebSocket from "ws";
 import { getMattermostRuntime } from "../runtime.js";
 import { resolveMattermostAccount } from "./accounts.js";

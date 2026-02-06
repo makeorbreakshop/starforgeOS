@@ -4,7 +4,7 @@ import {
   resolveControlCommandGate,
   type OpenClawConfig,
   type RuntimeEnv,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 import type { CoreConfig, NextcloudTalkInboundMessage } from "./types.js";
 import {

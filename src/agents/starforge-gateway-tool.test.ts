@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-core-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./starforge-tools.js";
 
 vi.mock("./tools/gateway.js", () => ({
   callGatewayTool: vi.fn(async (method: string) => {
@@ -18,11 +18,11 @@ describe("gateway tool", () => {
   it("schedules SIGUSR1 restart", async () => {
     vi.useFakeTimers();
     const kill = vi.spyOn(process, "kill").mockImplementation(() => true);
-    const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    const previousProfile = process.env.OPENCLAW_PROFILE;
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-"));
-    process.env.OPENCLAW_STATE_DIR = stateDir;
-    process.env.OPENCLAW_PROFILE = "isolated";
+    const previousStateDir = process.env.STARFORGEOS_STATE_DIR;
+    const previousProfile = process.env.STARFORGEOS_PROFILE;
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-test-"));
+    process.env.STARFORGEOS_STATE_DIR = stateDir;
+    process.env.STARFORGEOS_PROFILE = "isolated";
 
     try {
       const tool = createOpenClawTools({
@@ -51,7 +51,7 @@ describe("gateway tool", () => {
       };
       expect(parsed.payload?.kind).toBe("restart");
       expect(parsed.payload?.doctorHint).toBe(
-        "Run: openclaw --profile isolated doctor --non-interactive",
+        "Run: starforge --profile isolated doctor --non-interactive",
       );
 
       expect(kill).not.toHaveBeenCalled();
@@ -61,14 +61,14 @@ describe("gateway tool", () => {
       kill.mockRestore();
       vi.useRealTimers();
       if (previousStateDir === undefined) {
-        delete process.env.OPENCLAW_STATE_DIR;
+        delete process.env.STARFORGEOS_STATE_DIR;
       } else {
-        process.env.OPENCLAW_STATE_DIR = previousStateDir;
+        process.env.STARFORGEOS_STATE_DIR = previousStateDir;
       }
       if (previousProfile === undefined) {
-        delete process.env.OPENCLAW_PROFILE;
+        delete process.env.STARFORGEOS_PROFILE;
       } else {
-        process.env.OPENCLAW_PROFILE = previousProfile;
+        process.env.STARFORGEOS_PROFILE = previousProfile;
       }
     }
   });
@@ -83,7 +83,7 @@ describe("gateway tool", () => {
       throw new Error("missing gateway tool");
     }
 
-    const raw = '{\n  agents: { defaults: { workspace: "~/openclaw" } }\n}\n';
+    const raw = '{\n  agents: { defaults: { workspace: "~/starforge" } }\n}\n';
     await tool.execute("call2", {
       action: "config.apply",
       raw,

@@ -1,16 +1,16 @@
 {
-  "name": "@openclaw/tlon",
+  "name": "@starforgeos/tlon",
   "version": "2026.2.4",
-  "description": "OpenClaw Tlon/Urbit channel plugin",
+  "description": "StarforgeOS Tlon/Urbit channel plugin",
   "type": "module",
   "dependencies": {
     "@urbit/aura": "^3.0.0",
     "@urbit/http-api": "^3.0.0"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/tlon",
+      "npmSpec": "@starforgeos/tlon",
       "localPath": "extensions/tlon",
       "defaultChoice": "npm"
     }

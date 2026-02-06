@@ -136,23 +136,23 @@ function loadSkillEntries(
   const bundledSkills = bundledSkillsDir
     ? loadSkills({
         dir: bundledSkillsDir,
-        source: "openclaw-bundled",
+        source: "starforge-bundled",
       })
     : [];
   const extraSkills = mergedExtraDirs.flatMap((dir) => {
     const resolved = resolveUserPath(dir);
     return loadSkills({
       dir: resolved,
-      source: "openclaw-extra",
+      source: "starforge-extra",
     });
   });
   const managedSkills = loadSkills({
     dir: managedSkillsDir,
-    source: "openclaw-managed",
+    source: "starforge-managed",
   });
   const workspaceSkills = loadSkills({
     dir: workspaceSkillsDir,
-    source: "openclaw-workspace",
+    source: "starforge-workspace",
   });
 
   const merged = new Map<string, Skill>();

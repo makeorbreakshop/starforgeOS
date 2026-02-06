@@ -1,4 +1,4 @@
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
 import { loginMiniMaxPortalOAuth, type MiniMaxRegion } from "./oauth.js";
 
 const PROVIDER_ID = "minimax-portal";

@@ -3,14 +3,14 @@ import type {
   ChannelOnboardingDmPolicy,
   OpenClawConfig,
   WizardPrompter,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   promptAccountId,
   promptChannelAccessConfig,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import type { ZcaFriend, ZcaGroup } from "./types.js";
 import {
   listZalouserAccountIds,
@@ -50,7 +50,7 @@ async function noteZalouserHelp(prompter: WizardPrompter): Promise<void> {
       "1) Install zca-cli",
       "2) You'll scan a QR code with your Zalo app",
       "",
-      "Docs: https://docs.openclaw.ai/channels/zalouser",
+      "Docs: https://docs.starforgeos.ai/channels/zalouser",
     ].join("\n"),
     "Zalo Personal Setup",
   );
@@ -340,7 +340,7 @@ export const zalouserOnboardingAdapter: ChannelOnboardingAdapter = {
           "The `zca` binary was not found in PATH.",
           "",
           "Install zca-cli, then re-run onboarding:",
-          "Docs: https://docs.openclaw.ai/channels/zalouser",
+          "Docs: https://docs.starforgeos.ai/channels/zalouser",
         ].join("\n"),
         "Missing Dependency",
       );

@@ -14,7 +14,7 @@ const requiredPaths = [
   "dist/plugin-sdk/index.d.ts",
   "dist/build-info.json",
 ];
-const forbiddenPrefixes = ["dist/OpenClaw.app/"];
+const forbiddenPrefixes = ["dist/StarforgeOS.app/"];
 
 type PackageJson = {
   name?: string;

@@ -3,13 +3,13 @@ import type {
   ChannelOnboardingDmPolicy,
   OpenClawConfig,
   WizardPrompter,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   promptAccountId,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts.js";
 
 const channel = "zalo" as const;
@@ -117,7 +117,7 @@ async function noteZaloTokenHelp(prompter: WizardPrompter): Promise<void> {
       "2) Create a bot and get the token",
       "3) Token looks like 12345689:abc-xyz",
       "Tip: you can also set ZALO_BOT_TOKEN in your env.",
-      "Docs: https://docs.openclaw.ai/channels/zalo",
+      "Docs: https://docs.starforgeos.ai/channels/zalo",
     ].join("\n"),
     "Zalo bot token",
   );

@@ -1,5 +1,5 @@
-import type { ChannelPlugin, ClawdbotConfig } from "openclaw/plugin-sdk";
-import { DEFAULT_ACCOUNT_ID, PAIRING_APPROVED_MESSAGE } from "openclaw/plugin-sdk";
+import type { ChannelPlugin, ClawdbotConfig } from "starforgeos/plugin-sdk";
+import { DEFAULT_ACCOUNT_ID, PAIRING_APPROVED_MESSAGE } from "starforgeos/plugin-sdk";
 import type { ResolvedFeishuAccount, FeishuConfig } from "./types.js";
 import {
   resolveFeishuAccount,

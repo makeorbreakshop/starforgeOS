@@ -213,7 +213,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     extensions: [".ts", ".tsx", ".mts", ".cts", ".mtsx", ".ctsx", ".js", ".mjs", ".cjs", ".json"],
     ...(pluginSdkAlias
       ? {
-          alias: { "openclaw/plugin-sdk": pluginSdkAlias },
+          alias: { "starforge/plugin-sdk": pluginSdkAlias },
         }
       : {}),
   });

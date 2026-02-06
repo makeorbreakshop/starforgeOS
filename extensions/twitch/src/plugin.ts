@@ -1,12 +1,12 @@
 /**
- * Twitch channel plugin for OpenClaw.
+ * Twitch channel plugin for StarforgeOS.
  *
  * Main plugin export combining all adapters (outbound, actions, status, gateway).
  * This is the primary entry point for the Twitch channel integration.
  */
 
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
-import { buildChannelConfigSchema } from "openclaw/plugin-sdk";
+import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import { buildChannelConfigSchema } from "starforgeos/plugin-sdk";
 import type {
   ChannelAccountSnapshot,
   ChannelCapabilities,
@@ -33,7 +33,7 @@ import { isAccountConfigured } from "./utils/twitch.js";
  * Twitch channel plugin.
  *
  * Implements the ChannelPlugin interface to provide Twitch chat integration
- * for OpenClaw. Supports message sending, receiving, access control, and
+ * for StarforgeOS. Supports message sending, receiving, access control, and
  * status monitoring.
  */
 export const twitchPlugin: ChannelPlugin<TwitchAccountConfig> = {

@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/line",
+  "name": "@starforgeos/line",
   "version": "2026.2.4",
-  "description": "OpenClaw LINE channel plugin",
+  "description": "StarforgeOS LINE channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -21,7 +21,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/line",
+      "npmSpec": "@starforgeos/line",
       "localPath": "extensions/line",
       "defaultChoice": "npm"
     }

@@ -41,7 +41,7 @@ name: session-memory
 description: "Save session context"
 metadata:
   {
-    "openclaw": {
+    "starforge": {
       "emoji": "💾",
       "events": ["command:new"]
     }
@@ -58,8 +58,8 @@ metadata:
 
     // Verify the metadata is valid JSON
     const parsed = JSON.parse(result.metadata);
-    expect(parsed.openclaw.emoji).toBe("💾");
-    expect(parsed.openclaw.events).toEqual(["command:new"]);
+    expect(parsed.starforge.emoji).toBe("💾");
+    expect(parsed.starforge.events).toEqual(["command:new"]);
   });
 
   it("parses multi-line metadata with complex nested structure", () => {
@@ -68,7 +68,7 @@ name: command-logger
 description: "Log all command events"
 metadata:
   {
-    "openclaw":
+    "starforge":
       {
         "emoji": "📝",
         "events": ["command"],
@@ -83,21 +83,21 @@ metadata:
     expect(result.metadata).toBeDefined();
 
     const parsed = JSON.parse(result.metadata);
-    expect(parsed.openclaw.emoji).toBe("📝");
-    expect(parsed.openclaw.events).toEqual(["command"]);
-    expect(parsed.openclaw.requires.config).toEqual(["workspace.dir"]);
-    expect(parsed.openclaw.install[0].kind).toBe("bundled");
+    expect(parsed.starforge.emoji).toBe("📝");
+    expect(parsed.starforge.events).toEqual(["command"]);
+    expect(parsed.starforge.requires.config).toEqual(["workspace.dir"]);
+    expect(parsed.starforge.install[0].kind).toBe("bundled");
   });
 
   it("handles single-line metadata (inline JSON)", () => {
     const content = `---
 name: simple-hook
-metadata: {"openclaw": {"events": ["test"]}}
+metadata: {"starforge": {"events": ["test"]}}
 ---
 `;
     const result = parseFrontmatter(content);
     expect(result.name).toBe("simple-hook");
-    expect(result.metadata).toBe('{"openclaw": {"events": ["test"]}}');
+    expect(result.metadata).toBe('{"starforge": {"events": ["test"]}}');
   });
 
   it("handles mixed single-line and multi-line values", () => {
@@ -107,7 +107,7 @@ description: "A hook with mixed values"
 homepage: https://example.com
 metadata:
   {
-    "openclaw": {
+    "starforge": {
       "events": ["command:new"]
     }
   }
@@ -149,11 +149,11 @@ description: 'single-quoted'
 });
 
 describe("resolveOpenClawMetadata", () => {
-  it("extracts openclaw metadata from parsed frontmatter", () => {
+  it("extracts starforge metadata from parsed frontmatter", () => {
     const frontmatter = {
       name: "test-hook",
       metadata: JSON.stringify({
-        openclaw: {
+        starforge: {
           emoji: "🔥",
           events: ["command:new", "command:reset"],
           requires: {
@@ -178,7 +178,7 @@ describe("resolveOpenClawMetadata", () => {
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined when openclaw key is missing", () => {
+  it("returns undefined when starforge key is missing", () => {
     const frontmatter = {
       metadata: JSON.stringify({ other: "data" }),
     };
@@ -197,11 +197,11 @@ describe("resolveOpenClawMetadata", () => {
   it("handles install specs", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        starforge: {
           events: ["command"],
           install: [
-            { id: "bundled", kind: "bundled", label: "Bundled with OpenClaw" },
-            { id: "npm", kind: "npm", package: "@openclaw/hook" },
+            { id: "bundled", kind: "bundled", label: "Bundled with StarforgeOS" },
+            { id: "npm", kind: "npm", package: "@starforge/hook" },
           ],
         },
       }),
@@ -211,13 +211,13 @@ describe("resolveOpenClawMetadata", () => {
     expect(result?.install).toHaveLength(2);
     expect(result?.install?.[0].kind).toBe("bundled");
     expect(result?.install?.[1].kind).toBe("npm");
-    expect(result?.install?.[1].package).toBe("@openclaw/hook");
+    expect(result?.install?.[1].package).toBe("@starforge/hook");
   });
 
   it("handles os restrictions", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        starforge: {
           events: ["command"],
           os: ["darwin", "linux"],
         },
@@ -233,15 +233,15 @@ describe("resolveOpenClawMetadata", () => {
     const content = `---
 name: session-memory
 description: "Save session context to memory when /new command is issued"
-homepage: https://docs.openclaw.ai/hooks#session-memory
+homepage: https://docs.starforge.ai/hooks#session-memory
 metadata:
   {
-    "openclaw":
+    "starforge":
       {
         "emoji": "💾",
         "events": ["command:new"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with StarforgeOS" }],
       },
   }
 ---
@@ -253,28 +253,28 @@ metadata:
     expect(frontmatter.name).toBe("session-memory");
     expect(frontmatter.metadata).toBeDefined();
 
-    const openclaw = resolveOpenClawMetadata(frontmatter);
-    expect(openclaw).toBeDefined();
-    expect(openclaw?.emoji).toBe("💾");
-    expect(openclaw?.events).toEqual(["command:new"]);
-    expect(openclaw?.requires?.config).toEqual(["workspace.dir"]);
-    expect(openclaw?.install?.[0].kind).toBe("bundled");
+    const starforge = resolveOpenClawMetadata(frontmatter);
+    expect(starforge).toBeDefined();
+    expect(starforge?.emoji).toBe("💾");
+    expect(starforge?.events).toEqual(["command:new"]);
+    expect(starforge?.requires?.config).toEqual(["workspace.dir"]);
+    expect(starforge?.install?.[0].kind).toBe("bundled");
   });
 
   it("parses YAML metadata map", () => {
     const content = `---
 name: yaml-metadata
 metadata:
-  openclaw:
+  starforge:
     emoji: disk
     events:
       - command:new
 ---
 `;
     const frontmatter = parseFrontmatter(content);
-    const openclaw = resolveOpenClawMetadata(frontmatter);
-    expect(openclaw?.emoji).toBe("disk");
-    expect(openclaw?.events).toEqual(["command:new"]);
+    const starforge = resolveOpenClawMetadata(frontmatter);
+    expect(starforge?.emoji).toBe("disk");
+    expect(starforge?.events).toEqual(["command:new"]);
   });
 });
 

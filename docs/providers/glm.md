@@ -1,20 +1,20 @@
 ---
-summary: "GLM model family overview + how to use it in OpenClaw"
+summary: "GLM model family overview + how to use it in StarforgeOS"
 read_when:
-  - You want GLM models in OpenClaw
+  - You want GLM models in StarforgeOS
   - You need the model naming convention and setup
 title: "GLM Models"
 ---
 
 # GLM models
 
-GLM is a **model family** (not a company) available through the Z.AI platform. In OpenClaw, GLM
+GLM is a **model family** (not a company) available through the Z.AI platform. In StarforgeOS, GLM
 models are accessed via the `zai` provider and model IDs like `zai/glm-4.7`.
 
 ## CLI setup
 
 ```bash
-openclaw onboard --auth-choice zai-api-key
+starforge onboard --auth-choice zai-api-key
 ```
 
 ## Config snippet

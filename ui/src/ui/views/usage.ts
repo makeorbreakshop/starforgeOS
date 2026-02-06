@@ -5110,7 +5110,7 @@ export function renderUsage(props: UsageProps) {
                   class="usage-export-item"
                   @click=${() =>
                     downloadTextFile(
-                      `openclaw-usage-sessions-${exportStamp}.csv`,
+                      `starforgeos-usage-sessions-${exportStamp}.csv`,
                       buildSessionsCsv(filteredSessions),
                       "text/csv",
                     )}
@@ -5122,7 +5122,7 @@ export function renderUsage(props: UsageProps) {
                   class="usage-export-item"
                   @click=${() =>
                     downloadTextFile(
-                      `openclaw-usage-daily-${exportStamp}.csv`,
+                      `starforgeos-usage-daily-${exportStamp}.csv`,
                       buildDailyCsv(filteredDaily),
                       "text/csv",
                     )}
@@ -5134,7 +5134,7 @@ export function renderUsage(props: UsageProps) {
                   class="usage-export-item"
                   @click=${() =>
                     downloadTextFile(
-                      `openclaw-usage-${exportStamp}.json`,
+                      `starforgeos-usage-${exportStamp}.json`,
                       JSON.stringify(
                         {
                           totals: displayTotals,

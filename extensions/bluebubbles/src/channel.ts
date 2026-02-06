@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelPlugin, OpenClawConfig } from "openclaw/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelPlugin, OpenClawConfig } from "starforgeos/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -12,7 +12,7 @@ import {
   resolveBlueBubblesGroupRequireMention,
   resolveBlueBubblesGroupToolPolicy,
   setAccountEnabledInConfigSection,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   listBlueBubblesAccountIds,
   type ResolvedBlueBubblesAccount,

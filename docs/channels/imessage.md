@@ -19,7 +19,7 @@ Status: legacy external CLI integration. Gateway spawns `imsg rpc` (JSON-RPC ove
 1. Ensure Messages is signed in on this Mac.
 2. Install `imsg`:
    - `brew install steipete/tap/imsg`
-3. Configure OpenClaw with `channels.imessage.cliPath` and `channels.imessage.dbPath`.
+3. Configure StarforgeOS with `channels.imessage.cliPath` and `channels.imessage.dbPath`.
 4. Start the gateway and approve any macOS prompts (Automation + Full Disk Access).
 
 Minimal config:
@@ -58,7 +58,7 @@ Disable with:
 ## Requirements
 
 - macOS with Messages signed in.
-- Full Disk Access for OpenClaw + `imsg` (Messages DB access).
+- Full Disk Access for StarforgeOS + `imsg` (Messages DB access).
 - Automation permission when sending.
 - `channels.imessage.cliPath` can point to any command that proxies stdin/stdout (for example, a wrapper script that SSHes to another Mac and runs `imsg rpc`).
 
@@ -119,7 +119,7 @@ For single-account setups, use flat options (`channels.imessage.cliPath`, `chann
 
 ### Remote/SSH variant (optional)
 
-If you want iMessage on another Mac, set `channels.imessage.cliPath` to a wrapper that runs `imsg` on the remote macOS host over SSH. OpenClaw only needs stdio.
+If you want iMessage on another Mac, set `channels.imessage.cliPath` to a wrapper that runs `imsg` on the remote macOS host over SSH. StarforgeOS only needs stdio.
 
 Example wrapper:
 
@@ -128,7 +128,7 @@ Example wrapper:
 exec ssh -T gateway-host imsg "$@"
 ```
 
-**Remote attachments:** When `cliPath` points to a remote host via SSH, attachment paths in the Messages database reference files on the remote machine. OpenClaw can automatically fetch these over SCP by setting `channels.imessage.remoteHost`:
+**Remote attachments:** When `cliPath` points to a remote host via SSH, attachment paths in the Messages database reference files on the remote machine. StarforgeOS can automatically fetch these over SCP by setting `channels.imessage.remoteHost`:
 
 ```json5
 {
@@ -142,7 +142,7 @@ exec ssh -T gateway-host imsg "$@"
 }
 ```
 
-If `remoteHost` is not set, OpenClaw attempts to auto-detect it by parsing the SSH command in your wrapper script. Explicit configuration is recommended for reliability.
+If `remoteHost` is not set, StarforgeOS attempts to auto-detect it by parsing the SSH command in your wrapper script. Explicit configuration is recommended for reliability.
 
 #### Remote Mac via Tailscale (example)
 
@@ -153,7 +153,7 @@ Architecture:
 ```
 ┌──────────────────────────────┐          SSH (imsg rpc)          ┌──────────────────────────┐
 │ Gateway host (Linux/VM)      │──────────────────────────────────▶│ Mac with Messages + imsg │
-│ - openclaw gateway           │          SCP (attachments)        │ - Messages signed in     │
+│ - starforge gateway           │          SCP (attachments)        │ - Messages signed in     │
 │ - channels.imessage.cliPath  │◀──────────────────────────────────│ - Remote Login enabled   │
 └──────────────────────────────┘                                   └──────────────────────────┘
               ▲
@@ -169,7 +169,7 @@ Concrete config example (Tailscale hostname):
   channels: {
     imessage: {
       enabled: true,
-      cliPath: "~/.openclaw/scripts/imsg-ssh",
+      cliPath: "~/.starforgeos/scripts/imsg-ssh",
       remoteHost: "bot@mac-mini.tailnet-1234.ts.net",
       includeAttachments: true,
       dbPath: "/Users/bot/Library/Messages/chat.db",
@@ -178,7 +178,7 @@ Concrete config example (Tailscale hostname):
 }
 ```
 
-Example wrapper (`~/.openclaw/scripts/imsg-ssh`):
+Example wrapper (`~/.starforgeos/scripts/imsg-ssh`):
 
 ```bash
 #!/usr/bin/env bash
@@ -191,7 +191,7 @@ Notes:
 - Use SSH keys so `ssh bot@mac-mini.tailnet-1234.ts.net` works without prompts.
 - `remoteHost` should match the SSH target so SCP can fetch attachments.
 
-Multi-account support: use `channels.imessage.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern. Don't commit `~/.openclaw/openclaw.json` (it often contains tokens).
+Multi-account support: use `channels.imessage.accounts` with per-account config and optional `name`. See [`gateway/configuration`](/gateway/configuration#telegramaccounts--discordaccounts--slackaccounts--signalaccounts--imessageaccounts) for the shared pattern. Don't commit `~/.starforgeos/starforgeos.json` (it often contains tokens).
 
 ## Access control (DMs + groups)
 
@@ -200,8 +200,8 @@ DMs:
 - Default: `channels.imessage.dmPolicy = "pairing"`.
 - Unknown senders receive a pairing code; messages are ignored until approved (codes expire after 1 hour).
 - Approve via:
-  - `openclaw pairing list imessage`
-  - `openclaw pairing approve imessage <CODE>`
+  - `starforge pairing list imessage`
+  - `starforge pairing approve imessage <CODE>`
 - Pairing is the default token exchange for iMessage DMs. Details: [Pairing](/start/pairing)
 
 Groups:
@@ -220,7 +220,7 @@ Groups:
 
 Some iMessage threads can have multiple participants but still arrive with `is_group=false` depending on how Messages stores the chat identifier.
 
-If you explicitly configure a `chat_id` under `channels.imessage.groups`, OpenClaw treats that thread as a “group” for:
+If you explicitly configure a `chat_id` under `channels.imessage.groups`, StarforgeOS treats that thread as a “group” for:
 
 - session isolation (separate `agent:<agentId>:imessage:group:<chat_id>` session key)
 - group allowlisting / mention gating behavior

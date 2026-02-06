@@ -7,7 +7,7 @@ import { createOpenClawCodingTools } from "./pi-tools.js";
 
 describe("createOpenClawCodingTools", () => {
   it("uses workspaceDir for Read tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-ws-"));
     try {
       // Create a test file in the "workspace"
       const testFile = "test-workspace-file.txt";
@@ -34,7 +34,7 @@ describe("createOpenClawCodingTools", () => {
     }
   });
   it("uses workspaceDir for Write tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-ws-"));
     try {
       const testFile = "test-write-file.txt";
       const testContent = "written via workspace path";
@@ -58,7 +58,7 @@ describe("createOpenClawCodingTools", () => {
     }
   });
   it("uses workspaceDir for Edit tool path resolution", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ws-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-ws-"));
     try {
       const testFile = "test-edit-file.txt";
       const originalContent = "hello world";
@@ -85,7 +85,7 @@ describe("createOpenClawCodingTools", () => {
     }
   });
   it("accepts Claude Code parameter aliases for read/write/edit", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-alias-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-alias-"));
     try {
       const tools = createOpenClawCodingTools({ workspaceDir: tmpDir });
       const readTool = tools.find((tool) => tool.name === "read");

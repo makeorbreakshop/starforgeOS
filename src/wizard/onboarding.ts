@@ -55,11 +55,11 @@ async function requireRiskAcknowledgement(params: {
     [
       "Security warning — please read.",
       "",
-      "OpenClaw is a hobby project and still in beta. Expect sharp edges.",
+      "StarforgeOS is a hobby project and still in beta. Expect sharp edges.",
       "This bot can read files and run actions if tools are enabled.",
       "A bad prompt can trick it into doing unsafe things.",
       "",
-      "If you’re not comfortable with basic security and access control, don’t run OpenClaw.",
+      "If you’re not comfortable with basic security and access control, don’t run StarforgeOS.",
       "Ask someone experienced to help before enabling tools or exposing it to the internet.",
       "",
       "Recommended baseline:",
@@ -69,10 +69,10 @@ async function requireRiskAcknowledgement(params: {
       "- Use the strongest available model for any bot with tools or untrusted inboxes.",
       "",
       "Run regularly:",
-      "openclaw security audit --deep",
-      "openclaw security audit --fix",
+      "starforge security audit --deep",
+      "starforge security audit --fix",
       "",
-      "Must read: https://docs.openclaw.ai/gateway/security",
+      "Must read: https://docs.starforge.ai/gateway/security",
     ].join("\n"),
     "Security",
   );
@@ -92,7 +92,7 @@ export async function runOnboardingWizard(
   prompter: WizardPrompter,
 ) {
   printWizardHeader(runtime);
-  await prompter.intro("OpenClaw onboarding");
+  await prompter.intro("StarforgeOS onboarding");
   await requireRiskAcknowledgement({ opts, prompter });
 
   const snapshot = await readConfigFileSnapshot();
@@ -105,19 +105,19 @@ export async function runOnboardingWizard(
         [
           ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
           "",
-          "Docs: https://docs.openclaw.ai/gateway/configuration",
+          "Docs: https://docs.starforge.ai/gateway/configuration",
         ].join("\n"),
         "Config issues",
       );
     }
     await prompter.outro(
-      `Config invalid. Run \`${formatCliCommand("openclaw doctor")}\` to repair it, then re-run onboarding.`,
+      `Config invalid. Run \`${formatCliCommand("starforge doctor")}\` to repair it, then re-run onboarding.`,
     );
     runtime.exit(1);
     return;
   }
 
-  const quickstartHint = `Configure details later via ${formatCliCommand("openclaw configure")}.`;
+  const quickstartHint = `Configure details later via ${formatCliCommand("starforge configure")}.`;
   const manualHint = "Configure port, network, Tailscale, and auth options.";
   const explicitFlowRaw = opts.flow?.trim();
   const normalizedExplicitFlow = explicitFlowRaw === "manual" ? "advanced" : explicitFlowRaw;
@@ -294,8 +294,8 @@ export async function runOnboardingWizard(
   const localUrl = `ws://127.0.0.1:${localPort}`;
   const localProbe = await probeGatewayReachable({
     url: localUrl,
-    token: baseConfig.gateway?.auth?.token ?? process.env.OPENCLAW_GATEWAY_TOKEN,
-    password: baseConfig.gateway?.auth?.password ?? process.env.OPENCLAW_GATEWAY_PASSWORD,
+    token: baseConfig.gateway?.auth?.token ?? process.env.STARFORGEOS_GATEWAY_TOKEN,
+    password: baseConfig.gateway?.auth?.password ?? process.env.STARFORGEOS_GATEWAY_PASSWORD,
   });
   const remoteUrl = baseConfig.gateway?.remote?.url?.trim() ?? "";
   const remoteProbe = remoteUrl

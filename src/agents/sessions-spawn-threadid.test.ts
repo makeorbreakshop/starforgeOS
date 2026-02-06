@@ -22,7 +22,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
 });
 
 import "./test-helpers/fast-core-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./starforge-tools.js";
 import {
   listSubagentRunsForRequester,
   resetSubagentRegistryForTests,

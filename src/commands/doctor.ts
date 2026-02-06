@@ -16,7 +16,7 @@ import { logConfigUpdated } from "../config/logging.js";
 import { resolveGatewayService } from "../daemon/service.js";
 import { resolveGatewayAuth } from "../gateway/auth.js";
 import { buildGatewayConnectionDetails } from "../gateway/call.js";
-import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../infra/starforge-root.js";
 import { defaultRuntime } from "../runtime.js";
 import { note } from "../terminal/note.js";
 import { stylePromptTitle } from "../terminal/prompt-style.js";
@@ -68,7 +68,7 @@ export async function doctorCommand(
 ) {
   const prompter = createDoctorPrompter({ runtime, options });
   printWizardHeader(runtime);
-  intro("OpenClaw doctor");
+  intro("StarforgeOS doctor");
 
   const root = await resolveOpenClawPackageRoot({
     moduleUrl: import.meta.url,
@@ -101,11 +101,11 @@ export async function doctorCommand(
   if (!cfg.gateway?.mode) {
     const lines = [
       "gateway.mode is unset; gateway start will be blocked.",
-      `Fix: run ${formatCliCommand("openclaw configure")} and set Gateway mode (local/remote).`,
-      `Or set directly: ${formatCliCommand("openclaw config set gateway.mode local")}`,
+      `Fix: run ${formatCliCommand("starforge configure")} and set Gateway mode (local/remote).`,
+      `Or set directly: ${formatCliCommand("starforge config set gateway.mode local")}`,
     ];
     if (!fs.existsSync(configPath)) {
-      lines.push(`Missing config: run ${formatCliCommand("openclaw setup")} first.`);
+      lines.push(`Missing config: run ${formatCliCommand("starforge setup")} first.`);
     }
     note(lines.join("\n"), "Gateway");
   }
@@ -289,7 +289,7 @@ export async function doctorCommand(
       runtime.log(`Backup: ${shortenHomePath(backupPath)}`);
     }
   } else {
-    runtime.log(`Run "${formatCliCommand("openclaw doctor --fix")}" to apply changes.`);
+    runtime.log(`Run "${formatCliCommand("starforge doctor --fix")}" to apply changes.`);
   }
 
   if (options.workspaceSuggestions !== false) {

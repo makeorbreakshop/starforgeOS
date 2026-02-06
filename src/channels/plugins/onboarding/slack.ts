@@ -37,11 +37,11 @@ function setSlackDmPolicy(cfg: OpenClawConfig, dmPolicy: DmPolicy) {
 }
 
 function buildSlackManifest(botName: string) {
-  const safeName = botName.trim() || "OpenClaw";
+  const safeName = botName.trim() || "StarforgeOS";
   const manifest = {
     display_information: {
       name: safeName,
-      description: `${safeName} connector for OpenClaw`,
+      description: `${safeName} connector for StarforgeOS`,
     },
     features: {
       bot_user: {
@@ -54,8 +54,8 @@ function buildSlackManifest(botName: string) {
       },
       slash_commands: [
         {
-          command: "/openclaw",
-          description: "Send a message to OpenClaw",
+          command: "/starforge",
+          description: "Send a message to StarforgeOS",
           should_escape: false,
         },
       ],
@@ -370,7 +370,7 @@ export const slackOnboardingAdapter: ChannelOnboardingAdapter = {
     const slackBotName = String(
       await prompter.text({
         message: "Slack bot display name (used for manifest)",
-        initialValue: "OpenClaw",
+        initialValue: "StarforgeOS",
       }),
     ).trim();
     if (!accountConfigured) {

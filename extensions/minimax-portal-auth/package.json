@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/minimax-portal-auth",
+  "name": "@starforgeos/minimax-portal-auth",
   "version": "2026.2.4",
-  "description": "OpenClaw MiniMax Portal OAuth provider plugin",
+  "description": "StarforgeOS MiniMax Portal OAuth provider plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

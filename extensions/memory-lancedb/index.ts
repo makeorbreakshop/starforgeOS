@@ -1,17 +1,17 @@
 /**
- * OpenClaw Memory (LanceDB) Plugin
+ * StarforgeOS Memory (LanceDB) Plugin
  *
  * Long-term memory with vector search for AI conversations.
  * Uses LanceDB for storage and OpenAI for embeddings.
  * Provides seamless auto-recall and auto-capture via lifecycle hooks.
  */
 
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
+import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
 import * as lancedb from "@lancedb/lancedb";
 import { Type } from "@sinclair/typebox";
 import { randomUUID } from "node:crypto";
 import OpenAI from "openai";
-import { stringEnum } from "openclaw/plugin-sdk";
+import { stringEnum } from "starforgeos/plugin-sdk";
 import {
   MEMORY_CATEGORIES,
   type MemoryCategory,

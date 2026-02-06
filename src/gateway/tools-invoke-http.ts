@@ -1,11 +1,11 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createOpenClawTools } from "../agents/openclaw-tools.js";
 import {
   filterToolsByPolicy,
   resolveEffectiveToolPolicy,
   resolveGroupToolPolicy,
   resolveSubagentToolPolicy,
 } from "../agents/pi-tools.policy.js";
+import { createOpenClawTools } from "../agents/starforge-tools.js";
 import {
   buildPluginToolGroups,
   collectExplicitAllowlist,
@@ -170,9 +170,9 @@ export async function handleToolsInvokeHttpRequest(
 
   // Resolve message channel/account hints (optional headers) for policy inheritance.
   const messageChannel = normalizeMessageChannel(
-    getHeader(req, "x-openclaw-message-channel") ?? "",
+    getHeader(req, "x-starforge-message-channel") ?? "",
   );
-  const accountId = getHeader(req, "x-openclaw-account-id")?.trim() || undefined;
+  const accountId = getHeader(req, "x-starforge-account-id")?.trim() || undefined;
 
   const {
     agentId,

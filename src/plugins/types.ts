@@ -146,7 +146,7 @@ export type PluginCommandContext = {
   args?: string;
   /** The full normalized command body */
   commandBody: string;
-  /** Current OpenClaw configuration */
+  /** Current StarforgeOS configuration */
   config: OpenClawConfig;
 };
 

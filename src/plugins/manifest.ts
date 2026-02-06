@@ -3,7 +3,7 @@ import path from "node:path";
 import type { PluginConfigUiHint, PluginKind } from "./types.js";
 import { MANIFEST_KEY } from "../compat/legacy-names.js";
 
-export const PLUGIN_MANIFEST_FILENAME = "openclaw.plugin.json";
+export const PLUGIN_MANIFEST_FILENAME = "starforge.plugin.json";
 export const PLUGIN_MANIFEST_FILENAMES = [PLUGIN_MANIFEST_FILENAME] as const;
 
 export type PluginManifest = {
@@ -102,7 +102,7 @@ export function loadPluginManifest(rootDir: string): PluginManifestLoadResult {
   };
 }
 
-// package.json "openclaw" metadata (used for onboarding/catalog)
+// package.json "starforge" metadata (used for onboarding/catalog)
 export type PluginPackageChannel = {
   id?: string;
   label?: string;

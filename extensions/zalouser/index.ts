@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
+import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
+import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
 import { zalouserDock, zalouserPlugin } from "./src/channel.js";
 import { setZalouserRuntime } from "./src/runtime.js";
 import { ZalouserToolSchema, executeZalouserTool } from "./src/tool.js";

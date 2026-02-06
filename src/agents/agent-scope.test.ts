@@ -16,7 +16,7 @@ describe("resolveAgentConfig", () => {
   it("should return undefined when agent id does not exist", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/starforge" }],
       },
     };
     const result = resolveAgentConfig(cfg, "nonexistent");
@@ -30,8 +30,8 @@ describe("resolveAgentConfig", () => {
           {
             id: "main",
             name: "Main Agent",
-            workspace: "~/openclaw",
-            agentDir: "~/.openclaw/agents/main",
+            workspace: "~/starforge",
+            agentDir: "~/.starforge/agents/main",
             model: "anthropic/claude-opus-4",
           },
         ],
@@ -40,8 +40,8 @@ describe("resolveAgentConfig", () => {
     const result = resolveAgentConfig(cfg, "main");
     expect(result).toEqual({
       name: "Main Agent",
-      workspace: "~/openclaw",
-      agentDir: "~/.openclaw/agents/main",
+      workspace: "~/starforge",
+      agentDir: "~/.starforge/agents/main",
       model: "anthropic/claude-opus-4",
       identity: undefined,
       groupChat: undefined,
@@ -113,7 +113,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/starforge-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -141,7 +141,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/openclaw-restricted",
+            workspace: "~/starforge-restricted",
             tools: {
               allow: ["read"],
               deny: ["exec", "write", "edit"],
@@ -171,7 +171,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "family",
-            workspace: "~/openclaw-family",
+            workspace: "~/starforge-family",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -192,12 +192,12 @@ describe("resolveAgentConfig", () => {
   it("should normalize agent id", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/starforge" }],
       },
     };
     // Should normalize to "main" (default)
     const result = resolveAgentConfig(cfg, "");
     expect(result).toBeDefined();
-    expect(result?.workspace).toBe("~/openclaw");
+    expect(result?.workspace).toBe("~/starforge");
   });
 });

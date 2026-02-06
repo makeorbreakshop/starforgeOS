@@ -8,11 +8,11 @@ import { loadOpenClawPlugins } from "./loader.js";
 type TempPlugin = { dir: string; file: string; id: string };
 
 const tempDirs: string[] = [];
-const prevBundledDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+const prevBundledDir = process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR;
 const EMPTY_PLUGIN_SCHEMA = { type: "object", additionalProperties: false, properties: {} };
 
 function makeTempDir() {
-  const dir = path.join(os.tmpdir(), `openclaw-plugin-${randomUUID()}`);
+  const dir = path.join(os.tmpdir(), `starforge-plugin-${randomUUID()}`);
   fs.mkdirSync(dir, { recursive: true });
   tempDirs.push(dir);
   return dir;
@@ -29,7 +29,7 @@ function writePlugin(params: {
   const file = path.join(dir, filename);
   fs.writeFileSync(file, params.body, "utf-8");
   fs.writeFileSync(
-    path.join(dir, "openclaw.plugin.json"),
+    path.join(dir, "starforge.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -52,9 +52,9 @@ afterEach(() => {
     }
   }
   if (prevBundledDir === undefined) {
-    delete process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
+    delete process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR;
   } else {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = prevBundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = prevBundledDir;
   }
 });
 
@@ -67,7 +67,7 @@ describe("loadOpenClawPlugins", () => {
       dir: bundledDir,
       filename: "bundled.ts",
     });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const registry = loadOpenClawPlugins({
       cache: false,
@@ -124,7 +124,7 @@ describe("loadOpenClawPlugins", () => {
       dir: bundledDir,
       filename: "telegram.ts",
     });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const registry = loadOpenClawPlugins({
       cache: false,
@@ -151,7 +151,7 @@ describe("loadOpenClawPlugins", () => {
       dir: bundledDir,
       filename: "memory-core.ts",
     });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const registry = loadOpenClawPlugins({
       cache: false,
@@ -176,10 +176,10 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/memory-core",
+        name: "@starforge/memory-core",
         version: "1.2.3",
         description: "Memory plugin package",
-        openclaw: { extensions: ["./index.ts"] },
+        starforge: { extensions: ["./index.ts"] },
       }),
       "utf-8",
     );
@@ -190,7 +190,7 @@ describe("loadOpenClawPlugins", () => {
       filename: "index.ts",
     });
 
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const registry = loadOpenClawPlugins({
       cache: false,
@@ -210,7 +210,7 @@ describe("loadOpenClawPlugins", () => {
     expect(memory?.version).toBe("1.2.3");
   });
   it("loads plugins from config paths", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "allowed",
       body: `export default { id: "allowed", register(api) { api.registerGatewayMethod("allowed.ping", ({ respond }) => respond(true, { ok: true })); } };`,
@@ -233,7 +233,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("denylist disables plugins even if allowed", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "blocked",
       body: `export default { id: "blocked", register() {} };`,
@@ -256,7 +256,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("fails fast on invalid plugin config", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "configurable",
       body: `export default { id: "configurable", register() {} };`,
@@ -283,7 +283,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("registers channel plugins", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "channel-demo",
       body: `export default { id: "channel-demo", register(api) {
@@ -324,7 +324,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("registers http handlers", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "http-demo",
       body: `export default { id: "http-demo", register(api) {
@@ -350,7 +350,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("registers http routes", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "http-route-demo",
       body: `export default { id: "http-route-demo", register(api) {
@@ -377,7 +377,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("respects explicit disable in config", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const plugin = writePlugin({
       id: "config-disable",
       body: `export default { id: "config-disable", register() {} };`,
@@ -400,7 +400,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("enforces memory slot selection", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const memoryA = writePlugin({
       id: "memory-a",
       body: `export default { id: "memory-a", kind: "memory", register() {} };`,
@@ -427,7 +427,7 @@ describe("loadOpenClawPlugins", () => {
   });
 
   it("disables memory plugins when slot is none", () => {
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
     const memory = writePlugin({
       id: "memory-off",
       body: `export default { id: "memory-off", kind: "memory", register() {} };`,
@@ -455,7 +455,7 @@ describe("loadOpenClawPlugins", () => {
       dir: bundledDir,
       filename: "shadow.js",
     });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = bundledDir;
+    process.env.STARFORGEOS_BUNDLED_PLUGINS_DIR = bundledDir;
 
     const override = writePlugin({
       id: "shadow",

@@ -16,8 +16,8 @@ import {
   type ChannelMessageActionAdapter,
   type ChannelPlugin,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk";
-import { GoogleChatConfigSchema } from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
+import { GoogleChatConfigSchema } from "starforgeos/plugin-sdk";
 import {
   listGoogleChatAccountIds,
   resolveDefaultGoogleChatAccountId,

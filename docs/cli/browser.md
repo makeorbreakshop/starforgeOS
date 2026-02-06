@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `openclaw browser` (profiles, tabs, actions, extension relay)"
+summary: "CLI reference for `starforge browser` (profiles, tabs, actions, extension relay)"
 read_when:
-  - You use `openclaw browser` and want examples for common tasks
+  - You use `starforge browser` and want examples for common tasks
   - You want to control a browser running on another machine via a node host
   - You want to use the Chrome extension relay (attach/detach via toolbar button)
 title: "browser"
 ---
 
-# `openclaw browser`
+# `starforge browser`
 
-Manage OpenClaw’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
+Manage StarforgeOS’s browser control server and run browser actions (tabs, snapshots, screenshots, navigation, clicks, typing).
 
 Related:
 
@@ -27,38 +27,38 @@ Related:
 ## Quick start (local)
 
 ```bash
-openclaw browser --browser-profile chrome tabs
-openclaw browser --browser-profile openclaw start
-openclaw browser --browser-profile openclaw open https://example.com
-openclaw browser --browser-profile openclaw snapshot
+starforge browser --browser-profile chrome tabs
+starforge browser --browser-profile starforge start
+starforge browser --browser-profile starforge open https://example.com
+starforge browser --browser-profile starforge snapshot
 ```
 
 ## Profiles
 
 Profiles are named browser routing configs. In practice:
 
-- `openclaw`: launches/attaches to a dedicated OpenClaw-managed Chrome instance (isolated user data dir).
+- `starforgeos`: launches/attaches to a dedicated StarforgeOS-managed Chrome instance (isolated user data dir).
 - `chrome`: controls your existing Chrome tab(s) via the Chrome extension relay.
 
 ```bash
-openclaw browser profiles
-openclaw browser create-profile --name work --color "#FF5A36"
-openclaw browser delete-profile --name work
+starforge browser profiles
+starforge browser create-profile --name work --color "#FF5A36"
+starforge browser delete-profile --name work
 ```
 
 Use a specific profile:
 
 ```bash
-openclaw browser --browser-profile work tabs
+starforge browser --browser-profile work tabs
 ```
 
 ## Tabs
 
 ```bash
-openclaw browser tabs
-openclaw browser open https://docs.openclaw.ai
-openclaw browser focus <targetId>
-openclaw browser close <targetId>
+starforge browser tabs
+starforge browser open https://docs.starforgeos.ai
+starforge browser focus <targetId>
+starforge browser close <targetId>
 ```
 
 ## Snapshot / screenshot / actions
@@ -66,21 +66,21 @@ openclaw browser close <targetId>
 Snapshot:
 
 ```bash
-openclaw browser snapshot
+starforge browser snapshot
 ```
 
 Screenshot:
 
 ```bash
-openclaw browser screenshot
+starforge browser screenshot
 ```
 
 Navigate/click/type (ref-based UI automation):
 
 ```bash
-openclaw browser navigate https://example.com
-openclaw browser click <ref>
-openclaw browser type <ref> "hello"
+starforge browser navigate https://example.com
+starforge browser click <ref>
+starforge browser type <ref> "hello"
 ```
 
 ## Chrome extension relay (attach via toolbar button)
@@ -90,8 +90,8 @@ This mode lets the agent control an existing Chrome tab that you attach manually
 Install the unpacked extension to a stable path:
 
 ```bash
-openclaw browser extension install
-openclaw browser extension path
+starforge browser extension install
+starforge browser extension path
 ```
 
 Then Chrome → `chrome://extensions` → enable “Developer mode” → “Load unpacked” → select the printed folder.

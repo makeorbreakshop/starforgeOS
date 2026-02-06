@@ -80,7 +80,7 @@ export async function createAcpClient(opts: AcpClientOptions = {}): Promise<AcpC
   const log = verbose ? (msg: string) => console.error(`[acp-client] ${msg}`) : () => {};
 
   ensureOpenClawCliOnPath({ cwd });
-  const serverCommand = opts.serverCommand ?? "openclaw";
+  const serverCommand = opts.serverCommand ?? "starforge";
   const serverArgs = buildServerArgs(opts);
 
   log(`spawning: ${serverCommand} ${serverArgs.join(" ")}`);
@@ -126,7 +126,7 @@ export async function createAcpClient(opts: AcpClientOptions = {}): Promise<AcpC
       fs: { readTextFile: true, writeTextFile: true },
       terminal: true,
     },
-    clientInfo: { name: "openclaw-acp-client", version: "1.0.0" },
+    clientInfo: { name: "starforge-acp-client", version: "1.0.0" },
   });
 
   log("creating session");
@@ -150,7 +150,7 @@ export async function runAcpClientInteractive(opts: AcpClientOptions = {}): Prom
     output: process.stdout,
   });
 
-  console.log("OpenClaw ACP client");
+  console.log("StarforgeOS ACP client");
   console.log(`Session: ${sessionId}`);
   console.log('Type a prompt, or "exit" to quit.\n');
 

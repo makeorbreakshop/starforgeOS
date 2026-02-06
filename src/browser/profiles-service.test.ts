@@ -19,7 +19,7 @@ vi.mock("./trash.js", () => ({
 }));
 
 vi.mock("./chrome.js", () => ({
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw-test/openclaw/user-data"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/starforge-test/starforge/user-data"),
 }));
 
 import { loadConfig, writeConfigFile } from "../config/config.js";
@@ -99,9 +99,9 @@ describe("BrowserProfilesService", () => {
 
     vi.mocked(loadConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "starforge",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          starforge: { cdpPort: 18800, color: "#FF4500" },
           remote: { cdpUrl: "http://10.0.0.42:9222", color: "#0066CC" },
         },
       },
@@ -125,15 +125,15 @@ describe("BrowserProfilesService", () => {
 
     vi.mocked(loadConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "starforge",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          starforge: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18801, color: "#0066CC" },
         },
       },
     });
 
-    const tempDir = fs.mkdtempSync(path.join("/tmp", "openclaw-profile-"));
+    const tempDir = fs.mkdtempSync(path.join("/tmp", "starforge-profile-"));
     const userDataDir = path.join(tempDir, "work", "user-data");
     fs.mkdirSync(path.dirname(userDataDir), { recursive: true });
     vi.mocked(resolveOpenClawUserDataDir).mockReturnValue(userDataDir);

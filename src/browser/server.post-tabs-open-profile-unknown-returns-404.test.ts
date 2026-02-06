@@ -93,9 +93,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
         color: "#FF4500",
         attachOnly: cfgAttachOnly,
         headless: true,
-        defaultProfile: "openclaw",
+        defaultProfile: "starforge",
         profiles: {
-          openclaw: { cdpPort: testPort + 1, color: "#FF4500" },
+          starforge: { cdpPort: testPort + 1, color: "#FF4500" },
         },
       },
     }),
@@ -113,13 +113,13 @@ vi.mock("./chrome.js", () => ({
     return {
       pid: 123,
       exe: { kind: "chrome", path: "/fake/chrome" },
-      userDataDir: "/tmp/openclaw",
+      userDataDir: "/tmp/starforge",
       cdpPort: profile.cdpPort,
       startedAt: Date.now(),
       proc,
     };
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/starforge"),
   stopOpenClawChrome: vi.fn(async () => {
     reachable = false;
   }),
@@ -206,8 +206,8 @@ describe("browser control server", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
     // Minimal CDP JSON endpoints used by the server.
     let putNewCalls = 0;
@@ -266,9 +266,9 @@ describe("browser control server", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.STARFORGEOS_GATEWAY_PORT;
     } else {
-      process.env.OPENCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.STARFORGEOS_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -304,11 +304,11 @@ describe("profile CRUD endpoints", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
     vi.stubGlobal(
       "fetch",
@@ -326,9 +326,9 @@ describe("profile CRUD endpoints", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.STARFORGEOS_GATEWAY_PORT;
     } else {
-      process.env.OPENCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.STARFORGEOS_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -369,11 +369,11 @@ describe("profile CRUD endpoints", () => {
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
-    // "openclaw" already exists as the default profile
+    // "starforge" already exists as the default profile
     const result = await realFetch(`${base}/profiles/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "openclaw" }),
+      body: JSON.stringify({ name: "starforge" }),
     });
     expect(result.status).toBe(409);
     const body = (await result.json()) as { error: string };
@@ -434,8 +434,8 @@ describe("profile CRUD endpoints", () => {
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
-    // openclaw is the default profile
-    const result = await realFetch(`${base}/profiles/openclaw`, {
+    // starforge is the default profile
+    const result = await realFetch(`${base}/profiles/starforge`, {
       method: "DELETE",
     });
     expect(result.status).toBe(400);

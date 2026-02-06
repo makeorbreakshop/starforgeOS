@@ -4,13 +4,13 @@ import type {
   OpenClawConfig,
   DmPolicy,
   WizardPrompter,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   formatDocsLink,
   promptChannelAccessConfig,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   parseMSTeamsTeamEntry,
   resolveMSTeamsChannelAllowlist,

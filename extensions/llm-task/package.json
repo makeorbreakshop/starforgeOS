@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/llm-task",
+  "name": "@starforgeos/llm-task",
   "version": "2026.2.4",
-  "description": "OpenClaw JSON-only LLM task plugin",
+  "description": "StarforgeOS JSON-only LLM task plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

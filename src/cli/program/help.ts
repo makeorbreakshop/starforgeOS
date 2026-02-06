@@ -9,23 +9,23 @@ const CLI_NAME = resolveCliName();
 
 const EXAMPLES = [
   [
-    "openclaw channels login --verbose",
+    "starforge channels login --verbose",
     "Link personal WhatsApp Web and show QR + connection logs.",
   ],
   [
-    'openclaw message send --target +15555550123 --message "Hi" --json',
+    'starforge message send --target +15555550123 --message "Hi" --json',
     "Send via your web session and print JSON result.",
   ],
-  ["openclaw gateway --port 18789", "Run the WebSocket Gateway locally."],
-  ["openclaw --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["openclaw gateway --force", "Kill anything bound to the default gateway port, then start it."],
-  ["openclaw gateway ...", "Gateway control via WebSocket."],
+  ["starforge gateway --port 18789", "Run the WebSocket Gateway locally."],
+  ["starforge --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
+  ["starforge gateway --force", "Kill anything bound to the default gateway port, then start it."],
+  ["starforge gateway ...", "Gateway control via WebSocket."],
   [
-    'openclaw agent --to +15555550123 --message "Run summary" --deliver',
+    'starforge agent --to +15555550123 --message "Run summary" --deliver',
     "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
   ],
   [
-    'openclaw message send --channel telegram --target @mychat --message "Hi"',
+    'starforge message send --channel telegram --target @mychat --message "Hi"',
     "Send via your Telegram bot.",
   ],
 ] as const;
@@ -37,11 +37,11 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     .version(ctx.programVersion)
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.openclaw-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      "Dev profile: isolate state under ~/.starforge-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.openclaw-<name>)",
+      "Use a named profile (isolates STARFORGEOS_STATE_DIR/STARFORGEOS_CONFIG_PATH under ~/.starforge-<name>)",
     );
 
   program.option("--no-color", "Disable ANSI colors", false);
@@ -92,7 +92,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     if (command !== program) {
       return "";
     }
-    const docs = formatDocsLink("/cli", "docs.openclaw.ai/cli");
+    const docs = formatDocsLink("/cli", "docs.starforge.ai/cli");
     return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
   });
 }

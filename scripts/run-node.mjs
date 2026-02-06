@@ -108,7 +108,7 @@ const logRunner = (message) => {
 };
 
 const runNode = () => {
-  const nodeProcess = spawn(process.execPath, ["openclaw.mjs", ...args], {
+  const nodeProcess = spawn(process.execPath, ["starforge.mjs", ...args], {
     cwd,
     env,
     stdio: "inherit",

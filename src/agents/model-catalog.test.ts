@@ -13,7 +13,7 @@ vi.mock("./models-config.js", () => ({
 }));
 
 vi.mock("./agent-paths.js", () => ({
-  resolveOpenClawAgentDir: () => "/tmp/openclaw",
+  resolveOpenClawAgentDir: () => "/tmp/starforge",
 }));
 
 describe("loadModelCatalog", () => {

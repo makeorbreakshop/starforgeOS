@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@starforgeos/mattermost",
   "version": "2026.2.4",
-  "description": "OpenClaw Mattermost channel plugin",
+  "description": "StarforgeOS Mattermost channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -20,7 +20,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@openclaw/mattermost",
+      "npmSpec": "@starforgeos/mattermost",
       "localPath": "extensions/mattermost",
       "defaultChoice": "npm"
     }

@@ -6,7 +6,7 @@ import type { OpenClawConfig } from "../config/config.js";
 import { resolveTelegramToken } from "./token.js";
 
 function withTempDir(): string {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-token-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "starforge-telegram-token-"));
 }
 
 describe("resolveTelegramToken", () => {

@@ -29,8 +29,8 @@ function getTextContent(result?: { content?: Array<{ type: string; text?: string
 
 describe("workspace path resolution", () => {
   it("reads relative paths against workspaceDir even after cwd changes", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("starforge-ws-", async (workspaceDir) => {
+      await withTempDir("starforge-cwd-", async (otherDir) => {
         const testFile = "read.txt";
         const contents = "workspace read ok";
         await fs.writeFile(path.join(workspaceDir, testFile), contents, "utf8");
@@ -51,8 +51,8 @@ describe("workspace path resolution", () => {
   });
 
   it("writes relative paths against workspaceDir even after cwd changes", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("starforge-ws-", async (workspaceDir) => {
+      await withTempDir("starforge-cwd-", async (otherDir) => {
         const testFile = "write.txt";
         const contents = "workspace write ok";
 
@@ -77,8 +77,8 @@ describe("workspace path resolution", () => {
   });
 
   it("edits relative paths against workspaceDir even after cwd changes", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("starforge-ws-", async (workspaceDir) => {
+      await withTempDir("starforge-cwd-", async (otherDir) => {
         const testFile = "edit.txt";
         await fs.writeFile(path.join(workspaceDir, testFile), "hello world", "utf8");
 
@@ -91,11 +91,11 @@ describe("workspace path resolution", () => {
           await editTool?.execute("ws-edit", {
             path: testFile,
             oldText: "world",
-            newText: "openclaw",
+            newText: "starforge",
           });
 
           const updated = await fs.readFile(path.join(workspaceDir, testFile), "utf8");
-          expect(updated).toBe("hello openclaw");
+          expect(updated).toBe("hello starforge");
         } finally {
           cwdSpy.mockRestore();
         }
@@ -104,7 +104,7 @@ describe("workspace path resolution", () => {
   });
 
   it("defaults exec cwd to workspaceDir when workdir is omitted", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
+    await withTempDir("starforge-ws-", async (workspaceDir) => {
       const tools = createOpenClawCodingTools({ workspaceDir, exec: { host: "gateway" } });
       const execTool = tools.find((tool) => tool.name === "exec");
       expect(execTool).toBeDefined();
@@ -126,8 +126,8 @@ describe("workspace path resolution", () => {
   });
 
   it("lets exec workdir override the workspace default", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-override-", async (overrideDir) => {
+    await withTempDir("starforge-ws-", async (workspaceDir) => {
+      await withTempDir("starforge-override-", async (overrideDir) => {
         const tools = createOpenClawCodingTools({ workspaceDir, exec: { host: "gateway" } });
         const execTool = tools.find((tool) => tool.name === "exec");
         expect(execTool).toBeDefined();
@@ -153,19 +153,19 @@ describe("workspace path resolution", () => {
 
 describe("sandboxed workspace paths", () => {
   it("uses sandbox workspace for relative read/write/edit", async () => {
-    await withTempDir("openclaw-sandbox-", async (sandboxDir) => {
-      await withTempDir("openclaw-workspace-", async (workspaceDir) => {
+    await withTempDir("starforge-sandbox-", async (sandboxDir) => {
+      await withTempDir("starforge-workspace-", async (workspaceDir) => {
         const sandbox = {
           enabled: true,
           sessionKey: "sandbox:test",
           workspaceDir: sandboxDir,
           agentWorkspaceDir: workspaceDir,
           workspaceAccess: "rw",
-          containerName: "openclaw-sbx-test",
+          containerName: "starforge-sbx-test",
           containerWorkdir: "/workspace",
           docker: {
-            image: "openclaw-sandbox:bookworm-slim",
-            containerPrefix: "openclaw-sbx-",
+            image: "starforge-sandbox:bookworm-slim",
+            containerPrefix: "starforge-sbx-",
             workdir: "/workspace",
             readOnlyRoot: true,
             tmpfs: [],

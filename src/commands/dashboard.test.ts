@@ -41,7 +41,7 @@ function resetRuntime() {
 
 function mockSnapshot(token = "abc") {
   mocks.readConfigFileSnapshot.mockResolvedValue({
-    path: "/tmp/openclaw.json",
+    path: "/tmp/starforge.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -86,7 +86,7 @@ describe("dashboardCommand", () => {
     expect(mocks.copyToClipboard).toHaveBeenCalledWith("http://127.0.0.1:18789/");
     expect(mocks.openUrl).toHaveBeenCalledWith("http://127.0.0.1:18789/");
     expect(runtime.log).toHaveBeenCalledWith(
-      "Opened in your browser. Keep that tab to control OpenClaw.",
+      "Opened in your browser. Keep that tab to control StarforgeOS.",
     );
   });
 

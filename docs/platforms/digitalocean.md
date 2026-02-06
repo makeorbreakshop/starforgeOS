@@ -1,16 +1,16 @@
 ---
-summary: "OpenClaw on DigitalOcean (simple paid VPS option)"
+summary: "StarforgeOS on DigitalOcean (simple paid VPS option)"
 read_when:
-  - Setting up OpenClaw on DigitalOcean
-  - Looking for cheap VPS hosting for OpenClaw
+  - Setting up StarforgeOS on DigitalOcean
+  - Looking for cheap VPS hosting for StarforgeOS
 title: "DigitalOcean"
 ---
 
-# OpenClaw on DigitalOcean
+# StarforgeOS on DigitalOcean
 
 ## Goal
 
-Run a persistent OpenClaw Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
+Run a persistent StarforgeOS Gateway on DigitalOcean for **$6/month** (or $4/mo with reserved pricing).
 
 If you want a $0/month option and don’t mind ARM + provider-specific setup, see the [Oracle Cloud guide](/platforms/oracle).
 
@@ -56,7 +56,7 @@ If you want a $0/month option and don’t mind ARM + provider-specific setup, se
 ssh root@YOUR_DROPLET_IP
 ```
 
-## 3) Install OpenClaw
+## 3) Install StarforgeOS
 
 ```bash
 # Update system
@@ -66,17 +66,17 @@ apt update && apt upgrade -y
 curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 apt install -y nodejs
 
-# Install OpenClaw
-curl -fsSL https://openclaw.ai/install.sh | bash
+# Install StarforgeOS
+curl -fsSL https://starforgeos.ai/install.sh | bash
 
 # Verify
-openclaw --version
+starforge --version
 ```
 
 ## 4) Run Onboarding
 
 ```bash
-openclaw onboard --install-daemon
+starforge onboard --install-daemon
 ```
 
 The wizard will walk you through:
@@ -90,13 +90,13 @@ The wizard will walk you through:
 
 ```bash
 # Check status
-openclaw status
+starforge status
 
 # Check service
-systemctl --user status openclaw-gateway.service
+systemctl --user status starforgeos-gateway.service
 
 # View logs
-journalctl --user -u openclaw-gateway.service -f
+journalctl --user -u starforgeos-gateway.service -f
 ```
 
 ## 6) Access the Dashboard
@@ -120,8 +120,8 @@ curl -fsSL https://tailscale.com/install.sh | sh
 tailscale up
 
 # Configure Gateway to use Tailscale Serve
-openclaw config set gateway.tailscale.mode serve
-openclaw gateway restart
+starforge config set gateway.tailscale.mode serve
+starforge gateway restart
 ```
 
 Open: `https://<magicdns>/`
@@ -134,8 +134,8 @@ Notes:
 **Option C: Tailnet bind (no Serve)**
 
 ```bash
-openclaw config set gateway.bind tailnet
-openclaw gateway restart
+starforge config set gateway.bind tailnet
+starforge gateway restart
 ```
 
 Open: `http://<tailscale-ip>:18789` (token required).
@@ -145,14 +145,14 @@ Open: `http://<tailscale-ip>:18789` (token required).
 ### Telegram
 
 ```bash
-openclaw pairing list telegram
-openclaw pairing approve telegram <CODE>
+starforge pairing list telegram
+starforge pairing approve telegram <CODE>
 ```
 
 ### WhatsApp
 
 ```bash
-openclaw channels login whatsapp
+starforge channels login whatsapp
 # Scan QR code
 ```
 
@@ -194,13 +194,13 @@ htop
 
 All state lives in:
 
-- `~/.openclaw/` — config, credentials, session data
-- `~/.openclaw/workspace/` — workspace (SOUL.md, memory, etc.)
+- `~/.starforgeos/` — config, credentials, session data
+- `~/.starforgeos/workspace/` — workspace (SOUL.md, memory, etc.)
 
 These survive reboots. Back them up periodically:
 
 ```bash
-tar -czvf openclaw-backup.tar.gz ~/.openclaw ~/.openclaw/workspace
+tar -czvf starforgeos-backup.tar.gz ~/.starforge ~/.starforgeos/workspace
 ```
 
 ---
@@ -230,9 +230,9 @@ For the full setup guide, see [Oracle Cloud](/platforms/oracle). For signup tips
 ### Gateway won't start
 
 ```bash
-openclaw gateway status
-openclaw doctor --non-interactive
-journalctl -u openclaw --no-pager -n 50
+starforge gateway status
+starforge doctor --non-interactive
+journalctl -u starforge --no-pager -n 50
 ```
 
 ### Port already in use

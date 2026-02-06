@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/lobster",
+  "name": "@starforgeos/lobster",
   "version": "2026.2.4",
   "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

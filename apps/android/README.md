@@ -1,4 +1,4 @@
-## OpenClaw Node (Android) (internal)
+## StarforgeOS Node (Android) (internal)
 
 Modern Android node app: connects to the **Gateway WebSocket** (`_openclaw-gw._tcp`) and exposes **Canvas + Chat + Camera**.
 
@@ -25,7 +25,7 @@ cd apps/android
 
 1) Start the gateway (on your “master” machine):
 ```bash
-pnpm openclaw gateway --port 18789 --verbose
+pnpm starforge gateway --port 18789 --verbose
 ```
 
 2) In the Android app:
@@ -34,8 +34,8 @@ pnpm openclaw gateway --port 18789 --verbose
 
 3) Approve pairing (on the gateway machine):
 ```bash
-openclaw nodes pending
-openclaw nodes approve <requestId>
+starforge nodes pending
+starforge nodes approve <requestId>
 ```
 
 More details: `docs/platforms/android.md`.

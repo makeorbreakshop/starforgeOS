@@ -9,12 +9,12 @@ title: "Discovery and Transports"
 
 # Discovery & transports
 
-OpenClaw has two distinct problems that look similar on the surface:
+StarforgeOS has two distinct problems that look similar on the surface:
 
 1. **Operator remote control**: the macOS menu bar app controlling a gateway running elsewhere.
 2. **Node pairing**: iOS/Android (and future nodes) finding a gateway and pairing securely.
 
-The design goal is to keep all network discovery/advertising in the **Node Gateway** (`openclaw gateway`) and keep clients (mac app, iOS) as consumers.
+The design goal is to keep all network discovery/advertising in the **Node Gateway** (`starforge gateway`) and keep clients (mac app, iOS) as consumers.
 
 ## Terms
 
@@ -65,16 +65,16 @@ Troubleshooting and beacon details: [Bonjour](/gateway/bonjour).
   - `gatewayTls=1` (only when TLS is enabled)
   - `gatewayTlsSha256=<sha256>` (only when TLS is enabled and fingerprint is available)
   - `canvasPort=18793` (default canvas host port; serves `/__openclaw__/canvas/`)
-  - `cliPath=<path>` (optional; absolute path to a runnable `openclaw` entrypoint or binary)
+  - `cliPath=<path>` (optional; absolute path to a runnable `starforgeos` entrypoint or binary)
   - `tailnetDns=<magicdns>` (optional hint; auto-detected when Tailscale is available)
 
 Disable/override:
 
-- `OPENCLAW_DISABLE_BONJOUR=1` disables advertising.
-- `gateway.bind` in `~/.openclaw/openclaw.json` controls the Gateway bind mode.
-- `OPENCLAW_SSH_PORT` overrides the SSH port advertised in TXT (defaults to 22).
-- `OPENCLAW_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
-- `OPENCLAW_CLI_PATH` overrides the advertised CLI path.
+- `STARFORGEOS_DISABLE_BONJOUR=1` disables advertising.
+- `gateway.bind` in `~/.starforgeos/starforgeos.json` controls the Gateway bind mode.
+- `STARFORGEOS_SSH_PORT` overrides the SSH port advertised in TXT (defaults to 22).
+- `STARFORGEOS_TAILNET_DNS` publishes a `tailnetDns` hint (MagicDNS).
+- `STARFORGEOS_CLI_PATH` overrides the advertised CLI path.
 
 ### 2) Tailnet (cross-network)
 

@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
-import { resolveOpenClawPackageRoot, resolveOpenClawPackageRootSync } from "./openclaw-root.js";
+import { resolveOpenClawPackageRoot, resolveOpenClawPackageRootSync } from "./starforge-root.js";
 
 const CONTROL_UI_DIST_PATH_SEGMENTS = ["dist", "control-ui", "index.html"] as const;
 
@@ -84,7 +84,7 @@ export async function resolveControlUiDistIndexPath(
     return path.join(packageRoot, "dist", "control-ui", "index.html");
   }
 
-  // Fallback: traverse up and find package.json with name "openclaw" + dist/control-ui/index.html
+  // Fallback: traverse up and find package.json with name "starforge" + dist/control-ui/index.html
   // This handles global installs where path-based resolution might fail.
   let dir = path.dirname(normalized);
   for (let i = 0; i < 8; i++) {
@@ -94,7 +94,7 @@ export async function resolveControlUiDistIndexPath(
       try {
         const raw = fs.readFileSync(pkgJsonPath, "utf-8");
         const parsed = JSON.parse(raw) as { name?: unknown };
-        if (parsed.name === "openclaw") {
+        if (parsed.name === "starforge") {
           return indexPath;
         }
       } catch {
@@ -173,7 +173,7 @@ export function resolveControlUiRootSync(opts: ControlUiRootResolveOptions = {})
     addCandidate(candidates, path.join(moduleDir, "../../dist/control-ui"));
   }
   if (argv1Dir) {
-    // openclaw.mjs or dist/<bundle>.js
+    // starforge.mjs or dist/<bundle>.js
     addCandidate(candidates, path.join(argv1Dir, "dist", "control-ui"));
     addCandidate(candidates, path.join(argv1Dir, "control-ui"));
   }

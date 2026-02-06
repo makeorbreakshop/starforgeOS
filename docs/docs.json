@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "OpenClaw",
+  "name": "StarforgeOS",
   "theme": "mint",
   "icons": {
     "library": "lucide"
@@ -27,12 +27,12 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/openclaw/openclaw",
+        "href": "https://github.com/makeorbreakshop/starforgeOS",
         "icon": "github"
       },
       {
         "label": "Releases",
-        "href": "https://github.com/openclaw/openclaw/releases",
+        "href": "https://github.com/makeorbreakshop/starforgeOS/releases",
         "icon": "package"
       }
     ]
@@ -256,15 +256,15 @@
     },
     {
       "source": "/clawd",
-      "destination": "/start/openclaw"
+      "destination": "/start/starforgeos"
     },
     {
       "source": "/start/clawd",
-      "destination": "/start/openclaw"
+      "destination": "/start/starforgeos"
     },
     {
       "source": "/start/clawd/",
-      "destination": "/start/openclaw"
+      "destination": "/start/starforgeos"
     },
     {
       "source": "/clawhub",
@@ -789,7 +789,7 @@
               },
               {
                 "group": "Guides",
-                "pages": ["start/openclaw"]
+                "pages": ["start/starforgeos"]
               }
             ]
           },
@@ -1255,7 +1255,7 @@
               },
               {
                 "group": "指南",
-                "pages": ["zh-CN/start/openclaw"]
+                "pages": ["zh-CN/start/starforgeos"]
               }
             ]
           },

@@ -88,7 +88,7 @@ export function shouldIncludeHook(params: {
   const { entry, config, eligibility } = params;
   const hookKey = resolveHookKey(entry.hook.name, entry);
   const hookConfig = resolveHookConfig(config, hookKey);
-  const pluginManaged = entry.hook.source === "openclaw-plugin";
+  const pluginManaged = entry.hook.source === "starforge-plugin";
   const osList = entry.metadata?.os ?? [];
   const remotePlatforms = eligibility?.remote?.platforms ?? [];
 

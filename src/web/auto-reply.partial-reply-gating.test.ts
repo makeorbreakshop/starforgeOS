@@ -48,7 +48,7 @@ const rmDirWithRetries = async (dir: string): Promise<void> => {
 beforeEach(async () => {
   resetInboundDedupe();
   previousHome = process.env.HOME;
-  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-web-home-"));
+  tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-web-home-"));
   process.env.HOME = tempHome;
 });
 
@@ -63,7 +63,7 @@ afterEach(async () => {
 const makeSessionStore = async (
   entries: Record<string, unknown> = {},
 ): Promise<{ storePath: string; cleanup: () => Promise<void> }> => {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-session-"));
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(storePath, JSON.stringify(entries));
   const cleanup = async () => {

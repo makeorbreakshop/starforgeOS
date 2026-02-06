@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/discord",
+  "name": "@starforgeos/discord",
   "version": "2026.2.4",
-  "description": "OpenClaw Discord channel plugin",
+  "description": "StarforgeOS Discord channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

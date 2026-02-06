@@ -36,7 +36,7 @@ const runtime: RuntimeEnv = {
 const configSpy = vi.spyOn(configModule, "loadConfig");
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-" });
+  return withTempHomeBase(fn, { prefix: "starforge-agent-" });
 }
 
 function mockConfig(
@@ -51,7 +51,7 @@ function mockConfig(
       defaults: {
         model: { primary: "anthropic/claude-opus-4-5" },
         models: { "anthropic/claude-opus-4-5": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "starforge"),
         ...agentOverrides,
       },
       list: agentsList,

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import process from "node:process";
 
-declare const __OPENCLAW_VERSION__: string | undefined;
+declare const __STARFORGEOS_VERSION__: string | undefined;
 
 const BUNDLED_VERSION =
-  (typeof __OPENCLAW_VERSION__ === "string" && __OPENCLAW_VERSION__) ||
-  process.env.OPENCLAW_BUNDLED_VERSION ||
+  (typeof __STARFORGEOS_VERSION__ === "string" && __STARFORGEOS_VERSION__) ||
+  process.env.STARFORGEOS_BUNDLED_VERSION ||
   "0.0.0";
 
 function hasFlag(args: string[], flag: string): boolean {
@@ -66,7 +66,7 @@ async function main() {
   installUnhandledRejectionHandler();
 
   process.on("uncaughtException", (error) => {
-    console.error("[openclaw] Uncaught exception:", formatUncaughtError(error));
+    console.error("[starforge] Uncaught exception:", formatUncaughtError(error));
     process.exit(1);
   });
 
@@ -75,7 +75,7 @@ async function main() {
 
 void main().catch((err) => {
   console.error(
-    "[openclaw] Relay failed:",
+    "[starforge] Relay failed:",
     err instanceof Error ? (err.stack ?? err.message) : err,
   );
   process.exit(1);

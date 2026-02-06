@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import type { OpenClawPluginApi, OpenClawPluginToolContext } from "../../../src/plugins/types.js";
 import { createLobsterTool } from "./lobster-tool.js";
 
-async function writeFakeLobsterScript(scriptBody: string, prefix = "openclaw-lobster-plugin-") {
+async function writeFakeLobsterScript(scriptBody: string, prefix = "starforgeos-lobster-plugin-") {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
   const isWindows = process.platform === "win32";
 
@@ -100,7 +100,7 @@ describe("lobster plugin tool", () => {
       `const payload = ${JSON.stringify(payload)};\n` +
         `console.log("noise before json");\n` +
         `process.stdout.write(JSON.stringify(payload));\n`,
-      "openclaw-lobster-plugin-noisy-",
+      "starforgeos-lobster-plugin-noisy-",
     );
 
     const originalPath = process.env.PATH;
@@ -213,7 +213,7 @@ describe("lobster plugin tool", () => {
   it("rejects invalid JSON from lobster", async () => {
     const { dir } = await writeFakeLobsterScript(
       `process.stdout.write("nope");\n`,
-      "openclaw-lobster-plugin-bad-",
+      "starforgeos-lobster-plugin-bad-",
     );
 
     const originalPath = process.env.PATH;

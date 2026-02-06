@@ -176,10 +176,10 @@ class OpenClawA2UIHost extends LitElement {
       position: relative;
       box-sizing: border-box;
       padding:
-        var(--openclaw-a2ui-inset-top, 0px)
-        var(--openclaw-a2ui-inset-right, 0px)
-        var(--openclaw-a2ui-inset-bottom, 0px)
-        var(--openclaw-a2ui-inset-left, 0px);
+        var(--starforgeos-a2ui-inset-top, 0px)
+        var(--starforgeos-a2ui-inset-right, 0px)
+        var(--starforgeos-a2ui-inset-bottom, 0px)
+        var(--starforgeos-a2ui-inset-left, 0px);
     }
 
     #surfaces {
@@ -188,14 +188,14 @@ class OpenClawA2UIHost extends LitElement {
       gap: 12px;
       height: 100%;
       overflow: auto;
-      padding-bottom: var(--openclaw-a2ui-scroll-pad-bottom, 0px);
+      padding-bottom: var(--starforgeos-a2ui-scroll-pad-bottom, 0px);
     }
 
     .status {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: var(--openclaw-a2ui-status-top, 12px);
+      top: var(--starforgeos-a2ui-status-top, 12px);
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -216,7 +216,7 @@ class OpenClawA2UIHost extends LitElement {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      bottom: var(--openclaw-a2ui-toast-bottom, 12px);
+      bottom: var(--starforgeos-a2ui-toast-bottom, 12px);
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -242,7 +242,7 @@ class OpenClawA2UIHost extends LitElement {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-      top: var(--openclaw-a2ui-empty-top, var(--openclaw-a2ui-status-top, 12px));
+      top: var(--starforgeos-a2ui-empty-top, var(--starforgeos-a2ui-status-top, 12px));
       text-align: center;
       opacity: 0.8;
       padding: 10px 12px;
@@ -283,7 +283,7 @@ class OpenClawA2UIHost extends LitElement {
     globalThis.openclawA2UI = api;
     this.addEventListener("a2uiaction", (evt) => this.#handleA2UIAction(evt));
     this.#statusListener = (evt) => this.#handleActionStatus(evt);
-    for (const eventName of ["openclaw:a2ui-action-status"]) {
+    for (const eventName of ["starforgeos:a2ui-action-status"]) {
       globalThis.addEventListener(eventName, this.#statusListener);
     }
     this.#syncSurfaces();
@@ -292,7 +292,7 @@ class OpenClawA2UIHost extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     if (this.#statusListener) {
-      for (const eventName of ["openclaw:a2ui-action-status"]) {
+      for (const eventName of ["starforgeos:a2ui-action-status"]) {
         globalThis.removeEventListener(eventName, this.#statusListener);
       }
       this.#statusListener = null;
@@ -485,6 +485,6 @@ class OpenClawA2UIHost extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-a2ui-host")) {
-  customElements.define("openclaw-a2ui-host", OpenClawA2UIHost);
+if (!customElements.get("starforgeos-a2ui-host")) {
+  customElements.define("starforgeos-a2ui-host", OpenClawA2UIHost);
 }

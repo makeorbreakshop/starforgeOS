@@ -59,10 +59,10 @@ describe("discord native commands", () => {
         defaults: {
           model: "anthropic/claude-opus-4-5",
           humanDelay: { mode: "off" },
-          workspace: "/tmp/openclaw",
+          workspace: "/tmp/starforge",
         },
       },
-      session: { store: "/tmp/openclaw-sessions.json" },
+      session: { store: "/tmp/starforge-sessions.json" },
       discord: { dm: { enabled: true, policy: "open" } },
     } as ReturnType<typeof import("../config/config.js").loadConfig>;
 

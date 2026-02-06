@@ -7,7 +7,7 @@ const originalConnect = OpenClawApp.prototype.connect;
 
 function mountApp(pathname: string) {
   window.history.replaceState({}, "", pathname);
-  const app = document.createElement("openclaw-app") as OpenClawApp;
+  const app = document.createElement("starforgeos-app") as OpenClawApp;
   document.body.append(app);
   return app;
 }
@@ -22,14 +22,14 @@ beforeEach(() => {
   OpenClawApp.prototype.connect = () => {
     // no-op: avoid real gateway WS connections in browser tests
   };
-  window.__OPENCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  window.__STARFORGEOS_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
 
 afterEach(() => {
   OpenClawApp.prototype.connect = originalConnect;
-  window.__OPENCLAW_CONTROL_UI_BASE_PATH__ = undefined;
+  window.__STARFORGEOS_CONTROL_UI_BASE_PATH__ = undefined;
   localStorage.clear();
   document.body.innerHTML = "";
 });
@@ -53,22 +53,22 @@ describe("control UI routing", () => {
   });
 
   it("infers nested base paths", async () => {
-    const app = mountApp("/apps/openclaw/cron");
+    const app = mountApp("/apps/starforge/cron");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/apps/openclaw");
+    expect(app.basePath).toBe("/apps/starforge");
     expect(app.tab).toBe("cron");
-    expect(window.location.pathname).toBe("/apps/openclaw/cron");
+    expect(window.location.pathname).toBe("/apps/starforge/cron");
   });
 
   it("honors explicit base path overrides", async () => {
-    window.__OPENCLAW_CONTROL_UI_BASE_PATH__ = "/openclaw";
-    const app = mountApp("/openclaw/sessions");
+    window.__STARFORGEOS_CONTROL_UI_BASE_PATH__ = "/starforgeos";
+    const app = mountApp("/starforgeos/sessions");
     await app.updateComplete;
 
-    expect(app.basePath).toBe("/openclaw");
+    expect(app.basePath).toBe("/starforgeos");
     expect(app.tab).toBe("sessions");
-    expect(window.location.pathname).toBe("/openclaw/sessions");
+    expect(window.location.pathname).toBe("/starforgeos/sessions");
   });
 
   it("updates the URL when clicking nav items", async () => {
@@ -171,7 +171,7 @@ describe("control UI routing", () => {
 
   it("does not override stored settings from URL token params", async () => {
     localStorage.setItem(
-      "openclaw.control.settings.v1",
+      "starforgeos.control.settings.v1",
       JSON.stringify({ token: "existing-token" }),
     );
     const app = mountApp("/ui/overview?token=abc123");

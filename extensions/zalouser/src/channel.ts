@@ -6,7 +6,7 @@ import type {
   ChannelPlugin,
   OpenClawConfig,
   GroupToolPolicyConfig,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -16,7 +16,7 @@ import {
   migrateBaseNameToDefaultAccount,
   normalizeAccountId,
   setAccountEnabledInConfigSection,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import type { ZcaFriend, ZcaGroup, ZcaUserInfo } from "./types.js";
 import {
   listZalouserAccountIds,
@@ -505,7 +505,7 @@ export const zalouserPlugin: ChannelPlugin<ResolvedZalouserAccount> = {
       const ok = await checkZcaInstalled();
       if (!ok) {
         throw new Error(
-          "Missing dependency: `zca` not found in PATH. See docs.openclaw.ai/channels/zalouser",
+          "Missing dependency: `zca` not found in PATH. See docs.starforgeos.ai/channels/zalouser",
         );
       }
       runtime.log(

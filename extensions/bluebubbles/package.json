@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/bluebubbles",
+  "name": "@starforgeos/bluebubbles",
   "version": "2026.2.4",
-  "description": "OpenClaw BlueBubbles channel plugin",
+  "description": "StarforgeOS BlueBubbles channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@openclaw/bluebubbles",
+      "npmSpec": "@starforgeos/bluebubbles",
       "localPath": "extensions/bluebubbles",
       "defaultChoice": "npm"
     }

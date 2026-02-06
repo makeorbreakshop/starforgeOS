@@ -1,5 +1,5 @@
 import { formatCliCommand } from "../cli/command-format.js";
-import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../infra/starforge-root.js";
 import {
   checkUpdateStatus,
   compareSemverStrings,
@@ -66,7 +66,7 @@ export function formatUpdateAvailableHint(update: UpdateCheckResult): string | n
     details.push(`npm ${availability.latestVersion}`);
   }
   const suffix = details.length > 0 ? ` (${details.join(" · ")})` : "";
-  return `Update available${suffix}. Run: ${formatCliCommand("openclaw update")}`;
+  return `Update available${suffix}. Run: ${formatCliCommand("starforge update")}`;
 }
 
 export function formatUpdateOneLiner(update: UpdateCheckResult): string {

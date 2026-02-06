@@ -3,7 +3,7 @@ import type {
   ChannelDock,
   ChannelPlugin,
   OpenClawConfig,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -14,7 +14,7 @@ import {
   normalizeAccountId,
   PAIRING_APPROVED_MESSAGE,
   setAccountEnabledInConfigSection,
-} from "openclaw/plugin-sdk";
+} from "starforgeos/plugin-sdk";
 import {
   listZaloAccountIds,
   resolveDefaultZaloAccountId,

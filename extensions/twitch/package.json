@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/twitch",
+  "name": "@starforgeos/twitch",
   "version": "2026.2.4",
-  "description": "OpenClaw Twitch channel plugin",
+  "description": "StarforgeOS Twitch channel plugin",
   "type": "module",
   "dependencies": {
     "@twurple/api": "^8.0.3",
@@ -10,9 +10,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

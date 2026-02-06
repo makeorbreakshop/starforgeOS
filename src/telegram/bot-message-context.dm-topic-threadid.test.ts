@@ -9,7 +9,7 @@ vi.mock("../channels/session.js", () => ({
 
 describe("buildTelegramMessageContext DM topic threadId in deliveryContext (#8891)", () => {
   const baseConfig = {
-    agents: { defaults: { model: "anthropic/claude-opus-4-5", workspace: "/tmp/openclaw" } },
+    agents: { defaults: { model: "anthropic/claude-opus-4-5", workspace: "/tmp/starforge" } },
     channels: { telegram: {} },
     messages: { groupChat: { mentionPatterns: [] } },
   } as never;

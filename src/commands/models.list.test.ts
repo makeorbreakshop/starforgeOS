@@ -2,13 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 
 const loadConfig = vi.fn();
 const ensureOpenClawModelsJson = vi.fn().mockResolvedValue(undefined);
-const resolveOpenClawAgentDir = vi.fn().mockReturnValue("/tmp/openclaw-agent");
+const resolveOpenClawAgentDir = vi.fn().mockReturnValue("/tmp/starforge-agent");
 const ensureAuthProfileStore = vi.fn().mockReturnValue({ version: 1, profiles: {} });
 const listProfilesForProvider = vi.fn().mockReturnValue([]);
 const resolveAuthProfileDisplayLabel = vi.fn(({ profileId }: { profileId: string }) => profileId);
 const resolveAuthStorePathForDisplay = vi
   .fn()
-  .mockReturnValue("/tmp/openclaw-agent/auth-profiles.json");
+  .mockReturnValue("/tmp/starforge-agent/auth-profiles.json");
 const resolveProfileUnusableUntilForDisplay = vi.fn().mockReturnValue(null);
 const resolveEnvApiKey = vi.fn().mockReturnValue(undefined);
 const resolveAwsSdkEnvVarName = vi.fn().mockReturnValue(undefined);
@@ -19,8 +19,8 @@ const modelRegistryState = {
 };
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "/tmp/openclaw.json",
-  STATE_DIR: "/tmp/openclaw-state",
+  CONFIG_PATH: "/tmp/starforge.json",
+  STATE_DIR: "/tmp/starforge-state",
   loadConfig,
 }));
 

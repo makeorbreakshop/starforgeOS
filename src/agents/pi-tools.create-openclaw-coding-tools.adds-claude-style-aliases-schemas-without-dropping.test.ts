@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
 import { __testing, createOpenClawCodingTools } from "./pi-tools.js";
 import { createSandboxedReadTool } from "./pi-tools.read.js";
+import { createOpenClawTools } from "./starforge-tools.js";
 import { createBrowserTool } from "./tools/browser-tool.js";
 
 const defaultTools = createOpenClawCodingTools();
@@ -463,8 +463,8 @@ describe("createOpenClawCodingTools", () => {
     }
   });
   it("applies sandbox path guards to file_path alias", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sbx-"));
-    const outsidePath = path.join(os.tmpdir(), "openclaw-outside.txt");
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-sbx-"));
+    const outsidePath = path.join(os.tmpdir(), "starforge-outside.txt");
     await fs.writeFile(outsidePath, "outside", "utf8");
     try {
       const readTool = createSandboxedReadTool(tmpDir);

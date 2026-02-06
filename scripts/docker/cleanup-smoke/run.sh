@@ -3,33 +3,33 @@ set -euo pipefail
 
 cd /repo
 
-export OPENCLAW_STATE_DIR="/tmp/openclaw-test"
-export OPENCLAW_CONFIG_PATH="${OPENCLAW_STATE_DIR}/openclaw.json"
+export STARFORGEOS_STATE_DIR="/tmp/starforgeos-test"
+export STARFORGEOS_CONFIG_PATH="${STARFORGEOS_STATE_DIR}/starforgeos.json"
 
 echo "==> Build"
 pnpm build
 
 echo "==> Seed state"
-mkdir -p "${OPENCLAW_STATE_DIR}/credentials"
-mkdir -p "${OPENCLAW_STATE_DIR}/agents/main/sessions"
-echo '{}' >"${OPENCLAW_CONFIG_PATH}"
-echo 'creds' >"${OPENCLAW_STATE_DIR}/credentials/marker.txt"
-echo 'session' >"${OPENCLAW_STATE_DIR}/agents/main/sessions/sessions.json"
+mkdir -p "${STARFORGEOS_STATE_DIR}/credentials"
+mkdir -p "${STARFORGEOS_STATE_DIR}/agents/main/sessions"
+echo '{}' >"${STARFORGEOS_CONFIG_PATH}"
+echo 'creds' >"${STARFORGEOS_STATE_DIR}/credentials/marker.txt"
+echo 'session' >"${STARFORGEOS_STATE_DIR}/agents/main/sessions/sessions.json"
 
 echo "==> Reset (config+creds+sessions)"
-pnpm openclaw reset --scope config+creds+sessions --yes --non-interactive
+pnpm starforge reset --scope config+creds+sessions --yes --non-interactive
 
-test ! -f "${OPENCLAW_CONFIG_PATH}"
-test ! -d "${OPENCLAW_STATE_DIR}/credentials"
-test ! -d "${OPENCLAW_STATE_DIR}/agents/main/sessions"
+test ! -f "${STARFORGEOS_CONFIG_PATH}"
+test ! -d "${STARFORGEOS_STATE_DIR}/credentials"
+test ! -d "${STARFORGEOS_STATE_DIR}/agents/main/sessions"
 
 echo "==> Recreate minimal config"
-mkdir -p "${OPENCLAW_STATE_DIR}/credentials"
-echo '{}' >"${OPENCLAW_CONFIG_PATH}"
+mkdir -p "${STARFORGEOS_STATE_DIR}/credentials"
+echo '{}' >"${STARFORGEOS_CONFIG_PATH}"
 
 echo "==> Uninstall (state only)"
-pnpm openclaw uninstall --state --yes --non-interactive
+pnpm starforge uninstall --state --yes --non-interactive
 
-test ! -d "${OPENCLAW_STATE_DIR}"
+test ! -d "${STARFORGEOS_STATE_DIR}"
 
 echo "OK"

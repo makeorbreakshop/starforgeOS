@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
-import { createReplyPrefixOptions, resolveMentionGatingWithBypass } from "openclaw/plugin-sdk";
+import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import { createReplyPrefixOptions, resolveMentionGatingWithBypass } from "starforgeos/plugin-sdk";
 import type {
   GoogleChatAnnotation,
   GoogleChatAttachment,
@@ -396,7 +396,7 @@ function extractMentionInfo(annotations: GoogleChatAnnotation[], botUser?: strin
  * Resolve bot display name with fallback chain:
  * 1. Account config name
  * 2. Agent name from config
- * 3. "OpenClaw" as generic fallback
+ * 3. "StarforgeOS" as generic fallback
  */
 function resolveBotDisplayName(params: {
   accountName?: string;
@@ -411,7 +411,7 @@ function resolveBotDisplayName(params: {
   if (agent?.name?.trim()) {
     return agent.name.trim();
   }
-  return "OpenClaw";
+  return "StarforgeOS";
 }
 
 async function processMessageWithPipeline(params: {

@@ -398,7 +398,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("uses the last non-empty payload for delivery", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -456,7 +456,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("uses per-agent heartbeat overrides and session keys", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -526,7 +526,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("runs heartbeats in the explicit session key when configured", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -609,7 +609,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("suppresses duplicate heartbeat payloads within 24h", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -665,7 +665,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("can include reasoning payloads when enabled", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -737,7 +737,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("delivers reasoning even when the main heartbeat reply is HEARTBEAT_OK", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -808,7 +808,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("loads the default agent session from templated stores", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storeTemplate = path.join(tmpDir, "agents", "{agentId}", "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {
@@ -872,7 +872,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("skips heartbeat when HEARTBEAT.md is effectively empty (saves API calls)", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
@@ -944,7 +944,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("runs heartbeat when HEARTBEAT.md has actionable content", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
@@ -1014,7 +1014,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("runs heartbeat when HEARTBEAT.md does not exist (lets LLM decide)", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");

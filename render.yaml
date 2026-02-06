@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: openclaw
+    name: starforgeos
     runtime: docker
     plan: starter
     healthCheckPath: /health
@@ -9,13 +9,13 @@ services:
         value: "8080"
       - key: SETUP_PASSWORD
         sync: false
-      - key: OPENCLAW_STATE_DIR
-        value: /data/.openclaw
-      - key: OPENCLAW_WORKSPACE_DIR
+      - key: STARFORGEOS_STATE_DIR
+        value: /data/.starforgeos
+      - key: STARFORGEOS_WORKSPACE_DIR
         value: /data/workspace
-      - key: OPENCLAW_GATEWAY_TOKEN
+      - key: STARFORGEOS_GATEWAY_TOKEN
         generateValue: true
     disk:
-      name: openclaw-data
+      name: starforgeos-data
       mountPath: /data
       sizeGB: 1

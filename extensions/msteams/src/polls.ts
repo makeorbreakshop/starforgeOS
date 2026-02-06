@@ -104,11 +104,11 @@ export function extractMSTeamsPollVote(
   const pollId =
     readNestedString(value, ["openclawPollId"]) ??
     readNestedString(value, ["pollId"]) ??
-    readNestedString(value, ["openclaw", "pollId"]) ??
-    readNestedString(value, ["openclaw", "poll", "id"]) ??
+    readNestedString(value, ["starforgeos", "pollId"]) ??
+    readNestedString(value, ["starforgeos", "poll", "id"]) ??
     readNestedString(value, ["data", "openclawPollId"]) ??
     readNestedString(value, ["data", "pollId"]) ??
-    readNestedString(value, ["data", "openclaw", "pollId"]);
+    readNestedString(value, ["data", "starforgeos", "pollId"]);
   if (!pollId) {
     return null;
   }
@@ -190,7 +190,7 @@ export function buildMSTeamsPollCard(params: {
         },
         msteams: {
           type: "messageBack",
-          text: "openclaw poll vote",
+          text: "starforge poll vote",
           displayText: "Vote recorded",
           value: { openclawPollId: pollId, pollId },
         },

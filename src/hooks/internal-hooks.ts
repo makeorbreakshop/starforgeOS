@@ -1,5 +1,5 @@
 /**
- * Hook system for OpenClaw agent events
+ * Hook system for StarforgeOS agent events
  *
  * Provides an extensible event-driven hook system for agent events
  * like command processing, session lifecycle, etc.

@@ -76,7 +76,7 @@ const saveSessionToMemory: HookHandler = async (event) => {
     const agentId = resolveAgentIdFromSessionKey(event.sessionKey);
     const workspaceDir = cfg
       ? resolveAgentWorkspaceDir(cfg, agentId)
-      : path.join(os.homedir(), ".openclaw", "workspace");
+      : path.join(os.homedir(), ".starforge", "workspace");
     const memoryDir = path.join(workspaceDir, "memory");
     await fs.mkdir(memoryDir, { recursive: true });
 
@@ -118,8 +118,8 @@ const saveSessionToMemory: HookHandler = async (event) => {
         // Dynamically import the LLM slug generator (avoids module caching issues)
         // When compiled, handler is at dist/hooks/bundled/session-memory/handler.js
         // Going up ../.. puts us at dist/hooks/, so just add llm-slug-generator.js
-        const openclawRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-        const slugGenPath = path.join(openclawRoot, "llm-slug-generator.js");
+        const starforgeRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+        const slugGenPath = path.join(starforgeRoot, "llm-slug-generator.js");
         const { generateSlugViaLLM } = await import(slugGenPath);
 
         // Use LLM to generate a descriptive slug

@@ -77,7 +77,7 @@ vi.mock("../infra/provider-usage.js", () => ({
 }));
 
 import "./test-helpers/fast-core-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./starforge-tools.js";
 
 describe("session_status tool", () => {
   it("returns a status card for the current session", async () => {
@@ -101,7 +101,7 @@ describe("session_status tool", () => {
     const result = await tool.execute("call1", {});
     const details = result.details as { ok?: boolean; statusText?: string };
     expect(details.ok).toBe(true);
-    expect(details.statusText).toContain("OpenClaw");
+    expect(details.statusText).toContain("StarforgeOS");
     expect(details.statusText).toContain("🧠 Model:");
     expect(details.statusText).not.toContain("OAuth/token status");
   });

@@ -14,11 +14,11 @@ x-i18n:
 
 # Mac 签名（调试构建）
 
-此应用通常从 [`scripts/package-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/package-mac-app.sh) 构建，该脚本目前会：
+此应用通常从 [`scripts/package-mac-app.sh`](https://github.com/makeorbreakshop/starforgeOS/blob/main/scripts/package-mac-app.sh) 构建，该脚本目前会：
 
-- 设置稳定的调试 Bundle 标识符：`ai.openclaw.mac.debug`
+- 设置稳定的调试 Bundle 标识符：`ai.starforgeos.mac.debug`
 - 使用该 Bundle ID 写入 Info.plist（可通过 `BUNDLE_ID=...` 覆盖）
-- 调用 [`scripts/codesign-mac-app.sh`](https://github.com/openclaw/openclaw/blob/main/scripts/codesign-mac-app.sh) 对主二进制文件和应用包进行签名，使 macOS 将每次重新构建视为相同的已签名包，并保留 TCC 权限（通知、辅助功能、屏幕录制、麦克风、语音）。要获得稳定的权限，请使用真实签名身份；临时签名是可选的且不稳定（参阅 [macOS 权限](/platforms/mac/permissions)）。
+- 调用 [`scripts/codesign-mac-app.sh`](https://github.com/makeorbreakshop/starforgeOS/blob/main/scripts/codesign-mac-app.sh) 对主二进制文件和应用包进行签名，使 macOS 将每次重新构建视为相同的已签名包，并保留 TCC 权限（通知、辅助功能、屏幕录制、麦克风、语音）。要获得稳定的权限，请使用真实签名身份；临时签名是可选的且不稳定（参阅 [macOS 权限](/platforms/mac/permissions)）。
 - 默认使用 `CODESIGN_TIMESTAMP=auto`；为 Developer ID 签名启用受信任的时间戳。设置 `CODESIGN_TIMESTAMP=off` 可跳过时间戳（离线调试构建）。
 - 将构建元数据注入 Info.plist：`OpenClawBuildTimestamp`（UTC）和 `OpenClawGitCommit`（短哈希），以便"关于"面板可以显示构建信息、git 信息和调试/发布渠道。
 - **打包需要 Node 22+**：脚本会运行 TS 构建和 Control UI 构建。
@@ -51,4 +51,4 @@ DISABLE_LIBRARY_VALIDATION=1 scripts/package-mac-app.sh   # 仅限开发的 Spar
 
 ## 原因
 
-TCC 权限与 Bundle 标识符*和*代码签名绑定。使用不断变化的 UUID 的未签名调试构建会导致 macOS 在每次重新构建后忘记授权。对二进制文件进行签名（默认临时签名）并保持固定的 Bundle ID/路径（`dist/OpenClaw.app`）可以在构建之间保留授权，与 VibeTunnel 的方案一致。
+TCC 权限与 Bundle 标识符*和*代码签名绑定。使用不断变化的 UUID 的未签名调试构建会导致 macOS 在每次重新构建后忘记授权。对二进制文件进行签名（默认临时签名）并保持固定的 Bundle ID/路径（`dist/StarforgeOS.app`）可以在构建之间保留授权，与 VibeTunnel 的方案一致。

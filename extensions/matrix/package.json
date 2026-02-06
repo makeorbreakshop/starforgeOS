@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/matrix",
+  "name": "@starforgeos/matrix",
   "version": "2026.2.4",
-  "description": "OpenClaw Matrix channel plugin",
+  "description": "StarforgeOS Matrix channel plugin",
   "type": "module",
   "dependencies": {
     "@matrix-org/matrix-sdk-crypto-nodejs": "^0.4.0",
@@ -11,9 +11,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +28,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/matrix",
+      "npmSpec": "@starforgeos/matrix",
       "localPath": "extensions/matrix",
       "defaultChoice": "npm"
     }

@@ -8,7 +8,7 @@ vi.mock("./chrome.js", () => ({
   launchOpenClawChrome: vi.fn(async () => {
     throw new Error("unexpected launch");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/starforge"),
   stopOpenClawChrome: vi.fn(async () => {}),
 }));
 
@@ -76,7 +76,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          starforge: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -136,7 +136,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          starforge: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),
@@ -187,7 +187,7 @@ describe("browser server-context ensureTabAvailable", () => {
             cdpPort: 18792,
             color: "#00AA00",
           },
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          starforge: { cdpPort: 18800, color: "#FF4500" },
         },
       },
       profiles: new Map(),

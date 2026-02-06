@@ -15,7 +15,7 @@ describe("runCapability auto audio entries", () => {
   it("uses provider keys to auto-enable audio transcription", async () => {
     const originalPath = process.env.PATH;
     process.env.PATH = "/usr/bin:/bin";
-    const tmpPath = path.join(os.tmpdir(), `openclaw-auto-audio-${Date.now()}.wav`);
+    const tmpPath = path.join(os.tmpdir(), `starforge-auto-audio-${Date.now()}.wav`);
     await fs.writeFile(tmpPath, Buffer.from("RIFF"));
     const ctx: MsgContext = { MediaPath: tmpPath, MediaType: "audio/wav" };
     const media = normalizeMediaAttachments(ctx);
@@ -66,7 +66,7 @@ describe("runCapability auto audio entries", () => {
   it("skips auto audio when disabled", async () => {
     const originalPath = process.env.PATH;
     process.env.PATH = "/usr/bin:/bin";
-    const tmpPath = path.join(os.tmpdir(), `openclaw-auto-audio-${Date.now()}.wav`);
+    const tmpPath = path.join(os.tmpdir(), `starforge-auto-audio-${Date.now()}.wav`);
     await fs.writeFile(tmpPath, Buffer.from("RIFF"));
     const ctx: MsgContext = { MediaPath: tmpPath, MediaType: "audio/wav" };
     const media = normalizeMediaAttachments(ctx);

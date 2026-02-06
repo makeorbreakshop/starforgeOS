@@ -35,7 +35,7 @@ beforeEach(() => {
 
 describe("runHeartbeatOnce", () => {
   it("uses the delivery target as sender when lastTo differs", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hb-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-hb-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const replySpy = vi.spyOn(replyModule, "getReplyFromConfig");
     try {

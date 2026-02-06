@@ -39,7 +39,8 @@ const logCommand: HookHandler = async (event) => {
 
   try {
     // Create log directory
-    const stateDir = process.env.OPENCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".openclaw");
+    const stateDir =
+      process.env.STARFORGEOS_STATE_DIR?.trim() || path.join(os.homedir(), ".starforge");
     const logDir = path.join(stateDir, "logs");
     await fs.mkdir(logDir, { recursive: true });
 

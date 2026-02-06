@@ -187,7 +187,7 @@ function buildSkillStatus(
   const bundled =
     bundledNames && bundledNames.size > 0
       ? bundledNames.has(entry.skill.name)
-      : entry.skill.source === "openclaw-bundled";
+      : entry.skill.source === "starforge-bundled";
 
   const requiredBins = entry.metadata?.requires?.bins ?? [];
   const requiredAnyBins = entry.metadata?.requires?.anyBins ?? [];

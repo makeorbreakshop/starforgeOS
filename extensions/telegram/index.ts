@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
-import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
+import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
+import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
 import { telegramPlugin } from "./src/channel.js";
 import { setTelegramRuntime } from "./src/runtime.js";
 

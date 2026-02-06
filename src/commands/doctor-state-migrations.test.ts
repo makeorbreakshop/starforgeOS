@@ -15,7 +15,7 @@ import {
 let tempRoot: string | null = null;
 
 async function makeTempRoot() {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-"));
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "starforge-doctor-"));
   tempRoot = root;
   return root;
 }
@@ -54,7 +54,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({
       detected,
@@ -95,7 +95,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -116,7 +116,7 @@ describe("doctor legacy state migrations", () => {
 
     const result = await autoMigrateLegacyState({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
       log,
     });
 
@@ -141,7 +141,7 @@ describe("doctor legacy state migrations", () => {
 
     const result = await autoMigrateLegacyState({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
       log,
       now: () => 123,
     });
@@ -167,7 +167,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -183,7 +183,7 @@ describe("doctor legacy state migrations", () => {
     const cfg: OpenClawConfig = {};
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     const result = await runLegacyStateMigrations({ detected });
     expect(result.changes).toEqual([]);
@@ -202,7 +202,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -225,7 +225,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -248,7 +248,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -270,7 +270,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -291,7 +291,7 @@ describe("doctor legacy state migrations", () => {
 
     const detected = await detectLegacyStateMigrations({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
     });
     await runLegacyStateMigrations({ detected, now: () => 123 });
 
@@ -314,7 +314,7 @@ describe("doctor legacy state migrations", () => {
 
     const result = await autoMigrateLegacyState({
       cfg,
-      env: { OPENCLAW_STATE_DIR: root } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: root } as NodeJS.ProcessEnv,
       log,
     });
 
@@ -341,11 +341,11 @@ describe("doctor legacy state migrations", () => {
 
   it("skips state dir migration when env override is set", async () => {
     const root = await makeTempRoot();
-    const legacyDir = path.join(root, ".openclaw");
+    const legacyDir = path.join(root, ".starforge");
     fs.mkdirSync(legacyDir, { recursive: true });
 
     const result = await autoMigrateLegacyStateDir({
-      env: { OPENCLAW_STATE_DIR: "/custom/state" } as NodeJS.ProcessEnv,
+      env: { STARFORGEOS_STATE_DIR: "/custom/state" } as NodeJS.ProcessEnv,
       homedir: () => root,
     });
 

@@ -1,0 +1,412 @@
+DOCUMENTATION FILES UPDATED - StarforgeOS Rebrand
+=================================================
+
+MAIN DOCUMENTATION FILES:
+1. README.md - Main project README (with migration notice added)
+2. CHANGELOG.md - Full project changelog
+3. CONTRIBUTING.md - Contribution guidelines
+4. SECURITY.md - Security documentation
+5. AGENTS.md - Agent configuration
+
+README FILES (22 files):
+1. /README.md
+2. /Swabble/README.md
+3. /docs/.i18n/README.md
+4. /extensions/zalouser/README.md
+5. /extensions/zalo/README.md
+6. /extensions/tlon/README.md
+7. /extensions/open-prose/README.md
+8. /extensions/open-prose/skills/prose/examples/roadmap/README.md
+9. /extensions/open-prose/skills/prose/examples/README.md
+10. /extensions/open-prose/skills/prose/lib/README.md
+11. /extensions/qwen-portal-auth/README.md
+12. /extensions/lobster/README.md
+13. /extensions/llm-task/README.md
+14. /extensions/bluebubbles/README.md
+15. /extensions/google-gemini-cli-auth/README.md
+16. /extensions/minimax-portal-auth/README.md
+17. /extensions/twitch/README.md
+18. /extensions/copilot-proxy/README.md
+19. /extensions/google-antigravity-auth/README.md
+20. /extensions/nostr/README.md
+21. /extensions/voice-call/README.md
+22. /assets/chrome-extension/README.md
+23. /apps/macos/README.md
+24. /apps/ios/README.md
+25. /apps/android/README.md
+26. /src/hooks/bundled/soul-evil/README.md
+27. /src/hooks/bundled/README.md
+
+CONFIGURATION FILES:
+1. /docs/docs.json - Mintlify documentation configuration
+2. /package.json - Root package configuration
+3. /assets/chrome-extension/manifest.json - Chrome extension
+4. /docker-compose.yml - Docker configuration
+5. /Dockerfile - Docker build configuration
+6. All package.json files in /extensions/* (20+ files)
+7. All openclaw.plugin.json → starforgeos.plugin.json references
+
+DOCS DIRECTORY (~500 .md files):
+
+/docs/start/
+- openclaw.md → starforgeos.md
+- getting-started.md
+- quickstart.md
+- wizard.md
+- setup.md
+- showcase.md
+- bootstrapping.md
+- docs-directory.md
+- wizard-cli-automation.md
+- wizard-cli-reference.md
+- pairing.md
+- lore.md
+- hubs.md
+- onboarding.md
+
+/docs/install/
+- index.md
+- installer.md
+- node.md
+- bun.md
+- updating.md
+- uninstall.md
+- nix.md
+- docker.md
+- fly.md
+- gcp.md
+- hetzner.md
+- ansible.md
+- macos-vm.md
+- development-channels.md
+- migrating.md
+- exe-dev.md
+
+/docs/cli/
+- index.md
+- agent.md
+- agents.md
+- gateway.md
+- message.md
+- send.md
+- status.md
+- config.md
+- configure.md
+- setup.md
+- onboard.md
+- update.md
+- doctor.md
+- channels.md
+- nodes.md
+- node.md
+- devices.md
+- pairing.md
+- plugins.md
+- skills.md
+- hooks.md
+- models.md
+- memory.md
+- sessions.md
+- cron.md
+- webhooks.md
+- approvals.md
+- security.md
+- health.md
+- logs.md
+- dashboard.md
+- browser.md
+- tui.md
+- acp.md
+- sandbox.md
+- directory.md
+- dns.md
+- docs.md
+- system.md
+- voicecall.md
+- reset.md
+- uninstall.md
+
+/docs/platforms/
+- index.md
+- macos.md
+- ios.md
+- android.md
+- linux.md
+- windows.md
+- raspberry-pi.md
+- oracle.md
+- digitalocean.md
+
+/docs/platforms/mac/
+- menu-bar.md
+- permissions.md
+- bundled-gateway.md
+- canvas.md
+- webchat.md
+- voice-overlay.md
+- xpc.md
+- voicewake.md
+- release.md
+- skills.md
+- logging.md
+- signing.md
+- icon.md
+- peekaboo.md
+- dev-setup.md
+- child-process.md
+- health.md
+- remote.md
+
+/docs/tools/
+- index.md
+- skills.md
+- creating-skills.md
+- skills-config.md
+- slash-commands.md
+- browser.md
+- browser-login.md
+- browser-linux-troubleshooting.md
+- chrome-extension.md
+- exec.md
+- exec-approvals.md
+- elevated.md
+- thinking.md
+- llm-task.md
+- subagents.md
+- agent-send.md
+- apply-patch.md
+- lobster.md
+- clawhub.md
+- firecrawl.md
+- web.md
+- reactions.md
+
+/docs/channels/
+- index.md
+- whatsapp.md
+- telegram.md
+- slack.md
+- discord.md
+- googlechat.md
+- signal.md
+- bluebubbles.md
+- imessage.md
+- msteams.md
+- matrix.md
+- zalo.md
+- zalouser.md
+- feishu.md
+- grammy.md
+- twitch.md
+- tlon.md
+- nostr.md
+- line.md
+- location.md
+- nextcloud-talk.md
+- mattermost.md
+- troubleshooting.md
+
+/docs/gateway/
+- index.md
+- configuration.md
+- configuration-examples.md
+- pairing.md
+- authentication.md
+- discovery.md
+- bonjour.md
+- tailscale.md
+- remote.md
+- remote-gateway-readme.md
+- multiple-gateways.md
+- background-process.md
+- heartbeat.md
+- health.md
+- logging.md
+- troubleshooting.md
+- doctor.md
+- sandboxing.md
+- sandbox-vs-tool-policy-vs-elevated.md
+- gateway-lock.md
+- cli-backends.md
+- local-models.md
+- openai-http-api.md
+- openresponses-http-api.md
+- tools-invoke-http-api.md
+- protocol.md
+- bridge-protocol.md
+- network-model.md
+
+/docs/gateway/security/
+- index.md
+- formal-verification.md
+
+/docs/concepts/
+- agent.md
+- agent-loop.md
+- agent-workspace.md
+- architecture.md
+- context.md
+- channel-routing.md
+- compaction.md
+- features.md
+- group-messages.md
+- groups.md
+- markdown-formatting.md
+- memory.md
+- messages.md
+- model-failover.md
+- model-providers.md
+- models.md
+- multi-agent.md
+- oauth.md
+- presence.md
+- queue.md
+- retry.md
+- session.md
+- sessions.md
+- session-pruning.md
+- session-tool.md
+- streaming.md
+- system-prompt.md
+- timezone.md
+- typebox.md
+- typing-indicators.md
+- usage-tracking.md
+
+/docs/nodes/
+- index.md
+- images.md
+- camera.md
+- audio.md
+- talk.md
+- voicewake.md
+- location-command.md
+- media-understanding.md
+
+/docs/providers/
+- index.md
+- models.md
+- anthropic.md
+- openai.md
+- qwen.md
+- xiaomi.md
+- venice.md
+- ollama.md
+- deepgram.md
+- cloudflare-ai-gateway.md
+- vercel-ai-gateway.md
+- minimax.md
+- synthetic.md
+- moonshot.md
+- glm.md
+- zai.md
+- opencode.md
+- openrouter.md
+- github-copilot.md
+- claude-max-api-proxy.md
+
+/docs/automation/
+- cron-jobs.md
+- cron-vs-heartbeat.md
+- webhook.md
+- poll.md
+- gmail-pubsub.md
+- auth-monitoring.md
+
+/docs/web/
+- index.md
+- dashboard.md
+- webchat.md
+- control-ui.md
+
+/docs/plugins/
+- manifest.md
+- agent-tools.md
+- voice-call.md
+- zalouser.md
+
+/docs/help/
+- index.md
+- faq.md
+- troubleshooting.md
+- submitting-a-pr.md
+- submitting-an-issue.md
+
+/docs/reference/
+- RELEASING.md
+- rpc.md
+- AGENTS.default.md
+- credits.md
+- session-management-compaction.md
+- transcript-hygiene.md
+- api-usage-costs.md
+- device-models.md
+- test.md
+- wizard.md
+
+/docs/reference/templates/
+- SOUL.dev.md
+- SOUL.md
+- USER.dev.md
+- USER.md
+- TOOLS.dev.md
+- TOOLS.md
+- IDENTITY.md
+- IDENTITY.dev.md
+- HEARTBEAT.md
+- BOOTSTRAP.md
+- BOOT.md
+- AGENTS.dev.md
+- AGENTS.md
+
+/docs/refactor/
+- outbound-session-mirroring.md
+- strict-config.md
+- clawnet.md
+- plugin-sdk.md
+- exec-host.md
+
+/docs/experiments/
+- onboarding-config-protocol.md
+- research/memory.md
+- plans/cron-add-hardening.md
+- plans/group-policy-hardening.md
+- plans/openresponses-gateway.md
+- proposals/model-config.md
+
+/docs/security/
+- formal-verification.md
+
+/docs/diagnostics/
+- flags.md
+
+/docs/debug/
+- node-issue.md
+
+CHINESE (zh-CN) DOCUMENTATION:
+All files in /docs/zh-CN/ (mirrors English structure, ~250 files)
+- Complete mirror of English docs
+- All files updated with same rebranding rules
+
+SKILL FILES:
+All SKILL.md files in /skills/* and /extensions/*/skills/*
+
+HOOK FILES:
+All HOOK.md files in /src/hooks/bundled/*
+
+APP CONFIGURATION FILES:
+- /apps/android/app/build.gradle.kts
+- /apps/android/app/src/main/AndroidManifest.xml
+- /apps/android/app/src/main/res/values/strings.xml
+- /apps/ios/Sources/Info.plist
+- /apps/ios/fastlane/SETUP.md
+- /apps/macos/Sources/OpenClaw/Resources/Info.plist
+
+SPECIAL FILES:
+- docs.acp.md
+- docs/CNAME
+- docs/.i18n/glossary.zh-CN.json
+
+Total Documentation Files Updated: ~500 .md files
+Total Files Changed: 1,813
+Total Text Replacements: 10,626

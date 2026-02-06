@@ -93,9 +93,9 @@ vi.mock("../config/config.js", async (importOriginal) => {
         color: "#FF4500",
         attachOnly: cfgAttachOnly,
         headless: true,
-        defaultProfile: "openclaw",
+        defaultProfile: "starforge",
         profiles: {
-          openclaw: { cdpPort: testPort + 1, color: "#FF4500" },
+          starforge: { cdpPort: testPort + 1, color: "#FF4500" },
         },
       },
     }),
@@ -113,13 +113,13 @@ vi.mock("./chrome.js", () => ({
     return {
       pid: 123,
       exe: { kind: "chrome", path: "/fake/chrome" },
-      userDataDir: "/tmp/openclaw",
+      userDataDir: "/tmp/starforge",
       cdpPort: profile.cdpPort,
       startedAt: Date.now(),
       proc,
     };
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/starforge"),
   stopOpenClawChrome: vi.fn(async () => {
     reachable = false;
   }),
@@ -206,8 +206,8 @@ describe("browser control server", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
     // Minimal CDP JSON endpoints used by the server.
     let putNewCalls = 0;
@@ -266,9 +266,9 @@ describe("browser control server", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.STARFORGEOS_GATEWAY_PORT;
     } else {
-      process.env.OPENCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.STARFORGEOS_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -327,11 +327,11 @@ describe("backward compatibility (profile parameter)", () => {
 
     testPort = await getFreePort();
     _cdpBaseUrl = `http://127.0.0.1:${testPort + 1}`;
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
-    prevGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
-    process.env.OPENCLAW_GATEWAY_PORT = String(testPort - 2);
+    prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
+    process.env.STARFORGEOS_GATEWAY_PORT = String(testPort - 2);
 
     vi.stubGlobal(
       "fetch",
@@ -375,9 +375,9 @@ describe("backward compatibility (profile parameter)", () => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
     if (prevGatewayPort === undefined) {
-      delete process.env.OPENCLAW_GATEWAY_PORT;
+      delete process.env.STARFORGEOS_GATEWAY_PORT;
     } else {
-      process.env.OPENCLAW_GATEWAY_PORT = prevGatewayPort;
+      process.env.STARFORGEOS_GATEWAY_PORT = prevGatewayPort;
     }
     const { stopBrowserControlServer } = await import("./server.js");
     await stopBrowserControlServer();
@@ -393,8 +393,8 @@ describe("backward compatibility (profile parameter)", () => {
       profile?: string;
     };
     expect(status.running).toBe(false);
-    // Should use default profile (openclaw)
-    expect(status.profile).toBe("openclaw");
+    // Should use default profile (starforge)
+    expect(status.profile).toBe("starforge");
   });
 
   it("POST /start without profile uses default profile", async () => {
@@ -407,7 +407,7 @@ describe("backward compatibility (profile parameter)", () => {
       profile?: string;
     };
     expect(result.ok).toBe(true);
-    expect(result.profile).toBe("openclaw");
+    expect(result.profile).toBe("starforge");
   });
 
   it("POST /stop without profile uses default profile", async () => {
@@ -422,7 +422,7 @@ describe("backward compatibility (profile parameter)", () => {
       profile?: string;
     };
     expect(result.ok).toBe(true);
-    expect(result.profile).toBe("openclaw");
+    expect(result.profile).toBe("starforge");
   });
 
   it("GET /tabs without profile uses default profile", async () => {
@@ -464,18 +464,18 @@ describe("backward compatibility (profile parameter)", () => {
       profiles: Array<{ name: string }>;
     };
     expect(Array.isArray(result.profiles)).toBe(true);
-    // Should at least have the default openclaw profile
-    expect(result.profiles.some((p) => p.name === "openclaw")).toBe(true);
+    // Should at least have the default starforge profile
+    expect(result.profiles.some((p) => p.name === "starforge")).toBe(true);
   });
 
-  it("GET /tabs?profile=openclaw returns tabs for specified profile", async () => {
+  it("GET /tabs?profile=starforge returns tabs for specified profile", async () => {
     const { startBrowserControlServerFromConfig } = await import("./server.js");
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
     await realFetch(`${base}/start`, { method: "POST" });
 
-    const result = (await realFetch(`${base}/tabs?profile=openclaw`).then((r) => r.json())) as {
+    const result = (await realFetch(`${base}/tabs?profile=starforge`).then((r) => r.json())) as {
       running: boolean;
       tabs: unknown[];
     };
@@ -483,14 +483,14 @@ describe("backward compatibility (profile parameter)", () => {
     expect(Array.isArray(result.tabs)).toBe(true);
   });
 
-  it("POST /tabs/open?profile=openclaw opens tab in specified profile", async () => {
+  it("POST /tabs/open?profile=starforge opens tab in specified profile", async () => {
     const { startBrowserControlServerFromConfig } = await import("./server.js");
     await startBrowserControlServerFromConfig();
     const base = `http://127.0.0.1:${testPort}`;
 
     await realFetch(`${base}/start`, { method: "POST" });
 
-    const result = (await realFetch(`${base}/tabs/open?profile=openclaw`, {
+    const result = (await realFetch(`${base}/tabs/open?profile=starforge`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url: "https://example.com" }),

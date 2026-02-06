@@ -1,4 +1,4 @@
-# OpenClaw (iOS)
+# StarforgeOS (iOS)
 
 Internal-only SwiftUI app scaffold.
 
@@ -11,7 +11,7 @@ brew install swiftformat swiftlint
 ```bash
 cd apps/ios
 xcodegen generate
-open OpenClaw.xcodeproj
+open StarforgeOS.xcodeproj
 ```
 
 ## Shared packages

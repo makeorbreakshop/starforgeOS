@@ -1,6 +1,6 @@
-name: OpenClaw
+name: StarForge
 options:
-  bundleIdPrefix: ai.openclaw
+  bundleIdPrefix: ai.starforgeos
   deploymentTarget:
     iOS: "18.0"
   xcodeVersion: "16.0"
@@ -16,17 +16,17 @@ packages:
     path: ../../Swabble
 
 schemes:
-  OpenClaw:
+  StarforgeOS:
     shared: true
     build:
       targets:
-        OpenClaw: all
+        StarforgeOS: all
     test:
       targets:
         - OpenClawTests
 
 targets:
-  OpenClaw:
+  StarforgeOS:
     type: application
     platform: iOS
     sources:
@@ -71,15 +71,15 @@ targets:
         CODE_SIGN_IDENTITY: "Apple Development"
         CODE_SIGN_STYLE: Manual
         DEVELOPMENT_TEAM: Y5PE65HELJ
-        PRODUCT_BUNDLE_IDENTIFIER: ai.openclaw.ios
-        PROVISIONING_PROFILE_SPECIFIER: "ai.openclaw.ios Development"
+        PRODUCT_BUNDLE_IDENTIFIER: ai.starforgeos.ios
+        PROVISIONING_PROFILE_SPECIFIER: "ai.starforgeos.ios Development"
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
         ENABLE_APPINTENTS_METADATA: NO
     info:
       path: Sources/Info.plist
       properties:
-        CFBundleDisplayName: OpenClaw
+        CFBundleDisplayName: StarForge
         CFBundleIconName: AppIcon
         CFBundleShortVersionString: "2026.2.4"
         CFBundleVersion: "20260202"
@@ -88,16 +88,16 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UIBackgroundModes:
           - audio
-        NSLocalNetworkUsageDescription: OpenClaw discovers and connects to your OpenClaw gateway on the local network.
+        NSLocalNetworkUsageDescription: StarForge discovers and connects to your StarForge gateway on the local network.
         NSAppTransportSecurity:
           NSAllowsArbitraryLoadsInWebContent: true
         NSBonjourServices:
-          - _openclaw-gw._tcp
-        NSCameraUsageDescription: OpenClaw can capture photos or short video clips when requested via the gateway.
-        NSLocationWhenInUseUsageDescription: OpenClaw uses your location when you allow location sharing.
-        NSLocationAlwaysAndWhenInUseUsageDescription: OpenClaw can share your location in the background when you enable Always.
-        NSMicrophoneUsageDescription: OpenClaw needs microphone access for voice wake.
-        NSSpeechRecognitionUsageDescription: OpenClaw uses on-device speech recognition for voice wake.
+          - _starforgeos-gw._tcp
+        NSCameraUsageDescription: StarForge can capture photos or short video clips when requested via the gateway.
+        NSLocationWhenInUseUsageDescription: StarForge uses your location when you allow location sharing.
+        NSLocationAlwaysAndWhenInUseUsageDescription: StarForge can share your location in the background when you enable Always.
+        NSMicrophoneUsageDescription: StarForge needs microphone access for voice wake.
+        NSSpeechRecognitionUsageDescription: StarForge uses on-device speech recognition for voice wake.
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
@@ -115,20 +115,20 @@ targets:
     sources:
       - path: Tests
     dependencies:
-      - target: OpenClaw
+      - target: StarforgeOS
       - package: Swabble
         product: SwabbleKit
       - sdk: AppIntents.framework
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: ai.openclaw.ios.tests
+        PRODUCT_BUNDLE_IDENTIFIER: ai.starforgeos.ios.tests
         SWIFT_VERSION: "6.0"
         SWIFT_STRICT_CONCURRENCY: complete
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/OpenClaw.app/OpenClaw"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/StarforgeOS.app/StarforgeOS"
         BUNDLE_LOADER: "$(TEST_HOST)"
     info:
       path: Tests/Info.plist
       properties:
-        CFBundleDisplayName: OpenClawTests
+        CFBundleDisplayName: StarForgeTests
         CFBundleShortVersionString: "2026.2.4"
         CFBundleVersion: "20260202"

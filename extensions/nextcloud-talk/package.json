@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/nextcloud-talk",
+  "name": "@starforgeos/nextcloud-talk",
   "version": "2026.2.4",
-  "description": "OpenClaw Nextcloud Talk channel plugin",
+  "description": "StarforgeOS Nextcloud Talk channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/nextcloud-talk",
+      "npmSpec": "@starforgeos/nextcloud-talk",
       "localPath": "extensions/nextcloud-talk",
       "defaultChoice": "npm"
     }

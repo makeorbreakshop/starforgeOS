@@ -1,12 +1,12 @@
 {
-  "name": "@openclaw/slack",
+  "name": "@starforgeos/slack",
   "version": "2026.2.4",
-  "description": "OpenClaw Slack channel plugin",
+  "description": "StarforgeOS Slack channel plugin",
   "type": "module",
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ]

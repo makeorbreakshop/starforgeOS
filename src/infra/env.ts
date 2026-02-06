@@ -43,10 +43,64 @@ export function normalizeZaiEnv(): void {
   }
 }
 
+/**
+ * Map of deprecated OPENCLAW_* environment variables to their new STARFORGEOS_* equivalents.
+ * Used for backwards compatibility.
+ */
+const DEPRECATED_ENV_VAR_MAP: Record<string, string> = {
+  OPENCLAW_STATE_DIR: "STARFORGEOS_STATE_DIR",
+  OPENCLAW_CONFIG_PATH: "STARFORGEOS_CONFIG_PATH",
+  OPENCLAW_NIX_MODE: "STARFORGEOS_NIX_MODE",
+  OPENCLAW_PREFER_PNPM: "STARFORGEOS_PREFER_PNPM",
+  OPENCLAW_WORKSPACE_DIR: "STARFORGEOS_WORKSPACE_DIR",
+  OPENCLAW_GATEWAY_TOKEN: "STARFORGEOS_GATEWAY_TOKEN",
+  OPENCLAW_GATEWAY_PASSWORD: "STARFORGEOS_GATEWAY_PASSWORD",
+  OPENCLAW_SKIP_CHANNELS: "STARFORGEOS_SKIP_CHANNELS",
+  OPENCLAW_LAUNCHD_LABEL: "STARFORGEOS_LAUNCHD_LABEL",
+  OPENCLAW_VERSION: "STARFORGEOS_VERSION",
+  OPENCLAW_PROFILE: "STARFORGEOS_PROFILE",
+  OPENCLAW_VERBOSE: "STARFORGEOS_VERBOSE",
+  OPENCLAW_CONFIG_DIR: "STARFORGEOS_CONFIG_DIR",
+  OPENCLAW_AGENT_DIR: "STARFORGEOS_AGENT_DIR",
+  OPENCLAW_GATEWAY_PORT: "STARFORGEOS_GATEWAY_PORT",
+  OPENCLAW_GATEWAY_BIND: "STARFORGEOS_GATEWAY_BIND",
+  OPENCLAW_SYSTEMD_UNIT: "STARFORGEOS_SYSTEMD_UNIT",
+};
+
+const warnedDeprecations = new Set<string>();
+
+/**
+ * Migrate deprecated OPENCLAW_* environment variables to STARFORGEOS_*.
+ * Shows a deprecation warning once per variable and automatically
+ * sets the new variable if it's not already set.
+ */
+export function migrateDeprecatedEnvVars(): void {
+  for (const [oldVar, newVar] of Object.entries(DEPRECATED_ENV_VAR_MAP)) {
+    const oldValue = process.env[oldVar];
+    const newValue = process.env[newVar];
+
+    // If old variable is set and new one isn't, migrate it
+    if (oldValue?.trim() && !newValue?.trim()) {
+      process.env[newVar] = oldValue;
+
+      // Show deprecation warning once
+      if (
+        !warnedDeprecations.has(oldVar) &&
+        !process.env.VITEST &&
+        process.env.NODE_ENV !== "test"
+      ) {
+        warnedDeprecations.add(oldVar);
+        log.warn(`env: ${oldVar} is deprecated, please use ${newVar} instead`);
+      }
+    }
+  }
+}
+
 export function isTruthyEnvValue(value?: string): boolean {
   return parseBooleanValue(value) === true;
 }
 
 export function normalizeEnv(): void {
   normalizeZaiEnv();
+  migrateDeprecatedEnvVars();
 }

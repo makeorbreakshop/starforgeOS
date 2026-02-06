@@ -6,7 +6,7 @@ import {
   resolveControlUiDistIndexHealth,
   resolveControlUiDistIndexPathForRoot,
 } from "../infra/control-ui-assets.js";
-import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../infra/starforge-root.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { note } from "../terminal/note.js";
 

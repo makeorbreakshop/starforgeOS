@@ -17,10 +17,12 @@ the right time, and can optionally deliver output back to a chat.
 If you want _“run this every morning”_ or _“poke the agent in 20 minutes”_,
 cron is the mechanism.
 
+Troubleshooting: [/automation/troubleshooting](/automation/troubleshooting)
+
 ## TL;DR
 
 - Cron runs **inside the Gateway** (not inside the model).
-- Jobs persist under `~/.starforgeos/cron/` so restarts don’t lose schedules.
+- Jobs persist under `~/.openclaw/cron/` so restarts don’t lose schedules.
 - Two execution styles:
   - **Main session**: enqueue a system event, then run on the next heartbeat.
   - **Isolated**: run a dedicated agent turn in `cron:<jobId>`, with delivery (announce by default or none).
@@ -31,7 +33,7 @@ cron is the mechanism.
 Create a one-shot reminder, verify it exists, and run it immediately:
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Reminder" \
   --at "2026-02-01T16:00:00Z" \
   --session main \
@@ -39,15 +41,15 @@ starforge cron add \
   --wake now \
   --delete-after-run
 
-starforge cron list
-starforge cron run <job-id> --force
-starforge cron runs --id <job-id>
+openclaw cron list
+openclaw cron run <job-id>
+openclaw cron runs --id <job-id>
 ```
 
 Schedule a recurring isolated job with delivery:
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Morning brief" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
@@ -64,9 +66,9 @@ For the canonical JSON shapes and examples, see [JSON schema for tool calls](/au
 
 ## Where cron jobs are stored
 
-Cron jobs are persisted on the Gateway host at `~/.starforgeos/cron/jobs.json` by default.
+Cron jobs are persisted on the Gateway host at `~/.openclaw/cron/jobs.json` by default.
 The Gateway loads the file into memory and writes it back on changes, so manual edits
-are only safe when the Gateway is stopped. Prefer `starforge cron add/edit` or the cron
+are only safe when the Gateway is stopped. Prefer `openclaw cron add/edit` or the cron
 tool call API for changes.
 
 ## Beginner-friendly overview
@@ -123,8 +125,8 @@ local timezone is used.
 Main jobs enqueue a system event and optionally wake the heartbeat runner.
 They must use `payload.kind = "systemEvent"`.
 
-- `wakeMode: "next-heartbeat"` (default): event waits for the next scheduled heartbeat.
-- `wakeMode: "now"`: event triggers an immediate heartbeat run.
+- `wakeMode: "now"` (default): event triggers an immediate heartbeat run.
+- `wakeMode: "next-heartbeat"`: event waits for the next scheduled heartbeat.
 
 This is the best fit when you want the normal heartbeat prompt + main-session context.
 See [Heartbeat](/gateway/heartbeat).
@@ -171,7 +173,7 @@ Delivery config (isolated jobs only):
 Announce delivery suppresses messaging tool sends for the run; use `delivery.channel`/`delivery.to`
 to target the chat instead. When `delivery.mode = "none"`, no summary is posted to the main session.
 
-If `delivery` is omitted for isolated jobs, StarforgeOS defaults to `announce`.
+If `delivery` is omitted for isolated jobs, OpenClaw defaults to `announce`.
 
 #### Announce delivery flow
 
@@ -288,7 +290,7 @@ Notes:
 - `sessionTarget` must be `"main"` or `"isolated"` and must match `payload.kind`.
 - Optional fields: `agentId`, `description`, `enabled`, `deleteAfterRun` (defaults to true for `at`),
   `delivery`.
-- `wakeMode` defaults to `"next-heartbeat"` when omitted.
+- `wakeMode` defaults to `"now"` when omitted.
 
 ### cron.update params
 
@@ -319,8 +321,8 @@ Notes:
 
 ## Storage & history
 
-- Job store: `~/.starforgeos/cron/jobs.json` (Gateway-managed JSON).
-- Run history: `~/.starforgeos/cron/runs/<jobId>.jsonl` (JSONL, auto-pruned).
+- Job store: `~/.openclaw/cron/jobs.json` (Gateway-managed JSON).
+- Run history: `~/.openclaw/cron/runs/<jobId>.jsonl` (JSONL, auto-pruned).
 - Override store path: `cron.store` in config.
 
 ## Configuration
@@ -329,7 +331,7 @@ Notes:
 {
   cron: {
     enabled: true, // default true
-    store: "~/.starforgeos/cron/jobs.json",
+    store: "~/.openclaw/cron/jobs.json",
     maxConcurrentRuns: 1, // default 1
   },
 }
@@ -338,14 +340,14 @@ Notes:
 Disable cron entirely:
 
 - `cron.enabled: false` (config)
-- `STARFORGEOS_SKIP_CRON=1` (env)
+- `OPENCLAW_SKIP_CRON=1` (env)
 
 ## CLI quickstart
 
 One-shot reminder (UTC ISO, auto-delete after success):
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Send reminder" \
   --at "2026-01-12T18:00:00Z" \
   --session main \
@@ -357,7 +359,7 @@ starforge cron add \
 One-shot reminder (main session, wake immediately):
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Calendar check" \
   --at "20m" \
   --session main \
@@ -368,7 +370,7 @@ starforge cron add \
 Recurring isolated job (announce to WhatsApp):
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Morning status" \
   --cron "0 7 * * *" \
   --tz "America/Los_Angeles" \
@@ -382,7 +384,7 @@ starforge cron add \
 Recurring isolated job (deliver to a Telegram topic):
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Nightly summary (topic)" \
   --cron "0 22 * * *" \
   --tz "America/Los_Angeles" \
@@ -396,7 +398,7 @@ starforge cron add \
 Isolated job with model and thinking override:
 
 ```bash
-starforge cron add \
+openclaw cron add \
   --name "Deep analysis" \
   --cron "0 6 * * 1" \
   --tz "America/Los_Angeles" \
@@ -413,23 +415,24 @@ Agent selection (multi-agent setups):
 
 ```bash
 # Pin a job to agent "ops" (falls back to default if that agent is missing)
-starforge cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
+openclaw cron add --name "Ops sweep" --cron "0 6 * * *" --session isolated --message "Check ops queue" --agent ops
 
 # Switch or clear the agent on an existing job
-starforge cron edit <jobId> --agent ops
-starforge cron edit <jobId> --clear-agent
+openclaw cron edit <jobId> --agent ops
+openclaw cron edit <jobId> --clear-agent
 ```
 
-Manual run (debug):
+Manual run (force is the default, use `--due` to only run when due):
 
 ```bash
-starforge cron run <jobId> --force
+openclaw cron run <jobId>
+openclaw cron run <jobId> --due
 ```
 
 Edit an existing job (patch fields):
 
 ```bash
-starforge cron edit <jobId> \
+openclaw cron edit <jobId> \
   --message "Updated prompt" \
   --model "opus" \
   --thinking low
@@ -438,26 +441,26 @@ starforge cron edit <jobId> \
 Run history:
 
 ```bash
-starforge cron runs --id <jobId> --limit 50
+openclaw cron runs --id <jobId> --limit 50
 ```
 
 Immediate system event without creating a job:
 
 ```bash
-starforge system event --mode now --text "Next heartbeat: check battery."
+openclaw system event --mode now --text "Next heartbeat: check battery."
 ```
 
 ## Gateway API surface
 
 - `cron.list`, `cron.status`, `cron.add`, `cron.update`, `cron.remove`
 - `cron.run` (force or due), `cron.runs`
-  For immediate system events without a job, use [`starforge system event`](/cli/system).
+  For immediate system events without a job, use [`openclaw system event`](/cli/system).
 
 ## Troubleshooting
 
 ### “Nothing runs”
 
-- Check cron is enabled: `cron.enabled` and `STARFORGEOS_SKIP_CRON`.
+- Check cron is enabled: `cron.enabled` and `OPENCLAW_SKIP_CRON`.
 - Check the Gateway is running continuously (cron runs inside the Gateway process).
 - For `cron` schedules: confirm timezone (`--tz`) vs the host timezone.
 

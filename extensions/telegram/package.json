@@ -1,12 +1,12 @@
 {
   "name": "@starforgeos/telegram",
-  "version": "2026.2.4",
-  "description": "StarforgeOS Telegram channel plugin",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw Telegram channel plugin",
   "type": "module",
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

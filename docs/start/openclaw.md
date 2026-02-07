@@ -1,14 +1,14 @@
 ---
-summary: "End-to-end guide for running StarforgeOS as a personal assistant with safety cautions"
+summary: "End-to-end guide for running OpenClaw as a personal assistant with safety cautions"
 read_when:
   - Onboarding a new assistant instance
   - Reviewing safety/permission implications
 title: "Personal Assistant Setup"
 ---
 
-# Building a personal assistant with StarforgeOS
+# Building a personal assistant with OpenClaw
 
-StarforgeOS is a WhatsApp + Telegram + Discord + iMessage gateway for **Pi** agents. Plugins add Mattermost. This guide is the "personal assistant" setup: one dedicated WhatsApp number that behaves like your always-on agent.
+OpenClaw is a WhatsApp + Telegram + Discord + iMessage gateway for **Pi** agents. Plugins add Mattermost. This guide is the "personal assistant" setup: one dedicated WhatsApp number that behaves like your always-on agent.
 
 ## ⚠️ Safety first
 
@@ -26,7 +26,7 @@ Start conservative:
 
 ## Prerequisites
 
-- StarforgeOS installed and onboarded — see [Getting Started](/start/getting-started) if you haven't done this yet
+- OpenClaw installed and onboarded — see [Getting Started](/start/getting-started) if you haven't done this yet
 - A second phone number (SIM/eSIM/prepaid) for the assistant
 
 ## The two-phone setup (recommended)
@@ -43,28 +43,28 @@ Your Phone (personal)          Second Phone (assistant)
                                        ▼
                               ┌─────────────────┐
                               │  Your Mac       │
-                              │  (starforgeos)      │
+                              │  (openclaw)      │
                               │    Pi agent     │
                               └─────────────────┘
 ```
 
-If you link your personal WhatsApp to StarforgeOS, every message to you becomes “agent input”. That’s rarely what you want.
+If you link your personal WhatsApp to OpenClaw, every message to you becomes “agent input”. That’s rarely what you want.
 
 ## 5-minute quick start
 
 1. Pair WhatsApp Web (shows QR; scan with the assistant phone):
 
 ```bash
-starforge channels login
+openclaw channels login
 ```
 
 2. Start the Gateway (leave it running):
 
 ```bash
-starforge gateway --port 18789
+openclaw gateway --port 18789
 ```
 
-3. Put a minimal config in `~/.starforgeos/starforgeos.json`:
+3. Put a minimal config in `~/.openclaw/openclaw.json`:
 
 ```json5
 {
@@ -74,18 +74,18 @@ starforge gateway --port 18789
 
 Now message the assistant number from your allowlisted phone.
 
-When onboarding finishes, we auto-open the dashboard and print a clean (non-tokenized) link. If it prompts for auth, paste the token from `gateway.auth.token` into Control UI settings. To reopen later: `starforge dashboard`.
+When onboarding finishes, we auto-open the dashboard and print a clean (non-tokenized) link. If it prompts for auth, paste the token from `gateway.auth.token` into Control UI settings. To reopen later: `openclaw dashboard`.
 
 ## Give the agent a workspace (AGENTS)
 
-StarforgeOS reads operating instructions and “memory” from its workspace directory.
+OpenClaw reads operating instructions and “memory” from its workspace directory.
 
-By default, StarforgeOS uses `~/.starforgeos/workspace` as the agent workspace, and will create it (plus starter `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`) automatically on setup/first agent run. `BOOTSTRAP.md` is only created when the workspace is brand new (it should not come back after you delete it).
+By default, OpenClaw uses `~/.openclaw/workspace` as the agent workspace, and will create it (plus starter `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`) automatically on setup/first agent run. `BOOTSTRAP.md` is only created when the workspace is brand new (it should not come back after you delete it). `MEMORY.md` is optional (not auto-created); when present, it is loaded for normal sessions. Subagent sessions only inject `AGENTS.md` and `TOOLS.md`.
 
-Tip: treat this folder like StarforgeOS’s “memory” and make it a git repo (ideally private) so your `AGENTS.md` + memory files are backed up. If git is installed, brand-new workspaces are auto-initialized.
+Tip: treat this folder like OpenClaw’s “memory” and make it a git repo (ideally private) so your `AGENTS.md` + memory files are backed up. If git is installed, brand-new workspaces are auto-initialized.
 
 ```bash
-starforge setup
+openclaw setup
 ```
 
 Full workspace layout + backup guide: [Agent workspace](/concepts/agent-workspace)
@@ -96,7 +96,7 @@ Optional: choose a different workspace with `agents.defaults.workspace` (support
 ```json5
 {
   agent: {
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
   },
 }
 ```
@@ -113,7 +113,7 @@ If you already ship your own workspace files from a repo, you can disable bootst
 
 ## The config that turns it into “an assistant”
 
-StarforgeOS defaults to a good assistant setup, but you’ll usually want to tune:
+OpenClaw defaults to a good assistant setup, but you’ll usually want to tune:
 
 - persona/instructions in `SOUL.md`
 - thinking defaults (if desired)
@@ -126,7 +126,7 @@ Example:
   logging: { level: "info" },
   agent: {
     model: "anthropic/claude-opus-4-6",
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
     thinkingDefault: "high",
     timeoutSeconds: 1800,
     // Start with 0; enable later.
@@ -142,7 +142,7 @@ Example:
   },
   routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "starforgeos"],
+      mentionPatterns: ["@openclaw", "openclaw"],
     },
   },
   session: {
@@ -159,20 +159,20 @@ Example:
 
 ## Sessions and memory
 
-- Session files: `~/.starforgeos/agents/<agentId>/sessions/{{SessionId}}.jsonl`
-- Session metadata (token usage, last route, etc): `~/.starforgeos/agents/<agentId>/sessions/sessions.json` (legacy: `~/.starforgeos/sessions/sessions.json`)
+- Session files: `~/.openclaw/agents/<agentId>/sessions/{{SessionId}}.jsonl`
+- Session metadata (token usage, last route, etc): `~/.openclaw/agents/<agentId>/sessions/sessions.json` (legacy: `~/.openclaw/sessions/sessions.json`)
 - `/new` or `/reset` starts a fresh session for that chat (configurable via `resetTriggers`). If sent alone, the agent replies with a short hello to confirm the reset.
 - `/compact [instructions]` compacts the session context and reports the remaining context budget.
 
 ## Heartbeats (proactive mode)
 
-By default, StarforgeOS runs a heartbeat every 30 minutes with the prompt:
+By default, OpenClaw runs a heartbeat every 30 minutes with the prompt:
 `Read HEARTBEAT.md if it exists (workspace context). Follow it strictly. Do not infer or repeat old tasks from prior chats. If nothing needs attention, reply HEARTBEAT_OK.`
 Set `agents.defaults.heartbeat.every: "0m"` to disable.
 
-- If `HEARTBEAT.md` exists but is effectively empty (only blank lines and markdown headers like `# Heading`), StarforgeOS skips the heartbeat run to save API calls.
+- If `HEARTBEAT.md` exists but is effectively empty (only blank lines and markdown headers like `# Heading`), OpenClaw skips the heartbeat run to save API calls.
 - If the file is missing, the heartbeat still runs and the model decides what to do.
-- If the agent replies with `HEARTBEAT_OK` (optionally with short padding; see `agents.defaults.heartbeat.ackMaxChars`), StarforgeOS suppresses outbound delivery for that heartbeat.
+- If the agent replies with `HEARTBEAT_OK` (optionally with short padding; see `agents.defaults.heartbeat.ackMaxChars`), OpenClaw suppresses outbound delivery for that heartbeat.
 - Heartbeats run full agent turns — shorter intervals burn more tokens.
 
 ```json5
@@ -198,25 +198,25 @@ Here’s the screenshot.
 MEDIA:https://example.com/screenshot.png
 ```
 
-StarforgeOS extracts these and sends them as media alongside the text.
+OpenClaw extracts these and sends them as media alongside the text.
 
 ## Operations checklist
 
 ```bash
-starforge status          # local status (creds, sessions, queued events)
-starforge status --all    # full diagnosis (read-only, pasteable)
-starforge status --deep   # adds gateway health probes (Telegram + Discord)
-starforge health --json   # gateway health snapshot (WS)
+openclaw status          # local status (creds, sessions, queued events)
+openclaw status --all    # full diagnosis (read-only, pasteable)
+openclaw status --deep   # adds gateway health probes (Telegram + Discord)
+openclaw health --json   # gateway health snapshot (WS)
 ```
 
-Logs live under `/tmp/starforgeos/` (default: `starforgeos-YYYY-MM-DD.log`).
+Logs live under `/tmp/openclaw/` (default: `openclaw-YYYY-MM-DD.log`).
 
 ## Next steps
 
 - WebChat: [WebChat](/web/webchat)
 - Gateway ops: [Gateway runbook](/gateway)
 - Cron + wakeups: [Cron jobs](/automation/cron-jobs)
-- macOS menu bar companion: [StarforgeOS macOS app](/platforms/macos)
+- macOS menu bar companion: [OpenClaw macOS app](/platforms/macos)
 - iOS node app: [iOS app](/platforms/ios)
 - Android node app: [Android app](/platforms/android)
 - Windows status: [Windows (WSL2)](/platforms/windows)

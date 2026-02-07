@@ -1,7 +1,7 @@
 {
   "name": "@starforgeos/voice-call",
-  "version": "2026.2.4",
-  "description": "StarforgeOS voice-call plugin",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw voice-call plugin",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.48",
@@ -9,9 +9,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

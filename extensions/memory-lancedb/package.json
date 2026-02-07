@@ -1,17 +1,17 @@
 {
   "name": "@starforgeos/memory-lancedb",
-  "version": "2026.2.4",
-  "description": "StarforgeOS LanceDB-backed long-term memory plugin with auto-recall/capture",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
   "type": "module",
   "dependencies": {
-    "@lancedb/lancedb": "^0.23.0",
+    "@lancedb/lancedb": "^0.24.1",
     "@sinclair/typebox": "0.34.48",
     "openai": "^6.18.0"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

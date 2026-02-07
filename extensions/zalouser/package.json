@@ -1,16 +1,16 @@
 {
   "name": "@starforgeos/zalouser",
-  "version": "2026.2.4",
-  "description": "StarforgeOS Zalo Personal Account plugin via zca-cli",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw Zalo Personal Account plugin via zca-cli",
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.48",
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],

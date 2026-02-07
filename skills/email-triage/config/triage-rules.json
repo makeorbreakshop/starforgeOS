@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "updated": "2026-02-04",
+  
+  "vip_senders": {
+    "description": "Always surface immediately, regardless of content",
+    "patterns": [
+      "haley",
+      "hcullum",
+      "barrowelementary",
+      "clarke.k12.ga.us"
+    ],
+    "notes": "Wife Haley - any email from her goes straight through"
+  },
+
+  "family_domains": {
+    "description": "Kid/school stuff - needs attention, may contain legit info",
+    "patterns": [
+      "classdojo.com",
+      "procaresoftware.com", 
+      "barrowelementary",
+      "clarke.k12.ga.us",
+      "uga.edu"
+    ],
+    "action": "flag_family",
+    "notes": "ClassDojo, ProCare (daycare), Barrow Elementary, UGA Daycare (UCC)"
+  },
+
+  "newsletters": {
+    "description": "Subscribed content - batch for later reading",
+    "patterns": [
+      "starterstory.com",
+      "substack.com",
+      "beehiiv.com",
+      "every.to",
+      "thehustle.co",
+      "letterboxd.com",
+      "everbee.io"
+    ],
+    "action": "newsletter",
+    "notes": "Pat Flynn, Lenny's Newsletter, etc - read when you have time"
+  },
+
+  "ignore": {
+    "description": "Skip classification entirely, don't surface",
+    "patterns": [
+      "getsentry.com",
+      "sentry.io"
+    ],
+    "notes": "Sentry errors will have separate integration"
+  },
+
+  "auto_archive_candidates": {
+    "description": "Consider unsubscribing or auto-archiving",
+    "patterns": [
+      "michaels.com",
+      "burtsbeesbaby.com",
+      "printfresh.com",
+      "vacationstogo.com",
+      "ember.com",
+      "rsvlts.com",
+      "pipsticks.com",
+      "camp.com",
+      "wildalaskancompany.com"
+    ],
+    "notes": "Marketing junk - unsubscribe or auto-archive"
+  },
+
+  "family_context": {
+    "wife": "Haley Cullum - 1st grade teacher at Barrow Elementary",
+    "kids": [
+      {"name": "Millie", "age": 7, "grade": "2nd", "school": "Barrow Elementary"},
+      {"name": "Ollie", "age": 6, "grade": "K", "school": "Barrow Elementary", "notes": "autistic, loves routines"},
+      {"name": "Remy", "age": 3, "school": "University Daycare Center (UCC/UGA)", "notes": "starts K Fall 2026"}
+    ],
+    "school_district": "Athens-Clarke County Schools",
+    "daycare_app": "ProCare"
+  }
+}

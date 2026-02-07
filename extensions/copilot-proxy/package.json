@@ -1,12 +1,12 @@
 {
   "name": "@starforgeos/copilot-proxy",
-  "version": "2026.2.4",
-  "description": "StarforgeOS Copilot Proxy provider plugin",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw Copilot Proxy provider plugin",
   "type": "module",
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

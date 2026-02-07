@@ -1,7 +1,7 @@
 {
   "name": "@starforgeos/matrix",
-  "version": "2026.2.4",
-  "description": "StarforgeOS Matrix channel plugin",
+  "version": "2026.2.6-3",
+  "description": "OpenClaw Matrix channel plugin",
   "type": "module",
   "dependencies": {
     "@matrix-org/matrix-sdk-crypto-nodejs": "^0.4.0",
@@ -11,9 +11,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],

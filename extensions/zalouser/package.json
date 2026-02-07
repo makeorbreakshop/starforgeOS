@@ -5,12 +5,12 @@
   "type": "module",
   "dependencies": {
     "@sinclair/typebox": "0.34.48",
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],

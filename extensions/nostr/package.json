@@ -5,13 +5,13 @@
   "type": "module",
   "dependencies": {
     "nostr-tools": "^2.23.0",
-    "openclaw": "workspace:*",
+    "starforgeos": "workspace:*",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "openclaw": "workspace:*"
+    "starforgeos": "workspace:*"
   },
-  "openclaw": {
+  "starforgeos": {
     "extensions": [
       "./index.ts"
     ],

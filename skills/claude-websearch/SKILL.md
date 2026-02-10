@@ -2,7 +2,7 @@
 name: claude-websearch
 description: Search the web using Claude Code's native WebSearch. Use when you need web search results but don't have a Brave API key configured. Invoked via /websearch <query>.
 user-invocable: true
-metadata: {"openclaw": {"requires": {"bins": ["claude"]}, "emoji": "🔍"}}
+metadata: { "openclaw": { "requires": { "bins": ["claude"] }, "emoji": "🔍" } }
 ---
 
 # Claude Code WebSearch

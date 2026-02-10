@@ -2,7 +2,7 @@
 name: deep-research
 description: Deep web research using Claude sub-agents with native web search. Spawns parallel researchers for comprehensive coverage. Use for "research X", "find best practices for Y", "compare options for Z".
 user-invocable: true
-metadata: {"starforgeos": {"requires": {"bins": ["claude"]}, "emoji": "🔬"}}
+metadata: { "starforgeos": { "requires": { "bins": ["claude"] }, "emoji": "🔬" } }
 ---
 
 # Deep Research Skill
@@ -66,7 +66,7 @@ sessions_spawn(
   label="research-overview"
 )
 
-# Angle 2: Real-world examples & case studies  
+# Angle 2: Real-world examples & case studies
 sessions_spawn(
   task="Research {topic}: Focus on real-world examples, case studies, and implementations. Use web search. Find concrete examples.",
   model="anthropic/claude-sonnet-4",
@@ -97,11 +97,11 @@ Combine the findings from all research angles into a comprehensive report:
 
 ## Model Selection
 
-| Task Type | Model | Why |
-|-----------|-------|-----|
-| Quick lookup | claude-sonnet-4 | Fast, cheap, good enough |
-| Deep research | claude-sonnet-4 | Balance of quality/cost |
-| Synthesis | Your current model | You're already loaded |
+| Task Type     | Model              | Why                      |
+| ------------- | ------------------ | ------------------------ |
+| Quick lookup  | claude-sonnet-4    | Fast, cheap, good enough |
+| Deep research | claude-sonnet-4    | Balance of quality/cost  |
+| Synthesis     | Your current model | You're already loaded    |
 
 **Note:** Don't use Opus for sub-agent research — Sonnet with web search is sufficient and much cheaper. Use Opus (yourself) for synthesis and judgment.
 
@@ -110,6 +110,7 @@ Combine the findings from all research angles into a comprehensive report:
 **User asks:** "Research best practices for making YouTube videos"
 
 **You spawn:**
+
 1. "Research YouTube video best practices: filming, lighting, audio setup, equipment recommendations"
 2. "Research YouTube algorithm and optimization: titles, thumbnails, descriptions, tags, timing"
 3. "Research YouTube content strategy: hooks, retention, common mistakes successful creators avoid"
@@ -127,6 +128,7 @@ Combine the findings from all research angles into a comprehensive report:
 ## No Browser Needed
 
 This skill uses Claude's native web search tool (`WebSearch`), not browser automation. Benefits:
+
 - Faster (no page rendering)
 - More reliable (no JS issues)
 - Cleaner results (Claude extracts what matters)

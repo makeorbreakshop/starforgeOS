@@ -11,30 +11,30 @@ Scan your IMAP inbox, classify emails into priority categories, and surface the 
 
 - **Python 3.10+**
 - **IMAP-accessible email account** (Gmail, Fastmail, self-hosted, etc.)
-- **Ollama** *(optional)* — for AI-powered classification. Without it, the script uses keyword-based heuristics that still work well for common patterns.
+- **Ollama** _(optional)_ — for AI-powered classification. Without it, the script uses keyword-based heuristics that still work well for common patterns.
 
 ## Categories
 
-| Icon | Category | Description |
-|------|----------|-------------|
-| 🔴 | `urgent` | Outages, security alerts, legal, payment failures, time-critical |
-| 🟡 | `needs-response` | Business inquiries, questions, action items requiring a reply |
-| 🔵 | `informational` | Receipts, confirmations, newsletters, automated notifications |
-| ⚫ | `spam` | Marketing, promotions, unsolicited junk |
+| Icon | Category         | Description                                                      |
+| ---- | ---------------- | ---------------------------------------------------------------- |
+| 🔴   | `urgent`         | Outages, security alerts, legal, payment failures, time-critical |
+| 🟡   | `needs-response` | Business inquiries, questions, action items requiring a reply    |
+| 🔵   | `informational`  | Receipts, confirmations, newsletters, automated notifications    |
+| ⚫   | `spam`           | Marketing, promotions, unsolicited junk                          |
 
 ## Configuration
 
 All configuration is via environment variables:
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `IMAP_HOST` | ✅ | — | IMAP server hostname |
-| `IMAP_PORT` | — | `993` | IMAP port (SSL) |
-| `IMAP_USER` | ✅ | — | IMAP username / email address |
-| `IMAP_PASS` | ✅ | — | IMAP password or app-specific password |
-| `EMAIL_TRIAGE_STATE` | — | `./data/email-triage.json` | Path to the JSON state file |
-| `OLLAMA_URL` | — | `http://127.0.0.1:11434` | Ollama API endpoint |
-| `OLLAMA_MODEL` | — | `qwen2.5:7b` | Ollama model for classification |
+| Variable             | Required | Default                    | Description                            |
+| -------------------- | -------- | -------------------------- | -------------------------------------- |
+| `IMAP_HOST`          | ✅       | —                          | IMAP server hostname                   |
+| `IMAP_PORT`          | —        | `993`                      | IMAP port (SSL)                        |
+| `IMAP_USER`          | ✅       | —                          | IMAP username / email address          |
+| `IMAP_PASS`          | ✅       | —                          | IMAP password or app-specific password |
+| `EMAIL_TRIAGE_STATE` | —        | `./data/email-triage.json` | Path to the JSON state file            |
+| `OLLAMA_URL`         | —        | `http://127.0.0.1:11434`   | Ollama API endpoint                    |
+| `OLLAMA_MODEL`       | —        | `qwen2.5:7b`               | Ollama model for classification        |
 
 ## Commands
 

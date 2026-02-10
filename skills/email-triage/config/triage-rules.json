@@ -1,15 +1,10 @@
 {
   "version": 1,
   "updated": "2026-02-04",
-  
+
   "vip_senders": {
     "description": "Always surface immediately, regardless of content",
-    "patterns": [
-      "haley",
-      "hcullum",
-      "barrowelementary",
-      "clarke.k12.ga.us"
-    ],
+    "patterns": ["haley", "hcullum", "barrowelementary", "clarke.k12.ga.us"],
     "notes": "Wife Haley - any email from her goes straight through"
   },
 
@@ -17,7 +12,7 @@
     "description": "Kid/school stuff - needs attention, may contain legit info",
     "patterns": [
       "classdojo.com",
-      "procaresoftware.com", 
+      "procaresoftware.com",
       "barrowelementary",
       "clarke.k12.ga.us",
       "uga.edu"
@@ -43,10 +38,7 @@
 
   "ignore": {
     "description": "Skip classification entirely, don't surface",
-    "patterns": [
-      "getsentry.com",
-      "sentry.io"
-    ],
+    "patterns": ["getsentry.com", "sentry.io"],
     "notes": "Sentry errors will have separate integration"
   },
 
@@ -69,9 +61,20 @@
   "family_context": {
     "wife": "Haley Cullum - 1st grade teacher at Barrow Elementary",
     "kids": [
-      {"name": "Millie", "age": 7, "grade": "2nd", "school": "Barrow Elementary"},
-      {"name": "Ollie", "age": 6, "grade": "K", "school": "Barrow Elementary", "notes": "autistic, loves routines"},
-      {"name": "Remy", "age": 3, "school": "University Daycare Center (UCC/UGA)", "notes": "starts K Fall 2026"}
+      { "name": "Millie", "age": 7, "grade": "2nd", "school": "Barrow Elementary" },
+      {
+        "name": "Ollie",
+        "age": 6,
+        "grade": "K",
+        "school": "Barrow Elementary",
+        "notes": "autistic, loves routines"
+      },
+      {
+        "name": "Remy",
+        "age": 3,
+        "school": "University Daycare Center (UCC/UGA)",
+        "notes": "starts K Fall 2026"
+      }
     ],
     "school_district": "Athens-Clarke County Schools",
     "daycare_app": "ProCare"

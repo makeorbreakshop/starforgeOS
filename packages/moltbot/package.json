@@ -11,6 +11,6 @@
     "./cli-entry": "./bin/moltbot.js"
   },
   "dependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   }
 }

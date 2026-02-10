@@ -1,17 +1,16 @@
 {
-  "name": "@starforgeos/nostr",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/nostr",
+  "version": "2026.2.9",
   "description": "OpenClaw Nostr channel plugin for NIP-04 encrypted DMs",
   "type": "module",
   "dependencies": {
     "nostr-tools": "^2.23.0",
-    "starforgeos": "workspace:*",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
@@ -26,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@starforgeos/nostr",
+      "npmSpec": "@openclaw/nostr",
       "localPath": "extensions/nostr",
       "defaultChoice": "npm"
     }

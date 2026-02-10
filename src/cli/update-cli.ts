@@ -15,9 +15,11 @@ import {
   resolveUpdateAvailability,
 } from "../commands/status.update.js";
 import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
+import { resolveStateDir } from "../config/paths.js";
+import { formatDurationPrecise } from "../infra/format-time/format-duration.ts";
+import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
 import { trimLogTail } from "../infra/restart-sentinel.js";
 import { parseSemver } from "../infra/runtime-guard.js";
-import { resolveOpenClawPackageRoot } from "../infra/starforge-root.js";
 import {
   channelToNpmTag,
   DEFAULT_GIT_CHANNEL,
@@ -54,6 +56,7 @@ import { formatDocsLink } from "../terminal/links.js";
 import { stylePromptHint, stylePromptMessage } from "../terminal/prompt-style.js";
 import { renderTable } from "../terminal/table.js";
 import { theme } from "../terminal/theme.js";
+import { pathExists } from "../utils.js";
 import { replaceCliName, resolveCliName } from "./cli-name.js";
 import { formatCliCommand } from "./command-format.js";
 import { installCompletion } from "./completion-cli.js";
@@ -91,8 +94,8 @@ const STEP_LABELS: Record<string, string> = {
   "ui:build": "Building UI assets",
   "ui:build (post-doctor repair)": "Restoring missing UI assets",
   "ui assets verify": "Validating UI assets",
-  "starforge doctor entry": "Checking doctor entrypoint",
-  "starforge doctor": "Running doctor checks",
+  "openclaw doctor entry": "Checking doctor entrypoint",
+  "openclaw doctor": "Running doctor checks",
   "git rev-parse HEAD (after)": "Verifying update",
   "global update": "Updating via package manager",
   "global install": "Installing global package",
@@ -122,11 +125,10 @@ const UPDATE_QUIPS = [
 ];
 
 const MAX_LOG_CHARS = 8000;
-const DEFAULT_PACKAGE_NAME = "starforge";
+const DEFAULT_PACKAGE_NAME = "openclaw";
 const CORE_PACKAGE_NAMES = new Set([DEFAULT_PACKAGE_NAME]);
 const CLI_NAME = resolveCliName();
-const STARFORGEOS_REPO_URL = "https://github.com/starforge/starforge.git";
-const DEFAULT_GIT_DIR = path.join(os.homedir(), ".starforge");
+const OPENCLAW_REPO_URL = "https://github.com/openclaw/openclaw.git";
 
 function normalizeTag(value?: string | null): string | null {
   if (!value) {
@@ -136,8 +138,8 @@ function normalizeTag(value?: string | null): string | null {
   if (!trimmed) {
     return null;
   }
-  if (trimmed.startsWith("starforge@")) {
-    return trimmed.slice("starforge@".length);
+  if (trimmed.startsWith("openclaw@")) {
+    return trimmed.slice("openclaw@".length);
   }
   if (trimmed.startsWith(`${DEFAULT_PACKAGE_NAME}@`)) {
     return trimmed.slice(`${DEFAULT_PACKAGE_NAME}@`.length);
@@ -202,17 +204,8 @@ async function isCorePackage(root: string): Promise<boolean> {
   return Boolean(name && CORE_PACKAGE_NAMES.has(name));
 }
 
-async function pathExists(targetPath: string): Promise<boolean> {
-  try {
-    await fs.stat(targetPath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function tryWriteCompletionCache(root: string, jsonMode: boolean): Promise<void> {
-  const binPath = path.join(root, "starforge.mjs");
+  const binPath = path.join(root, "openclaw.mjs");
   if (!(await pathExists(binPath))) {
     return;
   }
@@ -277,7 +270,7 @@ async function tryInstallShellCompletion(opts: {
       if (!opts.skipPrompt) {
         defaultRuntime.log(
           theme.muted(
-            `Skipped. Run \`${replaceCliName(formatCliCommand("starforge completion --install"), CLI_NAME)}\` later to enable.`,
+            `Skipped. Run \`${replaceCliName(formatCliCommand("openclaw completion --install"), CLI_NAME)}\` later to enable.`,
           ),
         );
       }
@@ -305,7 +298,7 @@ async function isEmptyDir(targetPath: string): Promise<boolean> {
 }
 
 function resolveGitInstallDir(): string {
-  const override = process.env.STARFORGEOS_GIT_DIR?.trim();
+  const override = process.env.OPENCLAW_GIT_DIR?.trim();
   if (override) {
     return path.resolve(override);
   }
@@ -313,7 +306,7 @@ function resolveGitInstallDir(): string {
 }
 
 function resolveDefaultGitDir(): string {
-  return DEFAULT_GIT_DIR;
+  return resolveStateDir(process.env, os.homedir);
 }
 
 function resolveNodeRunner(): string {
@@ -374,7 +367,7 @@ async function ensureGitCheckout(params: {
   if (!dirExists) {
     return await runUpdateStep({
       name: "git clone",
-      argv: ["git", "clone", STARFORGEOS_REPO_URL, params.dir],
+      argv: ["git", "clone", OPENCLAW_REPO_URL, params.dir],
       timeoutMs: params.timeoutMs,
       progress: params.progress,
     });
@@ -384,12 +377,12 @@ async function ensureGitCheckout(params: {
     const empty = await isEmptyDir(params.dir);
     if (!empty) {
       throw new Error(
-        `STARFORGEOS_GIT_DIR points at a non-git directory: ${params.dir}. Set STARFORGEOS_GIT_DIR to an empty folder or an starforge checkout.`,
+        `OPENCLAW_GIT_DIR points at a non-git directory: ${params.dir}. Set OPENCLAW_GIT_DIR to an empty folder or an openclaw checkout.`,
       );
     }
     return await runUpdateStep({
       name: "git clone",
-      argv: ["git", "clone", STARFORGEOS_REPO_URL, params.dir],
+      argv: ["git", "clone", OPENCLAW_REPO_URL, params.dir],
       cwd: params.dir,
       timeoutMs: params.timeoutMs,
       progress: params.progress,
@@ -397,7 +390,7 @@ async function ensureGitCheckout(params: {
   }
 
   if (!(await isCorePackage(params.dir))) {
-    throw new Error(`STARFORGEOS_GIT_DIR does not look like a core checkout: ${params.dir}.`);
+    throw new Error(`OPENCLAW_GIT_DIR does not look like a core checkout: ${params.dir}.`);
   }
 
   return null;
@@ -526,7 +519,7 @@ export async function updateStatusCommand(opts: UpdateStatusOptions): Promise<vo
     },
   ];
 
-  defaultRuntime.log(theme.heading("StarforgeOS update status"));
+  defaultRuntime.log(theme.heading("OpenClaw update status"));
   defaultRuntime.log("");
   defaultRuntime.log(
     renderTable({
@@ -575,7 +568,7 @@ function createUpdateProgress(enabled: boolean): ProgressController {
       }
 
       const label = getStepLabel(step);
-      const duration = theme.muted(`(${formatDuration(step.durationMs)})`);
+      const duration = theme.muted(`(${formatDurationPrecise(step.durationMs)})`);
       const icon = step.exitCode === 0 ? theme.success("\u2713") : theme.error("\u2717");
 
       currentSpinner.stop(`${icon} ${label} ${duration}`);
@@ -601,14 +594,6 @@ function createUpdateProgress(enabled: boolean): ProgressController {
       }
     },
   };
-}
-
-function formatDuration(ms: number): string {
-  if (ms < 1000) {
-    return `${ms}ms`;
-  }
-  const seconds = (ms / 1000).toFixed(1);
-  return `${seconds}s`;
 }
 
 function formatStepStatus(exitCode: number | null): string {
@@ -668,7 +653,7 @@ function printResult(result: UpdateRunResult, opts: PrintResultOptions) {
     defaultRuntime.log(theme.heading("Steps:"));
     for (const step of result.steps) {
       const status = formatStepStatus(step.exitCode);
-      const duration = theme.muted(`(${formatDuration(step.durationMs)})`);
+      const duration = theme.muted(`(${formatDurationPrecise(step.durationMs)})`);
       defaultRuntime.log(`  ${status} ${step.name} ${duration}`);
 
       if (step.exitCode !== 0 && step.stderrTail) {
@@ -683,7 +668,7 @@ function printResult(result: UpdateRunResult, opts: PrintResultOptions) {
   }
 
   defaultRuntime.log("");
-  defaultRuntime.log(`Total time: ${theme.muted(formatDuration(result.durationMs))}`);
+  defaultRuntime.log(`Total time: ${theme.muted(formatDurationPrecise(result.durationMs))}`);
 }
 
 export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
@@ -808,7 +793,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
   const showProgress = !opts.json && process.stdout.isTTY;
 
   if (!opts.json) {
-    defaultRuntime.log(theme.heading("Updating StarforgeOS..."));
+    defaultRuntime.log(theme.heading("Updating OpenClaw..."));
     defaultRuntime.log("");
   }
 
@@ -952,12 +937,12 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     if (result.reason === "not-git-install") {
       defaultRuntime.log(
         theme.warn(
-          `Skipped: this StarforgeOS install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("starforge doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("starforge gateway restart"), CLI_NAME)}\`.`,
+          `Skipped: this OpenClaw install isn't a git checkout, and the package manager couldn't be detected. Update via your package manager, then run \`${replaceCliName(formatCliCommand("openclaw doctor"), CLI_NAME)}\` and \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\`.`,
         ),
       );
       defaultRuntime.log(
         theme.muted(
-          `Examples: \`${replaceCliName("npm i -g starforge@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g starforge@latest", CLI_NAME)}\``,
+          `Examples: \`${replaceCliName("npm i -g openclaw@latest", CLI_NAME)}\` or \`${replaceCliName("pnpm add -g openclaw@latest", CLI_NAME)}\``,
         ),
       );
     }
@@ -1073,7 +1058,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
       if (!opts.json && restarted) {
         defaultRuntime.log(theme.success("Daemon restarted successfully."));
         defaultRuntime.log("");
-        process.env.STARFORGEOS_UPDATE_IN_PROGRESS = "1";
+        process.env.OPENCLAW_UPDATE_IN_PROGRESS = "1";
         try {
           const interactiveDoctor = Boolean(process.stdin.isTTY) && !opts.json && opts.yes !== true;
           await doctorCommand(defaultRuntime, {
@@ -1082,7 +1067,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
         } catch (err) {
           defaultRuntime.log(theme.warn(`Doctor failed: ${String(err)}`));
         } finally {
-          delete process.env.STARFORGEOS_UPDATE_IN_PROGRESS;
+          delete process.env.OPENCLAW_UPDATE_IN_PROGRESS;
         }
       }
     } catch (err) {
@@ -1090,7 +1075,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
         defaultRuntime.log(theme.warn(`Daemon restart failed: ${String(err)}`));
         defaultRuntime.log(
           theme.muted(
-            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("starforge gateway restart"), CLI_NAME)}`,
+            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}`,
           ),
         );
       }
@@ -1100,13 +1085,13 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
     if (result.mode === "npm" || result.mode === "pnpm") {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("starforge doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("starforge gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     } else {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("starforge gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     }
@@ -1120,7 +1105,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
 export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promise<void> {
   if (!process.stdin.isTTY) {
     defaultRuntime.error(
-      "Update wizard requires a TTY. Use `starforge update --channel <stable|beta|dev>` instead.",
+      "Update wizard requires a TTY. Use `openclaw update --channel <stable|beta|dev>` instead.",
     );
     defaultRuntime.exit(1);
     return;
@@ -1211,7 +1196,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
         const empty = await isEmptyDir(gitDir);
         if (!empty) {
           defaultRuntime.error(
-            `STARFORGEOS_GIT_DIR points at a non-git directory: ${gitDir}. Set STARFORGEOS_GIT_DIR to an empty folder or an starforge checkout.`,
+            `OPENCLAW_GIT_DIR points at a non-git directory: ${gitDir}. Set OPENCLAW_GIT_DIR to an empty folder or an openclaw checkout.`,
           );
           defaultRuntime.exit(1);
           return;
@@ -1219,7 +1204,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
       }
       const ok = await confirm({
         message: stylePromptMessage(
-          `Create a git checkout at ${gitDir}? (override via STARFORGEOS_GIT_DIR)`,
+          `Create a git checkout at ${gitDir}? (override via OPENCLAW_GIT_DIR)`,
         ),
         initialValue: true,
       });
@@ -1256,7 +1241,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
 export function registerUpdateCli(program: Command) {
   const update = program
     .command("update")
-    .description("Update StarforgeOS to the latest version")
+    .description("Update OpenClaw to the latest version")
     .option("--json", "Output result as JSON", false)
     .option("--no-restart", "Skip restarting the gateway service after a successful update")
     .option("--channel <stable|beta|dev>", "Persist update channel (git + npm)")
@@ -1265,15 +1250,15 @@ export function registerUpdateCli(program: Command) {
     .option("--yes", "Skip confirmation prompts (non-interactive)", false)
     .addHelpText("after", () => {
       const examples = [
-        ["starforge update", "Update a source checkout (git)"],
-        ["starforge update --channel beta", "Switch to beta channel (git + npm)"],
-        ["starforge update --channel dev", "Switch to dev channel (git + npm)"],
-        ["starforge update --tag beta", "One-off update to a dist-tag or version"],
-        ["starforge update --no-restart", "Update without restarting the service"],
-        ["starforge update --json", "Output result as JSON"],
-        ["starforge update --yes", "Non-interactive (accept downgrade prompts)"],
-        ["starforge update wizard", "Interactive update wizard"],
-        ["starforge --update", "Shorthand for starforge update"],
+        ["openclaw update", "Update a source checkout (git)"],
+        ["openclaw update --channel beta", "Switch to beta channel (git + npm)"],
+        ["openclaw update --channel dev", "Switch to dev channel (git + npm)"],
+        ["openclaw update --tag beta", "One-off update to a dist-tag or version"],
+        ["openclaw update --no-restart", "Update without restarting the service"],
+        ["openclaw update --json", "Output result as JSON"],
+        ["openclaw update --yes", "Non-interactive (accept downgrade prompts)"],
+        ["openclaw update wizard", "Interactive update wizard"],
+        ["openclaw --update", "Shorthand for openclaw update"],
       ] as const;
       const fmtExamples = examples
         .map(([cmd, desc]) => `  ${theme.command(cmd)} ${theme.muted(`# ${desc}`)}`)
@@ -1285,7 +1270,7 @@ ${theme.heading("What this does:")}
 
 ${theme.heading("Switch channels:")}
   - Use --channel stable|beta|dev to persist the update channel in config
-  - Run starforge update status to see the active channel and source
+  - Run openclaw update status to see the active channel and source
   - Use --tag <dist-tag|version> for a one-off npm update without persisting
 
 ${theme.heading("Non-interactive:")}
@@ -1301,7 +1286,7 @@ ${theme.heading("Notes:")}
   - Downgrades require confirmation (can break configuration)
   - Skips update if the working directory has uncommitted changes
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.starforge.ai/cli/update")}`;
+${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}`;
     })
     .action(async (opts) => {
       try {
@@ -1325,7 +1310,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.starforge.ai/cli/u
     .option("--timeout <seconds>", "Timeout for each update step in seconds (default: 1200)")
     .addHelpText(
       "after",
-      `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.starforge.ai/cli/update")}\n`,
+      `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}\n`,
     )
     .action(async (opts) => {
       try {
@@ -1347,14 +1332,14 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.starforge.ai/cli/u
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["starforge update status", "Show channel + version status."],
-          ["starforge update status --json", "JSON output."],
-          ["starforge update status --timeout 10", "Custom timeout."],
+          ["openclaw update status", "Show channel + version status."],
+          ["openclaw update status --json", "JSON output."],
+          ["openclaw update status --timeout 10", "Custom timeout."],
         ])}\n\n${theme.heading("Notes:")}\n${theme.muted(
           "- Shows current update channel (stable/beta/dev) and source",
         )}\n${theme.muted("- Includes git tag/branch/SHA for source checkouts")}\n\n${theme.muted(
           "Docs:",
-        )} ${formatDocsLink("/cli/update", "docs.starforge.ai/cli/update")}`,
+        )} ${formatDocsLink("/cli/update", "docs.openclaw.ai/cli/update")}`,
     )
     .action(async (opts) => {
       try {

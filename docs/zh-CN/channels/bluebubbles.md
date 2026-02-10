@@ -22,10 +22,10 @@ x-i18n:
 
 - 通过 BlueBubbles 辅助应用在 macOS 上运行（[bluebubbles.app](https://bluebubbles.app)）。
 - 推荐/已测试版本：macOS Sequoia (15)。macOS Tahoe (26) 可用；但在 Tahoe 上编辑功能目前不可用，群组图标更新可能显示成功但实际未同步。
-- StarforgeOS 通过其 REST API 与之通信（`GET /api/v1/ping`、`POST /message/text`、`POST /chat/:id/*`）。
+- OpenClaw 通过其 REST API 与之通信（`GET /api/v1/ping`、`POST /message/text`、`POST /chat/:id/*`）。
 - 传入消息通过 webhook 到达；发出的回复、输入指示器、已读回执和 tapback 均为 REST 调用。
 - 附件和贴纸作为入站媒体被接收（并在可能时呈现给智能体）。
-- 配对/白名单的工作方式与其他渠道相同（`/start/pairing` 等），使用 `channels.bluebubbles.allowFrom` + 配对码。
+- 配对/白名单的工作方式与其他渠道相同（`/channels/pairing` 等），使用 `channels.bluebubbles.allowFrom` + 配对码。
 - 回应作为系统事件呈现，与 Slack/Telegram 类似，智能体可以在回复前"提及"它们。
 - 高级功能：编辑、撤回、回复线程、消息效果、群组管理。
 
@@ -33,7 +33,7 @@ x-i18n:
 
 1. 在你的 Mac 上安装 BlueBubbles 服务器（按照 [bluebubbles.app/install](https://bluebubbles.app/install) 的说明操作）。
 2. 在 BlueBubbles 配置中，启用 web API 并设置密码。
-3. 运行 `starforge onboard` 并选择 BlueBubbles，或手动配置：
+3. 运行 `openclaw onboard` 并选择 BlueBubbles，或手动配置：
    ```json5
    {
      channels: {
@@ -54,7 +54,7 @@ x-i18n:
 BlueBubbles 可在交互式设置向导中使用：
 
 ```
-starforge onboard
+openclaw onboard
 ```
 
 向导会提示输入：
@@ -68,7 +68,7 @@ starforge onboard
 你也可以通过 CLI 添加 BlueBubbles：
 
 ```
-starforge channels add bluebubbles --http-url http://192.168.1.100:1234 --password <password>
+openclaw channels add bluebubbles --http-url http://192.168.1.100:1234 --password <password>
 ```
 
 ## 访问控制（私信 + 群组）
@@ -78,9 +78,9 @@ starforge channels add bluebubbles --http-url http://192.168.1.100:1234 --passwo
 - 默认：`channels.bluebubbles.dmPolicy = "pairing"`。
 - 未知发送者会收到配对码；在批准之前消息会被忽略（配对码 1 小时后过期）。
 - 批准方式：
-  - `starforge pairing list bluebubbles`
-  - `starforge pairing approve bluebubbles <CODE>`
-- 配对是默认的令牌交换方式。详情：[配对](/start/pairing)
+  - `openclaw pairing list bluebubbles`
+  - `openclaw pairing approve bluebubbles <CODE>`
+- 配对是默认的令牌交换方式。详情：[配对](/channels/pairing)
 
 群组：
 
@@ -122,7 +122,7 @@ BlueBubbles 支持群聊的提及门控，与 iMessage/WhatsApp 行为一致：
 
 - **输入指示器**：在响应生成前和生成期间自动发送。
 - **已读回执**：由 `channels.bluebubbles.sendReadReceipts` 控制（默认：`true`）。
-- **输入指示器**：StarforgeOS 发送输入开始事件；BlueBubbles 在发送或超时时自动清除输入状态（通过 DELETE 手动停止不可靠）。
+- **输入指示器**：OpenClaw 发送输入开始事件；BlueBubbles 在发送或超时时自动清除输入状态（通过 DELETE 手动停止不可靠）。
 
 ```json5
 {
@@ -177,7 +177,7 @@ BlueBubbles 在配置中启用时支持高级消息操作：
 
 ### 消息 ID（短格式 vs 完整格式）
 
-StarforgeOS 可能会显示*短*消息 ID（例如 `1`、`2`）以节省 token。
+OpenClaw 可能会显示*短*消息 ID（例如 `1`、`2`）以节省 token。
 
 - `MessageSid` / `ReplyToId` 可以是短 ID。
 - `MessageSidFull` / `ReplyToIdFull` 包含提供商的完整 ID。
@@ -249,7 +249,7 @@ StarforgeOS 可能会显示*短*消息 ID（例如 `1`、`2`）以节省 token�
 - `chat_id:123`
 - `chat_identifier:...`
 - 直接句柄：`+15555550123`、`user@example.com`
-  - 如果直接句柄没有现有的私信聊天，StarforgeOS 将通过 `POST /api/v1/chat/new` 创建一个。这需要启用 BlueBubbles Private API。
+  - 如果直接句柄没有现有的私信聊天，OpenClaw 将通过 `POST /api/v1/chat/new` 创建一个。这需要启用 BlueBubbles Private API。
 
 ## 安全性
 
@@ -261,11 +261,11 @@ StarforgeOS 可能会显示*短*消息 ID（例如 `1`、`2`）以节省 token�
 ## 故障排除
 
 - 如果输入/已读事件停止工作，请检查 BlueBubbles webhook 日志并验证 Gateway 网关路径是否与 `channels.bluebubbles.webhookPath` 匹配。
-- 配对码在一小时后过期；使用 `starforge pairing list bluebubbles` 和 `starforge pairing approve bluebubbles <code>`。
+- 配对码在一小时后过期；使用 `openclaw pairing list bluebubbles` 和 `openclaw pairing approve bluebubbles <code>`。
 - 回应需要 BlueBubbles private API（`POST /api/v1/message/react`）；确保服务器版本支持它。
 - 编辑/撤回需要 macOS 13+ 和兼容的 BlueBubbles 服务器版本。在 macOS 26（Tahoe）上，由于 private API 变更，编辑功能目前不可用。
 - 在 macOS 26（Tahoe）上群组图标更新可能不稳定：API 可能返回成功但新图标未同步。
-- StarforgeOS 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知不可用的操作。如果在 macOS 26（Tahoe）上编辑仍然显示，请使用 `channels.bluebubbles.actions.edit=false` 手动禁用。
-- 查看状态/健康信息：`starforge status --all` 或 `starforge status --deep`。
+- OpenClaw 会根据 BlueBubbles 服务器的 macOS 版本自动隐藏已知不可用的操作。如果在 macOS 26（Tahoe）上编辑仍然显示，请使用 `channels.bluebubbles.actions.edit=false` 手动禁用。
+- 查看状态/健康信息：`openclaw status --all` 或 `openclaw status --deep`。
 
-有关通用渠道工作流参考，请参阅[渠道](/channels)和[插件](/plugins)指南。
+有关通用渠道工作流参考，请参阅[渠道](/channels)和[插件](/tools/plugin)指南。

@@ -1,9 +1,9 @@
 ---
-summary: "Schema-accurate configuration examples for common StarforgeOS setups"
+summary: "Schema-accurate configuration examples for common OpenClaw setups"
 read_when:
-  - Learning how to configure StarforgeOS
+  - Learning how to configure OpenClaw
   - Looking for configuration examples
-  - Setting up StarforgeOS for the first time
+  - Setting up OpenClaw for the first time
 title: "Configuration Examples"
 ---
 
@@ -17,12 +17,12 @@ Examples below are aligned with the current config schema. For the exhaustive re
 
 ```json5
 {
-  agent: { workspace: "~/.starforgeos/workspace" },
+  agent: { workspace: "~/.openclaw/workspace" },
   channels: { whatsapp: { allowFrom: ["+15555550123"] } },
 }
 ```
 
-Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that number.
+Save to `~/.openclaw/openclaw.json` and you can DM the bot from that number.
 
 ### Recommended starter
 
@@ -34,7 +34,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
     emoji: "🦞",
   },
   agent: {
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
     model: { primary: "anthropic/claude-sonnet-4-5" },
   },
   channels: {
@@ -89,7 +89,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
   // Logging
   logging: {
     level: "info",
-    file: "/tmp/starforgeos/starforgeos.log",
+    file: "/tmp/openclaw/openclaw.log",
     consoleLevel: "info",
     consoleStyle: "pretty",
     redactSensitive: "tools",
@@ -97,7 +97,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
 
   // Message formatting
   messages: {
-    messagePrefix: "[starforgeos]",
+    messagePrefix: "[openclaw]",
     responsePrefix: ">",
     ackReaction: "👀",
     ackReactionScope: "group-mentions",
@@ -106,7 +106,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
   // Routing + queue
   routing: {
     groupChat: {
-      mentionPatterns: ["@openclaw", "starforgeos"],
+      mentionPatterns: ["@openclaw", "openclaw"],
       historyLimit: 50,
     },
     queue: {
@@ -159,7 +159,13 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
       discord: { mode: "idle", idleMinutes: 10080 },
     },
     resetTriggers: ["/new", "/reset"],
-    store: "~/.starforgeos/agents/default/sessions/sessions.json",
+    store: "~/.openclaw/agents/default/sessions/sessions.json",
+    maintenance: {
+      mode: "warn",
+      pruneAfter: "30d",
+      maxEntries: 500,
+      rotateBytes: "10mb",
+    },
     typingIntervalSeconds: 5,
     sendPolicy: {
       default: "allow",
@@ -192,7 +198,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
       dm: { enabled: true, allowFrom: ["steipete"] },
       guilds: {
         "123456789012345678": {
-          slug: "friends-of-starforgeos",
+          slug: "friends-of-openclaw",
           requireMention: false,
           channels: {
             general: { allow: true },
@@ -212,7 +218,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
       dm: { enabled: true, allowFrom: ["U123"] },
       slashCommand: {
         enabled: true,
-        name: "starforgeos",
+        name: "openclaw",
         sessionPrefix: "slack:slash",
         ephemeral: true,
       },
@@ -222,7 +228,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
   // Agent runtime
   agents: {
     defaults: {
-      workspace: "~/.starforgeos/workspace",
+      workspace: "~/.openclaw/workspace",
       userTimezone: "America/Chicago",
       model: {
         primary: "anthropic/claude-sonnet-4-5",
@@ -275,9 +281,9 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
       sandbox: {
         mode: "non-main",
         perSession: true,
-        workspaceRoot: "~/.starforgeos/sandboxes",
+        workspaceRoot: "~/.openclaw/sandboxes",
         docker: {
-          image: "starforgeos-sandbox:bookworm-slim",
+          image: "openclaw-sandbox:bookworm-slim",
           workdir: "/workspace",
           readOnlyRoot: true,
           tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -342,8 +348,9 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
   // Cron jobs
   cron: {
     enabled: true,
-    store: "~/.starforgeos/cron/cron.json",
+    store: "~/.openclaw/cron/cron.json",
     maxConcurrentRuns: 2,
+    sessionRetention: "24h",
   },
 
   // Webhooks
@@ -352,7 +359,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
     path: "/hooks",
     token: "shared-secret",
     presets: ["gmail"],
-    transformsDir: "~/.starforgeos/hooks",
+    transformsDir: "~/.openclaw/hooks",
     mappings: [
       {
         id: "gmail-hook",
@@ -372,7 +379,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
       },
     ],
     gmail: {
-      account: "starforgeos@gmail.com",
+      account: "openclaw@gmail.com",
       label: "INBOX",
       topic: "projects/<project-id>/topics/gog-gmail-watch",
       subscription: "gog-gmail-watch-push",
@@ -391,7 +398,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
     mode: "local",
     port: 18789,
     bind: "loopback",
-    controlUi: { enabled: true, basePath: "/starforgeos" },
+    controlUi: { enabled: true, basePath: "/openclaw" },
     auth: {
       mode: "token",
       token: "gateway-token",
@@ -429,7 +436,7 @@ Save to `~/.starforgeos/starforgeos.json` and you can DM the bot from that numbe
 
 ```json5
 {
-  agent: { workspace: "~/.starforgeos/workspace" },
+  agent: { workspace: "~/.openclaw/workspace" },
   channels: {
     whatsapp: { allowFrom: ["+15555550123"] },
     telegram: {
@@ -493,7 +500,7 @@ If more than one person can DM your bot (multiple entries in `allowFrom`, pairin
     },
   },
   agent: {
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-sonnet-4-5",
       fallbacks: ["anthropic/claude-opus-4-6"],
@@ -532,7 +539,7 @@ If more than one person can DM your bot (multiple entries in `allowFrom`, pairin
     },
   },
   agent: {
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
     model: {
       primary: "anthropic/claude-opus-4-6",
       fallbacks: ["minimax/MiniMax-M2.1"],
@@ -550,7 +557,7 @@ If more than one person can DM your bot (multiple entries in `allowFrom`, pairin
     theme: "professional assistant",
   },
   agent: {
-    workspace: "~/work-starforgeos",
+    workspace: "~/work-openclaw",
     elevated: { enabled: false },
   },
   channels: {
@@ -571,7 +578,7 @@ If more than one person can DM your bot (multiple entries in `allowFrom`, pairin
 ```json5
 {
   agent: {
-    workspace: "~/.starforgeos/workspace",
+    workspace: "~/.openclaw/workspace",
     model: { primary: "lmstudio/minimax-m2.1-gs32" },
   },
   models: {

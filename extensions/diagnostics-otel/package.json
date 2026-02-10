@@ -1,6 +1,6 @@
 {
-  "name": "@starforgeos/diagnostics-otel",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/diagnostics-otel",
+  "version": "2026.2.9",
   "description": "OpenClaw diagnostics OpenTelemetry exporter",
   "type": "module",
   "dependencies": {
@@ -17,9 +17,9 @@
     "@opentelemetry/semantic-conventions": "^1.39.0"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

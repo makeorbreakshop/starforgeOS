@@ -262,7 +262,7 @@ starforge [--dev] [--profile <name>] <command>
 - `starforge plugins enable <id>` / `disable <id>` — 切换 `plugins.entries.<id>.enabled`。
 - `starforge plugins doctor` — 报告插件加载错误。
 
-大多数插件更改需要重启 Gateway 网关。参见 [/plugin](/plugin)。
+大多数插件更改需要重启 Gateway 网关。参见 [/plugin](/tools/plugin)。
 
 ## 记忆
 

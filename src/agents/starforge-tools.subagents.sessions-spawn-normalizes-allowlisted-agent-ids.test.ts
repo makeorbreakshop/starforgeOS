@@ -23,11 +23,10 @@ vi.mock("../config/config.js", async (importOriginal) => {
 
 import { emitAgentEvent } from "../infra/agent-events.js";
 import "./test-helpers/fast-core-tools.js";
-import { sleep } from "../utils.js";
-import { createOpenClawTools } from "./starforge-tools.js";
+import { createOpenClawTools } from "./openclaw-tools.js";
 import { resetSubagentRegistryForTests } from "./subagent-registry.js";
 
-describe("starforge-tools: subagents", () => {
+describe("openclaw-tools: subagents", () => {
   beforeEach(() => {
     configOverride = {
       session: {
@@ -202,19 +201,22 @@ describe("starforge-tools: subagents", () => {
     if (!childRunId) {
       throw new Error("missing child runId");
     }
-    emitAgentEvent({
-      runId: childRunId,
-      stream: "lifecycle",
-      data: {
-        phase: "end",
-        startedAt: 1234,
-        endedAt: 2345,
-      },
-    });
+    vi.useFakeTimers();
+    try {
+      emitAgentEvent({
+        runId: childRunId,
+        stream: "lifecycle",
+        data: {
+          phase: "end",
+          startedAt: 1234,
+          endedAt: 2345,
+        },
+      });
 
-    await sleep(0);
-    await sleep(0);
-    await sleep(0);
+      await vi.runAllTimersAsync();
+    } finally {
+      vi.useRealTimers();
+    }
 
     const childWait = waitCalls.find((call) => call.runId === childRunId);
     expect(childWait?.timeoutMs).toBe(1000);
@@ -245,7 +247,7 @@ describe("starforge-tools: subagents", () => {
       | undefined;
     expect(second?.sessionKey).toBe("discord:group:req");
     expect(second?.deliver).toBe(true);
-    expect(second?.message).toContain("background task");
+    expect(second?.message).toContain("subagent task");
 
     const sendCalls = calls.filter((c) => c.method === "send");
     expect(sendCalls.length).toBe(0);
@@ -313,19 +315,22 @@ describe("starforge-tools: subagents", () => {
     if (!childRunId) {
       throw new Error("missing child runId");
     }
-    emitAgentEvent({
-      runId: childRunId,
-      stream: "lifecycle",
-      data: {
-        phase: "end",
-        startedAt: 1000,
-        endedAt: 2000,
-      },
-    });
+    vi.useFakeTimers();
+    try {
+      emitAgentEvent({
+        runId: childRunId,
+        stream: "lifecycle",
+        data: {
+          phase: "end",
+          startedAt: 1000,
+          endedAt: 2000,
+        },
+      });
 
-    await sleep(0);
-    await sleep(0);
-    await sleep(0);
+      await vi.runAllTimersAsync();
+    } finally {
+      vi.useRealTimers();
+    }
 
     const agentCalls = calls.filter((call) => call.method === "agent");
     expect(agentCalls).toHaveLength(2);

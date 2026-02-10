@@ -1,15 +1,16 @@
 {
-  "name": "@starforgeos/memory-core",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/memory-core",
+  "version": "2026.2.9",
+  "private": true,
   "description": "OpenClaw core memory search plugin",
   "type": "module",
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "peerDependencies": {
-    "starforgeos": ">=2026.1.26"
+    "openclaw": ">=2026.1.26"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

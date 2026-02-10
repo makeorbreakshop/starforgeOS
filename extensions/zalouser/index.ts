@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
-import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
+import type { AnyAgentTool, OpenClawPluginApi } from "openclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
 import { zalouserDock, zalouserPlugin } from "./src/channel.js";
 import { setZalouserRuntime } from "./src/runtime.js";
 import { ZalouserToolSchema, executeZalouserTool } from "./src/tool.js";
@@ -24,7 +24,7 @@ const plugin = {
         "friends (list/search friends), groups (list groups), me (profile info), status (auth check).",
       parameters: ZalouserToolSchema,
       execute: executeZalouserTool,
-    });
+    } as AnyAgentTool);
   },
 };
 

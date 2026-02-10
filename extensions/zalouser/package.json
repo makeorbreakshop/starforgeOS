@@ -1,16 +1,15 @@
 {
-  "name": "@starforgeos/zalouser",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/zalouser",
+  "version": "2026.2.9",
   "description": "OpenClaw Zalo Personal Account plugin via zca-cli",
   "type": "module",
   "dependencies": {
-    "@sinclair/typebox": "0.34.48",
-    "starforgeos": "workspace:*"
+    "@sinclair/typebox": "0.34.48"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +27,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@starforgeos/zalouser",
+      "npmSpec": "@openclaw/zalouser",
       "localPath": "extensions/zalouser",
       "defaultChoice": "npm"
     }

@@ -19,8 +19,8 @@ x-i18n:
 
 相关内容：
 
-- 钩子：[钩子](/hooks)
-- 插件钩子：[插件](/plugin#plugin-hooks)
+- 钩子：[钩子](/automation/hooks)
+- 插件钩子：[插件](/tools/plugin#plugin-hooks)
 
 ## 列出所有钩子
 
@@ -255,7 +255,7 @@ starforge hooks enable session-memory
 
 **输出：** `~/.starforgeos/workspace/memory/YYYY-MM-DD-slug.md`
 
-**参见：** [session-memory 文档](/hooks#session-memory)
+**参见：** [session-memory 文档](/automation/hooks#session-memory)
 
 ### command-logger
 
@@ -282,7 +282,7 @@ cat ~/.starforgeos/logs/commands.log | jq .
 grep '"action":"new"' ~/.starforgeos/logs/commands.log | jq .
 ```
 
-**参见：** [command-logger 文档](/hooks#command-logger)
+**参见：** [command-logger 文档](/automation/hooks#command-logger)
 
 ### soul-evil
 
@@ -308,4 +308,4 @@ starforge hooks enable soul-evil
 starforge hooks enable boot-md
 ```
 
-**参见：** [boot-md 文档](/hooks#boot-md)
+**参见：** [boot-md 文档](/automation/hooks#boot-md)

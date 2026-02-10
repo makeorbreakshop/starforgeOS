@@ -1,6 +1,6 @@
 {
-  "name": "@starforgeos/voice-call",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/voice-call",
+  "version": "2026.2.9",
   "description": "OpenClaw voice-call plugin",
   "type": "module",
   "dependencies": {
@@ -9,9 +9,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

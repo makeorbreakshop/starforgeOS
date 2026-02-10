@@ -1,16 +1,15 @@
 {
-  "name": "@starforgeos/zalo",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/zalo",
+  "version": "2026.2.9",
   "description": "OpenClaw Zalo channel plugin",
   "type": "module",
   "dependencies": {
-    "starforgeos": "workspace:*",
     "undici": "7.21.0"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
@@ -28,7 +27,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@starforgeos/zalo",
+      "npmSpec": "@openclaw/zalo",
       "localPath": "extensions/zalo",
       "defaultChoice": "npm"
     }

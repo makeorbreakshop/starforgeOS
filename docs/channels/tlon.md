@@ -30,7 +30,7 @@ Local checkout (when running from a git repo):
 starforge plugins install ./extensions/tlon
 ```
 
-Details: [Plugins](/plugin)
+Details: [Plugins](/tools/plugin)
 
 ## Setup
 

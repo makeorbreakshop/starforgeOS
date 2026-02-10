@@ -1,18 +1,19 @@
 {
-  "name": "@starforgeos/googlechat",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/googlechat",
+  "version": "2026.2.9",
+  "private": true,
   "description": "OpenClaw Google Chat channel plugin",
   "type": "module",
   "dependencies": {
     "google-auth-library": "^10.5.0"
   },
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
   "peerDependencies": {
-    "starforgeos": ">=2026.1.26"
+    "openclaw": ">=2026.1.26"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,7 +32,7 @@
       "order": 55
     },
     "install": {
-      "npmSpec": "@starforgeos/googlechat",
+      "npmSpec": "@openclaw/googlechat",
       "localPath": "extensions/googlechat",
       "defaultChoice": "npm"
     }

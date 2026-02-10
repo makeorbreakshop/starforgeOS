@@ -255,7 +255,7 @@ Manage extensions and their config:
 - `starforge plugins enable <id>` / `disable <id>` — toggle `plugins.entries.<id>.enabled`.
 - `starforge plugins doctor` — report plugin load errors.
 
-Most plugin changes require a gateway restart. See [/plugin](/plugin).
+Most plugin changes require a gateway restart. See [/plugin](/tools/plugin).
 
 ## Memory
 

@@ -34,7 +34,7 @@ starforge plugins install @openclaw/tlon
 starforge plugins install ./extensions/tlon
 ```
 
-详情：[插件](/plugin)
+详情：[插件](/tools/plugin)
 
 ## 设置
 

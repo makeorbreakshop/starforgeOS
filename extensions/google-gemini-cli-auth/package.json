@@ -1,12 +1,13 @@
 {
-  "name": "@starforgeos/google-gemini-cli-auth",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/google-gemini-cli-auth",
+  "version": "2026.2.9",
+  "private": true,
   "description": "OpenClaw Gemini CLI OAuth provider plugin",
   "type": "module",
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

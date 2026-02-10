@@ -1,12 +1,13 @@
 {
-  "name": "@starforgeos/imessage",
-  "version": "2026.2.6-3",
+  "name": "@openclaw/imessage",
+  "version": "2026.2.9",
+  "private": true,
   "description": "OpenClaw iMessage channel plugin",
   "type": "module",
   "devDependencies": {
-    "starforgeos": "workspace:*"
+    "openclaw": "workspace:*"
   },
-  "starforgeos": {
+  "openclaw": {
     "extensions": [
       "./index.ts"
     ]

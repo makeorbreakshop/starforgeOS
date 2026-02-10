@@ -13,7 +13,7 @@ StarforgeOS uses this manifest to validate configuration **without executing plu
 code**. Missing or invalid manifests are treated as plugin errors and block
 config validation.
 
-See the full plugin system guide: [Plugins](/plugin).
+See the full plugin system guide: [Plugins](/tools/plugin).
 
 ## Required fields
 

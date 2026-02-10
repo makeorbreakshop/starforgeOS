@@ -3,7 +3,7 @@
 ## Identity
 
 - **Machine**: Mac Studio (100.95.106.45)
-- **Model**: Claude Opus 4.6 (default Opus 4.5)
+- **Model**: Claude Opus 4.6 (default: `anthropic/claude-opus-4-6`)
 - **Role**: Chief of Staff
 - **Reports to**: Brandon Cullum
 

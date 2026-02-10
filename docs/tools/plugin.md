@@ -96,23 +96,23 @@ StarforgeOS scans, in order:
 
 2. Workspace extensions
 
-- `<workspace>/.starforgeos/extensions/*.ts`
-- `<workspace>/.starforgeos/extensions/*/index.ts`
+- `<workspace>/.starforge/extensions/*.ts`
+- `<workspace>/.starforge/extensions/*/index.ts`
 
 3. Global extensions
 
-- `~/.starforgeos/extensions/*.ts`
-- `~/.starforgeos/extensions/*/index.ts`
+- `~/.starforge/extensions/*.ts`
+- `~/.starforge/extensions/*/index.ts`
 
 4. Bundled extensions (shipped with StarforgeOS, **disabled by default**)
 
-- `<starforgeos>/extensions/*`
+- `<starforge>/extensions/*`
 
 Bundled plugins must be enabled explicitly via `plugins.entries.<id>.enabled`
 or `starforge plugins enable <id>`. Installed plugins are enabled by default,
 but can be disabled the same way.
 
-Each plugin must include a `starforgeos.plugin.json` file in its root. If a path
+Each plugin must include a `starforge.plugin.json` file in its root. If a path
 points at a file, the plugin root is the file's directory and must contain the
 manifest.
 
@@ -121,12 +121,12 @@ wins and lower-precedence copies are ignored.
 
 ### Package packs
 
-A plugin directory may include a `package.json` with `starforgeos.extensions`:
+A plugin directory may include a `package.json` with `starforge.extensions`:
 
 ```json
 {
   "name": "my-pack",
-  "starforgeos": {
+  "starforge": {
     "extensions": ["./src/safety.ts", "./src/tools.ts"]
   }
 }
@@ -140,15 +140,15 @@ If your plugin imports npm deps, install them in that directory so
 
 ### Channel catalog metadata
 
-Channel plugins can advertise onboarding metadata via `starforgeos.channel` and
-install hints via `starforgeos.install`. This keeps the core catalog data-free.
+Channel plugins can advertise onboarding metadata via `starforge.channel` and
+install hints via `starforge.install`. This keeps the core catalog data-free.
 
 Example:
 
 ```json
 {
   "name": "@openclaw/nextcloud-talk",
-  "starforgeos": {
+  "starforge": {
     "extensions": ["./index.ts"],
     "channel": {
       "id": "nextcloud-talk",
@@ -172,13 +172,13 @@ Example:
 StarforgeOS can also merge **external channel catalogs** (for example, an MPM
 registry export). Drop a JSON file at one of:
 
-- `~/.starforgeos/mpm/plugins.json`
-- `~/.starforgeos/mpm/catalog.json`
-- `~/.starforgeos/plugins/catalog.json`
+- `~/.starforge/mpm/plugins.json`
+- `~/.starforge/mpm/catalog.json`
+- `~/.starforge/plugins/catalog.json`
 
 Or point `STARFORGEOS_PLUGIN_CATALOG_PATHS` (or `STARFORGEOS_MPM_CATALOG_PATHS`) at
 one or more JSON files (comma/semicolon/`PATH`-delimited). Each file should
-contain `{ "entries": [ { "name": "@scope/pkg", "starforgeos": { "channel": {...}, "install": {...} } } ] }`.
+contain `{ "entries": [ { "name": "@scope/pkg", "starforge": { "channel": {...}, "install": {...} } } ] }`.
 
 ## Plugin IDs
 
@@ -222,7 +222,7 @@ Validation rules (strict):
 - Unknown `channels.<id>` keys are **errors** unless a plugin manifest declares
   the channel id.
 - Plugin config is validated using the JSON Schema embedded in
-  `starforgeos.plugin.json` (`configSchema`).
+  `starforge.plugin.json` (`configSchema`).
 - If a plugin is disabled, its config is preserved and a **warning** is emitted.
 
 ## Plugin slots (exclusive categories)
@@ -281,7 +281,7 @@ Example:
 ```bash
 starforge plugins list
 starforge plugins info <id>
-starforge plugins install <path>                 # copy a local file/dir into ~/.starforgeos/extensions/<id>
+starforge plugins install <path>                 # copy a local file/dir into ~/.starforge/extensions/<id>
 starforge plugins install ./extensions/voice-call # relative path ok
 starforge plugins install ./plugin.tgz           # install from a local tarball
 starforge plugins install ./plugin.zip           # install from a local zip
@@ -624,14 +624,14 @@ it’s present in your workspace/managed skills locations.
 
 Recommended packaging:
 
-- Main package: `starforgeos` (this repo)
+- Core package: `openclaw` (historical npm package name; exposes `openclaw/plugin-sdk`)
 - Plugins: separate npm packages under `@openclaw/*` (example: `@openclaw/voice-call`)
 
 Publishing contract:
 
-- Plugin `package.json` must include `starforgeos.extensions` with one or more entry files.
+- Plugin `package.json` must include `starforge.extensions` with one or more entry files.
 - Entry files can be `.js` or `.ts` (jiti loads TS at runtime).
-- `starforge plugins install <npm-spec>` uses `npm pack`, extracts into `~/.starforgeos/extensions/<id>/`, and enables it in config.
+- `starforge plugins install <npm-spec>` uses `npm pack`, extracts into `~/.starforge/extensions/<id>/`, and enables it in config.
 - Config key stability: scoped packages are normalized to the **unscoped** id for `plugins.entries.*`.
 
 ## Example plugin: Voice Call
@@ -661,4 +661,4 @@ Plugins run in-process with the Gateway. Treat them as trusted code:
 Plugins can (and should) ship tests:
 
 - In-repo plugins can keep Vitest tests under `src/**` (example: `src/plugins/voice-call.plugin.test.ts`).
-- Separately published plugins should run their own CI (lint/build/test) and validate `starforgeos.extensions` points at the built entrypoint (`dist/index.js`).
+- Separately published plugins should run their own CI (lint/build/test) and validate `starforge.extensions` points at the built entrypoint (`dist/index.js`).

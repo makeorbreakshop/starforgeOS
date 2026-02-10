@@ -6,9 +6,9 @@ read_when:
 title: "Plugin Manifest"
 ---
 
-# Plugin manifest (starforgeos.plugin.json)
+# Plugin manifest (starforge.plugin.json)
 
-Every plugin **must** ship a `starforgeos.plugin.json` file in the **plugin root**.
+Every plugin **must** ship a `starforge.plugin.json` file in the **plugin root**.
 StarforgeOS uses this manifest to validate configuration **without executing plugin
 code**. Missing or invalid manifests are treated as plugin errors and block
 config validation.
@@ -64,6 +64,9 @@ Optional keys:
 ## Notes
 
 - The manifest is **required for all plugins**, including local filesystem loads.
+- If you are merging upstream OpenClaw into a StarforgeOS fork, upstream may ship
+  `openclaw.plugin.json`. Keep `starforge.plugin.json` alongside it (same content)
+  so StarforgeOS can validate the plugin without executing code.
 - Runtime still loads the plugin module separately; the manifest is only for
   discovery + validation.
 - If your plugin depends on native modules, document the build steps and any

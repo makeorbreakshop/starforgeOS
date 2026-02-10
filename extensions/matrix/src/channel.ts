@@ -8,7 +8,7 @@ import {
   PAIRING_APPROVED_MESSAGE,
   setAccountEnabledInConfigSection,
   type ChannelPlugin,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { CoreConfig } from "./types.js";
 import { matrixMessageActions } from "./actions.js";
 import { MatrixConfigSchema } from "./config-schema.js";

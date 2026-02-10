@@ -8,7 +8,7 @@ import {
   type ChannelOnboardingDmPolicy,
   type OpenClawConfig,
   type WizardPrompter,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { CoreConfig, DmPolicy } from "./types.js";
 import {
   listNextcloudTalkAccountIds,

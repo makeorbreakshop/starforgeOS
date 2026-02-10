@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
-import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
+import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
 import { googlechatDock, googlechatPlugin } from "./src/channel.js";
 import { handleGoogleChatWebhookRequest } from "./src/monitor.js";
 import { setGoogleChatRuntime } from "./src/runtime.js";

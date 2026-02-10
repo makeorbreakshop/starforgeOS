@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import type { TwitchAccountConfig } from "./types.js";
 
 /**

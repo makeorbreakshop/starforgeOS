@@ -1,5 +1,5 @@
 import type { AddressInfo } from "node:net";
-import type { OpenClawConfig, PluginRuntime } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig, PluginRuntime } from "openclaw/plugin-sdk";
 import { createServer } from "node:http";
 import { describe, expect, it } from "vitest";
 import type { ResolvedZaloAccount } from "./types.js";

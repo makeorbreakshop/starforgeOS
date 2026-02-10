@@ -4,14 +4,14 @@ import type {
   OpenClawConfig,
   DmPolicy,
   WizardPrompter,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   DEFAULT_ACCOUNT_ID,
   addWildcardAllowFrom,
   formatDocsLink,
   normalizeAccountId,
   promptAccountId,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   listBlueBubblesAccountIds,
   resolveBlueBubblesAccount,

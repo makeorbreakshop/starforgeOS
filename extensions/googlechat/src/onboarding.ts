@@ -1,4 +1,4 @@
-import type { OpenClawConfig, DmPolicy } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig, DmPolicy } from "openclaw/plugin-sdk";
 import {
   addWildcardAllowFrom,
   formatDocsLink,
@@ -9,7 +9,7 @@ import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   migrateBaseNameToDefaultAccount,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   listGoogleChatAccountIds,
   resolveDefaultGoogleChatAccountId,

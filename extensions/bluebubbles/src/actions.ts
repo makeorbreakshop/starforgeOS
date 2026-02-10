@@ -9,7 +9,7 @@ import {
   type ChannelMessageActionAdapter,
   type ChannelMessageActionName,
   type ChannelToolSend,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { BlueBubblesSendTarget } from "./types.js";
 import { resolveBlueBubblesAccount } from "./accounts.js";
 import { sendBlueBubblesAttachment } from "./attachments.js";

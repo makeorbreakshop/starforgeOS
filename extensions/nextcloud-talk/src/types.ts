@@ -3,7 +3,7 @@ import type {
   DmConfig,
   DmPolicy,
   GroupPolicy,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 
 export type { DmPolicy, GroupPolicy };
 

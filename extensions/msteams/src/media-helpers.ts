@@ -8,7 +8,7 @@ import {
   extensionForMime,
   extractOriginalFilename,
   getFileExtension,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 
 /**
  * Detect MIME type from URL extension or data URL.

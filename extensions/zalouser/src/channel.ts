@@ -6,7 +6,7 @@ import type {
   ChannelPlugin,
   OpenClawConfig,
   GroupToolPolicyConfig,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   buildChannelConfigSchema,
@@ -16,7 +16,7 @@ import {
   migrateBaseNameToDefaultAccount,
   normalizeAccountId,
   setAccountEnabledInConfigSection,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { ZcaFriend, ZcaGroup, ZcaUserInfo } from "./types.js";
 import {
   listZalouserAccountIds,

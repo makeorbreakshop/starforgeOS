@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import {
   formatDocsLink,
   promptAccountId,
@@ -6,7 +6,7 @@ import {
   normalizeAccountId,
   type ChannelOnboardingAdapter,
   type WizardPrompter,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { TlonResolvedAccount } from "./types.js";
 import { listTlonAccountIds, resolveTlonAccount } from "./types.js";
 

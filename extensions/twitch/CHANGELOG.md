@@ -65,5 +65,5 @@
 ### Improvements
 
 - Added proper configuration schema with Zod validation
-- Added plugin descriptor (starforgeos.plugin.json)
+- Added plugin descriptor (starforge.plugin.json)
 - Added comprehensive README and documentation

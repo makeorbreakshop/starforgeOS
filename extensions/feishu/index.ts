@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
-import { emptyPluginConfigSchema } from "starforgeos/plugin-sdk";
+import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
+import { emptyPluginConfigSchema } from "openclaw/plugin-sdk";
 import { registerFeishuBitableTools } from "./src/bitable.js";
 import { feishuPlugin } from "./src/channel.js";
 import { registerFeishuDocTools } from "./src/docx.js";

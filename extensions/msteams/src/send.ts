@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
-import { loadWebMedia, resolveChannelMediaMaxBytes } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import { loadWebMedia, resolveChannelMediaMaxBytes } from "openclaw/plugin-sdk";
 import { createMSTeamsConversationStoreFs } from "./conversation-store-fs.js";
 import {
   classifyMSTeamsSendError,

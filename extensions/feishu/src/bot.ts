@@ -1,11 +1,11 @@
-import type { ClawdbotConfig, RuntimeEnv } from "starforgeos/plugin-sdk";
+import type { ClawdbotConfig, RuntimeEnv } from "openclaw/plugin-sdk";
 import {
   buildPendingHistoryContextFromMap,
   recordPendingHistoryEntryIfEnabled,
   clearHistoryEntriesIfEnabled,
   DEFAULT_GROUP_HISTORY_LIMIT,
   type HistoryEntry,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { FeishuMessageContext, FeishuMediaInfo, ResolvedFeishuAccount } from "./types.js";
 import type { DynamicAgentCreationConfig } from "./types.js";
 import { resolveFeishuAccount } from "./accounts.js";

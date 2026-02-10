@@ -3,14 +3,14 @@ import type {
   ChannelGroupContext,
   GroupPolicy,
   GroupToolPolicyConfig,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   buildChannelKeyCandidates,
   normalizeChannelSlug,
   resolveChannelEntryMatchWithFallback,
   resolveMentionGatingWithBypass,
   resolveNestedAllowlistDecision,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { NextcloudTalkRoomConfig } from "./types.js";
 
 function normalizeAllowEntry(raw: string): string {

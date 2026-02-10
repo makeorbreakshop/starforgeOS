@@ -2,7 +2,7 @@ import {
   resolveChannelMediaMaxBytes,
   type OpenClawConfig,
   type PluginRuntime,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { MSTeamsAccessTokenProvider } from "./attachments/types.js";
 import type {
   MSTeamsConversationStore,

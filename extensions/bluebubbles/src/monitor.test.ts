@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig, PluginRuntime } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig, PluginRuntime } from "openclaw/plugin-sdk";
 import { EventEmitter } from "node:events";
-import { removeAckReactionAfterReply, shouldAckReaction } from "starforgeos/plugin-sdk";
+import { removeAckReactionAfterReply, shouldAckReaction } from "openclaw/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ResolvedBlueBubblesAccount } from "./accounts.js";
 import {

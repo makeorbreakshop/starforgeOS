@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
-import { createReplyPrefixOptions } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import { createReplyPrefixOptions } from "openclaw/plugin-sdk";
 import { describe, expect, it } from "vitest";
 import { mattermostPlugin } from "./channel.js";
 

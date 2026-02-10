@@ -9,7 +9,7 @@ import {
   type ChannelPlugin,
   type OpenClawConfig,
   type ChannelSetupInput,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { CoreConfig } from "./types.js";
 import {
   listNextcloudTalkAccountIds,

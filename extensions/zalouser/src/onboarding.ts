@@ -3,14 +3,14 @@ import type {
   ChannelOnboardingDmPolicy,
   OpenClawConfig,
   WizardPrompter,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   promptAccountId,
   promptChannelAccessConfig,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { ZcaFriend, ZcaGroup } from "./types.js";
 import {
   listZalouserAccountIds,

@@ -26,7 +26,7 @@ import {
   type OpenClawConfig,
   type ResolvedTelegramAccount,
   type TelegramProbe,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { getTelegramRuntime } from "./runtime.js";
 
 const meta = getChatChannelMeta("telegram");

@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from "starforgeos/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "openclaw/plugin-sdk";
 
 type ZalouserAccountStatus = {
   accountId?: unknown;

@@ -4,7 +4,7 @@ import {
   summarizeMapping,
   type OpenClawConfig,
   type RuntimeEnv,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { MSTeamsConversationStore } from "./conversation-store.js";
 import type { MSTeamsAdapter } from "./messenger.js";
 import { createMSTeamsConversationStoreFs } from "./conversation-store-fs.js";

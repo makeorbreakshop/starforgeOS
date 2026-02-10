@@ -10,7 +10,7 @@
  * - Registry integration
  */
 
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { sendMessageTwitchInternal } from "./send.js";
 

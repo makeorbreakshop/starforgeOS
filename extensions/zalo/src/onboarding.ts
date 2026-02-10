@@ -3,13 +3,13 @@ import type {
   ChannelOnboardingDmPolicy,
   OpenClawConfig,
   WizardPrompter,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   addWildcardAllowFrom,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   promptAccountId,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { listZaloAccountIds, resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts.js";
 
 const channel = "zalo" as const;

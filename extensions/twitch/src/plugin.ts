@@ -5,8 +5,8 @@
  * This is the primary entry point for the Twitch channel integration.
  */
 
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
-import { buildChannelConfigSchema } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import { buildChannelConfigSchema } from "openclaw/plugin-sdk";
 import type {
   ChannelAccountSnapshot,
   ChannelCapabilities,

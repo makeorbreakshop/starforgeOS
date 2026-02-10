@@ -9,7 +9,7 @@ import {
   type LineConfig,
   type LineChannelData,
   type ResolvedLineAccount,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { getLineRuntime } from "./runtime.js";
 
 // LINE channel metadata

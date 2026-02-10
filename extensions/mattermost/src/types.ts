@@ -1,4 +1,4 @@
-import type { BlockStreamingCoalesceConfig, DmPolicy, GroupPolicy } from "starforgeos/plugin-sdk";
+import type { BlockStreamingCoalesceConfig, DmPolicy, GroupPolicy } from "openclaw/plugin-sdk";
 
 export type MattermostChatMode = "oncall" | "onmessage" | "onchar";
 

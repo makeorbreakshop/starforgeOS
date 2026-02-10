@@ -5,7 +5,7 @@ import {
   type ClawdbotConfig,
   type RuntimeEnv,
   type ReplyPayload,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { MentionTarget } from "./mention.js";
 import { resolveFeishuAccount } from "./accounts.js";
 import { getFeishuRuntime } from "./runtime.js";

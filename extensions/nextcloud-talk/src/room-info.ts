@@ -1,4 +1,4 @@
-import type { RuntimeEnv } from "starforgeos/plugin-sdk";
+import type { RuntimeEnv } from "openclaw/plugin-sdk";
 import { readFileSync } from "node:fs";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 

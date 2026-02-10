@@ -6,17 +6,12 @@
  * Provides seamless auto-recall and auto-capture via lifecycle hooks.
  */
 
-<<<<<<< HEAD
-import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
-import * as lancedb from "@lancedb/lancedb";
-=======
 import type * as LanceDB from "@lancedb/lancedb";
 import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
->>>>>>> upstream/main
 import { Type } from "@sinclair/typebox";
 import { randomUUID } from "node:crypto";
 import OpenAI from "openai";
-import { stringEnum } from "starforgeos/plugin-sdk";
+import { stringEnum } from "openclaw/plugin-sdk";
 import {
   MEMORY_CATEGORIES,
   type MemoryCategory,

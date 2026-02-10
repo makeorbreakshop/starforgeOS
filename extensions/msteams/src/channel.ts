@@ -1,14 +1,10 @@
-import type {
-  ChannelMessageActionName,
-  ChannelPlugin,
-  OpenClawConfig,
-} from "starforgeos/plugin-sdk";
+import type { ChannelMessageActionName, ChannelPlugin, OpenClawConfig } from "openclaw/plugin-sdk";
 import {
   buildChannelConfigSchema,
   DEFAULT_ACCOUNT_ID,
   MSTeamsConfigSchema,
   PAIRING_APPROVED_MESSAGE,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { listMSTeamsDirectoryGroupsLive, listMSTeamsDirectoryPeersLive } from "./directory-live.js";
 import { msteamsOnboardingAdapter } from "./onboarding.js";
 import { msteamsOutbound } from "./outbound.js";

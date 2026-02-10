@@ -2,8 +2,8 @@ import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   OpenClawConfig,
-} from "starforgeos/plugin-sdk";
-import { jsonResult, readStringParam } from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
+import { jsonResult, readStringParam } from "openclaw/plugin-sdk";
 import { listEnabledZaloAccounts } from "./accounts.js";
 import { sendMessageZalo } from "./send.js";
 

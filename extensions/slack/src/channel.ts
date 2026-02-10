@@ -29,7 +29,7 @@ import {
   type ChannelMessageActionName,
   type ChannelPlugin,
   type ResolvedSlackAccount,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { getSlackRuntime } from "./runtime.js";
 
 const meta = getChatChannelMeta("slack");

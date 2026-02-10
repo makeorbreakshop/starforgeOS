@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
-import { createReplyPrefixOptions, resolveMentionGatingWithBypass } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import { createReplyPrefixOptions, resolveMentionGatingWithBypass } from "openclaw/plugin-sdk";
 import type {
   GoogleChatAnnotation,
   GoogleChatAttachment,

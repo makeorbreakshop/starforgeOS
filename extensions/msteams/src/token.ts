@@ -1,4 +1,4 @@
-import type { MSTeamsConfig } from "starforgeos/plugin-sdk";
+import type { MSTeamsConfig } from "openclaw/plugin-sdk";
 
 export type MSTeamsCredentials = {
   appId: string;

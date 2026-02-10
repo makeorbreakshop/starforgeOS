@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import { RefreshingAuthProvider, StaticAuthProvider } from "@twurple/auth";
 import { ChatClient, LogLevel } from "@twurple/chat";
 import type { ChannelLogSink, TwitchAccountConfig, TwitchChatMessage } from "./types.js";

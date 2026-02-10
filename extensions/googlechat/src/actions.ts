@@ -2,14 +2,14 @@ import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   OpenClawConfig,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   createActionGate,
   jsonResult,
   readNumberParam,
   readReactionParams,
   readStringParam,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { listEnabledGoogleChatAccounts, resolveGoogleChatAccount } from "./accounts.js";
 import {
   createGoogleChatReaction,

@@ -4,7 +4,7 @@ import {
   GroupPolicySchema,
   MarkdownConfigSchema,
   requireOpenAllowFrom,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { z } from "zod";
 
 const MattermostAccountSchemaBase = z

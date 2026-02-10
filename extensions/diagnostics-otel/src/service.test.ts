@@ -96,16 +96,15 @@ vi.mock("@opentelemetry/semantic-conventions", () => ({
   },
 }));
 
-vi.mock("starforgeos/plugin-sdk", async () => {
-  const actual =
-    await vi.importActual<typeof import("starforgeos/plugin-sdk")>("starforgeos/plugin-sdk");
+vi.mock("openclaw/plugin-sdk", async () => {
+  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk")>("openclaw/plugin-sdk");
   return {
     ...actual,
     registerLogTransport: registerLogTransportMock,
   };
 });
 
-import { emitDiagnosticEvent } from "starforgeos/plugin-sdk";
+import { emitDiagnosticEvent } from "openclaw/plugin-sdk";
 import { createDiagnosticsOtelService } from "./service.js";
 
 describe("diagnostics-otel service", () => {

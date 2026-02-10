@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import {
   createReplyPrefixOptions,
   logAckFailure,
@@ -7,7 +7,7 @@ import {
   logTypingFailure,
   resolveAckReaction,
   resolveControlCommandGate,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import type { ResolvedBlueBubblesAccount } from "./accounts.js";
 import type { BlueBubblesAccountConfig, BlueBubblesAttachment } from "./types.js";
 import { downloadBlueBubblesAttachment } from "./attachments.js";

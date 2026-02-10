@@ -1,5 +1,5 @@
 import type * as Lark from "@larksuiteoapi/node-sdk";
-import type { OpenClawPluginApi } from "starforgeos/plugin-sdk";
+import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
 import { Type } from "@sinclair/typebox";
 import { Readable } from "stream";
 import { listEnabledFeishuAccounts } from "./accounts.js";

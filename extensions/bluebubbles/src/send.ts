@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import crypto from "node:crypto";
 import { stripMarkdown } from "openclaw/plugin-sdk";
 import { resolveBlueBubblesAccount } from "./accounts.js";

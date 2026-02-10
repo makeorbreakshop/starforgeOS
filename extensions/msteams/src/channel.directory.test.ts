@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "starforgeos/plugin-sdk";
+import type { OpenClawConfig } from "openclaw/plugin-sdk";
 import { describe, expect, it } from "vitest";
 import { msteamsPlugin } from "./channel.js";
 

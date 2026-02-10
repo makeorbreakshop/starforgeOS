@@ -4,12 +4,12 @@ import type {
   ChannelPlugin,
   ChannelSetupInput,
   OpenClawConfig,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import {
   applyAccountNameToChannelSection,
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
-} from "starforgeos/plugin-sdk";
+} from "openclaw/plugin-sdk";
 import { tlonChannelConfigSchema } from "./config-schema.js";
 import { monitorTlonProvider } from "./monitor/index.js";
 import { tlonOnboardingAdapter } from "./onboarding.js";

@@ -76,6 +76,9 @@ USER.md
 # local tooling
 .serena/
 
+# Ops docs live in shared-memory; keep them out of the engine repo to avoid upstream merge conflicts.
+docs/mfm/
+
 # Agent credentials and memory (NEVER COMMIT)
 /memory/
 .agent/*.json

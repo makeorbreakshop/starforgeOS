@@ -312,15 +312,28 @@ export function resolveConfigDir(
   env: NodeJS.ProcessEnv = process.env,
   homedir: () => string = os.homedir,
 ): string {
-  const override = env.OPENCLAW_STATE_DIR?.trim() || env.CLAWDBOT_STATE_DIR?.trim();
+  const override =
+    env.STARFORGEOS_STATE_DIR?.trim() ||
+    env.OPENCLAW_STATE_DIR?.trim() ||
+    env.CLAWDBOT_STATE_DIR?.trim();
   if (override) {
     return resolveUserPath(override);
   }
-  const newDir = path.join(resolveRequiredHomeDir(env, homedir), ".openclaw");
+  const home = resolveRequiredHomeDir(env, homedir);
+  const newDir = path.join(home, ".starforge");
+  const legacyDir = path.join(home, ".openclaw");
   try {
     const hasNew = fs.existsSync(newDir);
     if (hasNew) {
       return newDir;
+    }
+  } catch {
+    // best-effort
+  }
+  try {
+    const hasLegacy = fs.existsSync(legacyDir);
+    if (hasLegacy) {
+      return legacyDir;
     }
   } catch {
     // best-effort
@@ -337,8 +350,12 @@ function resolveHomeDisplayPrefix(): { home: string; prefix: string } | undefine
   if (!home) {
     return undefined;
   }
-  const explicitHome = process.env.OPENCLAW_HOME?.trim();
-  if (explicitHome) {
+  const explicitStarforgeHome = process.env.STARFORGEOS_HOME?.trim();
+  if (explicitStarforgeHome) {
+    return { home, prefix: "$STARFORGEOS_HOME" };
+  }
+  const explicitOpenClawHome = process.env.OPENCLAW_HOME?.trim();
+  if (explicitOpenClawHome) {
     return { home, prefix: "$OPENCLAW_HOME" };
   }
   return { home, prefix: "~" };

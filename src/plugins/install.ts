@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { MANIFEST_KEY } from "../compat/legacy-names.js";
 import {
   extractArchive,
   fileExists,
@@ -12,6 +11,10 @@ import {
 import { runCommandWithTimeout } from "../process/exec.js";
 import { scanDirectoryWithSummary } from "../security/skill-scanner.js";
 import { CONFIG_DIR, resolveUserPath } from "../utils.js";
+import {
+  getPackageManifestMetadata,
+  type PackageManifest as PluginPackageManifest,
+} from "./manifest.js";
 
 type PluginInstallLogger = {
   info?: (message: string) => void;
@@ -22,7 +25,7 @@ type PackageManifest = {
   name?: string;
   version?: string;
   dependencies?: Record<string, string>;
-} & Partial<Record<typeof MANIFEST_KEY, { extensions?: string[] }>>;
+} & PluginPackageManifest;
 
 export type InstallPluginResult =
   | {
@@ -87,7 +90,7 @@ function extensionUsesSkippedScannerPath(entry: string): boolean {
 }
 
 async function ensureOpenClawExtensions(manifest: PackageManifest) {
-  const extensions = manifest[MANIFEST_KEY]?.extensions;
+  const extensions = getPackageManifestMetadata(manifest)?.extensions;
   if (!Array.isArray(extensions)) {
     throw new Error("package.json missing starforge.extensions");
   }

@@ -1,11 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { PluginConfigUiHint, PluginKind } from "./types.js";
-import { MANIFEST_KEY } from "../compat/legacy-names.js";
+import {
+  LEGACY_MANIFEST_KEYS,
+  LEGACY_PLUGIN_MANIFEST_FILENAMES,
+  MANIFEST_KEY,
+} from "../compat/legacy-names.js";
 import { isRecord } from "../utils.js";
 
 export const PLUGIN_MANIFEST_FILENAME = "starforge.plugin.json";
-export const PLUGIN_MANIFEST_FILENAMES = [PLUGIN_MANIFEST_FILENAME] as const;
+export const PLUGIN_MANIFEST_FILENAMES = [
+  PLUGIN_MANIFEST_FILENAME,
+  ...LEGACY_PLUGIN_MANIFEST_FILENAMES,
+] as const;
 
 export type PluginManifest = {
   id: string;
@@ -147,5 +154,12 @@ export function getPackageManifestMetadata(
   if (!manifest) {
     return undefined;
   }
-  return manifest[MANIFEST_KEY];
+  // Prefer the canonical key, but accept legacy keys to keep forks/upstream merges sane.
+  for (const key of [MANIFEST_KEY, ...LEGACY_MANIFEST_KEYS] as const) {
+    const candidate = (manifest as unknown as Record<string, unknown>)[key];
+    if (isRecord(candidate)) {
+      return candidate as OpenClawPackageManifest;
+    }
+  }
+  return undefined;
 }

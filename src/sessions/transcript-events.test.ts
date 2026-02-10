@@ -42,4 +42,3 @@ describe("session transcript events", () => {
     expect(seen).toEqual(["/tmp/one.jsonl"]);
   });
 });
-

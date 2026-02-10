@@ -27,4 +27,3 @@ describe("formatRelativeTime", () => {
     vi.useRealTimers();
   });
 });
-

@@ -40,8 +40,14 @@ describe("progress line helpers", () => {
 
   it("unregister ignores mismatched streams", () => {
     const writes: string[] = [];
-    const streamA = { isTTY: true, write: (c: string) => writes.push(`a:${c}`) } as unknown as NodeJS.WriteStream;
-    const streamB = { isTTY: true, write: (c: string) => writes.push(`b:${c}`) } as unknown as NodeJS.WriteStream;
+    const streamA = {
+      isTTY: true,
+      write: (c: string) => writes.push(`a:${c}`),
+    } as unknown as NodeJS.WriteStream;
+    const streamB = {
+      isTTY: true,
+      write: (c: string) => writes.push(`b:${c}`),
+    } as unknown as NodeJS.WriteStream;
 
     registerActiveProgressLine(streamA);
     unregisterActiveProgressLine(streamB);
@@ -51,4 +57,3 @@ describe("progress line helpers", () => {
     expect(writes).toEqual(["a:\r\x1b[2K"]);
   });
 });
-

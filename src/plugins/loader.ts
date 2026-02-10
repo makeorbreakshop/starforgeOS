@@ -213,7 +213,13 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     extensions: [".ts", ".tsx", ".mts", ".cts", ".mtsx", ".ctsx", ".js", ".mjs", ".cjs", ".json"],
     ...(pluginSdkAlias
       ? {
-          alias: { "starforge/plugin-sdk": pluginSdkAlias },
+          // Support legacy + rebrand import specifiers across forks and local dev.
+          // This alias only affects jiti-loaded plugin modules (not core runtime).
+          alias: {
+            "openclaw/plugin-sdk": pluginSdkAlias,
+            "starforge/plugin-sdk": pluginSdkAlias,
+            "starforgeos/plugin-sdk": pluginSdkAlias,
+          },
         }
       : {}),
   });

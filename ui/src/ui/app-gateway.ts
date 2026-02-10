@@ -127,7 +127,7 @@ export function connectGateway(host: GatewayHost) {
     url: host.settings.gatewayUrl,
     token: host.settings.token.trim() ? host.settings.token : undefined,
     password: host.password.trim() ? host.password : undefined,
-    clientName: "starforgeos-control-ui",
+    clientName: "starforge-control-ui",
     mode: "webchat",
     onHello: (hello) => {
       host.connected = true;

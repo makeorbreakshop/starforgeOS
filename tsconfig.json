@@ -19,7 +19,9 @@
     "useDefineForClassFields": false,
     "paths": {
       "*": ["./*"],
-      "openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"]
+      "openclaw/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "starforge/plugin-sdk": ["./src/plugin-sdk/index.ts"],
+      "starforgeos/plugin-sdk": ["./src/plugin-sdk/index.ts"]
     }
   },
   "include": ["src/**/*", "ui/**/*", "extensions/**/*"],

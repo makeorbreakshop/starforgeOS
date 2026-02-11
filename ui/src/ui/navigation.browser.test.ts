@@ -75,12 +75,6 @@ describe("control UI routing", () => {
     const app = mountApp("/chat");
     await app.updateComplete;
 
-    const opsButton = Array.from(app.querySelectorAll<HTMLButtonElement>(".mode-rail__item")).find(
-      (button) => button.textContent?.includes("OPS"),
-    );
-    opsButton?.click();
-    await app.updateComplete;
-
     const link = app.querySelector<HTMLAnchorElement>('a.nav-item[href="/channels"]');
     expect(link).not.toBeNull();
     link?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }));

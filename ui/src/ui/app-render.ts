@@ -52,15 +52,7 @@ import {
 } from "./controllers/skills.ts";
 import { loadUsage, loadSessionTimeSeries, loadSessionLogs } from "./controllers/usage.ts";
 import { icons } from "./icons.ts";
-import {
-  defaultTabForSurface,
-  normalizeBasePath,
-  subtitleForTab,
-  SURFACE_RAIL,
-  surfaceForTab,
-  tabsForSurface,
-  titleForTab,
-} from "./navigation.ts";
+import { normalizeBasePath, TAB_GROUPS, subtitleForTab, titleForTab } from "./navigation.ts";
 
 // Module-scope debounce for usage date changes (avoids type-unsafe hacks on state object)
 let usageDateDebounceTimeout: number | null = null;
@@ -118,10 +110,6 @@ export function renderApp(state: AppViewState) {
   const configValue =
     state.configForm ?? (state.configSnapshot?.config as Record<string, unknown> | null);
   const basePath = normalizeBasePath(state.basePath ?? "");
-  const activeSurface = surfaceForTab(state.tab);
-  const activeSurfaceTabs = tabsForSurface(activeSurface);
-  const activeSurfaceLabel =
-    SURFACE_RAIL.find((surface) => surface.id === activeSurface)?.label ?? "OPS";
   const resolvedAgentId =
     state.agentsSelectedId ??
     state.agentsList?.defaultId ??
@@ -154,46 +142,42 @@ export function renderApp(state: AppViewState) {
             </div>
           </div>
         </div>
-        <nav class="mode-rail" aria-label="Primary operating modes">
-          ${SURFACE_RAIL.map((surface) => {
-            const isActive = surface.id === activeSurface;
-            return html`
-              <button
-                class="mode-rail__item ${isActive ? "active" : ""}"
-                @click=${() => {
-                  const nextTab = surface.tabs.includes(state.tab)
-                    ? state.tab
-                    : defaultTabForSurface(surface.id);
-                  state.setTab(nextTab);
-                }}
-                title=${`Open ${surface.label}`}
-                aria-pressed=${isActive}
-              >
-                <span class="mode-rail__icon" aria-hidden="true">${icons[surface.icon]}</span>
-                <span class="mode-rail__label">${surface.label}</span>
-              </button>
-            `;
-          })}
-        </nav>
         <div class="topbar-status">
           <div class="pill">
             <span class="statusDot ${state.connected ? "ok" : ""}"></span>
-            <span>OPS</span>
-            <span class="mono">${state.connected ? "NOMINAL" : "OFFLINE"}</span>
+            <span>Health</span>
+            <span class="mono">${state.connected ? "OK" : "Offline"}</span>
           </div>
           ${renderThemeToggle(state)}
         </div>
       </header>
       <aside class="nav ${state.settings.navCollapsed ? "nav--collapsed" : ""}">
-        <div class="nav-heading">
-          <span class="nav-heading__label">${activeSurfaceLabel} MODULES</span>
-          <span class="nav-heading__meta">${activeSurfaceTabs.length} views</span>
-        </div>
-        <div class="nav-group">
-          <div class="nav-group__items">
-            ${activeSurfaceTabs.map((tab) => renderTab(state, tab))}
-          </div>
-        </div>
+        ${TAB_GROUPS.map((group) => {
+          const isGroupCollapsed = state.settings.navGroupsCollapsed[group.label] ?? false;
+          const hasActiveTab = group.tabs.some((tab) => tab === state.tab);
+          return html`
+            <div class="nav-group ${isGroupCollapsed && !hasActiveTab ? "nav-group--collapsed" : ""}">
+              <button
+                class="nav-label"
+                @click=${() => {
+                  const next = { ...state.settings.navGroupsCollapsed };
+                  next[group.label] = !isGroupCollapsed;
+                  state.applySettings({
+                    ...state.settings,
+                    navGroupsCollapsed: next,
+                  });
+                }}
+                aria-expanded=${!isGroupCollapsed}
+              >
+                <span class="nav-label__text">${group.label}</span>
+                <span class="nav-label__chevron">${isGroupCollapsed ? "+" : "−"}</span>
+              </button>
+              <div class="nav-group__items">
+                ${group.tabs.map((tab) => renderTab(state, tab))}
+              </div>
+            </div>
+          `;
+        })}
         <div class="nav-group nav-group--links">
           <div class="nav-label nav-label--static">
             <span class="nav-label__text">Resources</span>

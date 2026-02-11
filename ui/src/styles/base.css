@@ -1,87 +1,100 @@
-@import url("https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-  --bg: #080e17;
-  --bg-accent: #091320;
-  --bg-elevated: #101a29;
-  --bg-hover: #152236;
-  --bg-muted: #101a29;
+  /* Background - Warmer dark with depth */
+  --bg: #12141a;
+  --bg-accent: #14161d;
+  --bg-elevated: #1a1d25;
+  --bg-hover: #262a35;
+  --bg-muted: #262a35;
 
-  --card: #0d1827;
-  --card-foreground: #e9f4ff;
-  --card-highlight: rgba(91, 255, 190, 0.14);
-  --popover: #0d1827;
-  --popover-foreground: #e9f4ff;
+  /* Card / Surface - More contrast between levels */
+  --card: #181b22;
+  --card-foreground: #f4f4f5;
+  --card-highlight: rgba(255, 255, 255, 0.05);
+  --popover: #181b22;
+  --popover-foreground: #f4f4f5;
 
-  --panel: #070d16;
-  --panel-strong: #0f1927;
-  --panel-hover: #162334;
-  --chrome: rgba(8, 14, 23, 0.96);
-  --chrome-strong: rgba(8, 14, 23, 0.99);
+  /* Panel */
+  --panel: #12141a;
+  --panel-strong: #1a1d25;
+  --panel-hover: #262a35;
+  --chrome: rgba(18, 20, 26, 0.95);
+  --chrome-strong: rgba(18, 20, 26, 0.98);
 
-  --text: #c3d4e8;
-  --text-strong: #f4fbff;
-  --chat-text: #d7e7f8;
-  --muted: #7b93ae;
-  --muted-strong: #5d7590;
-  --muted-foreground: #7b93ae;
+  /* Text - Slightly warmer */
+  --text: #e4e4e7;
+  --text-strong: #fafafa;
+  --chat-text: #e4e4e7;
+  --muted: #71717a;
+  --muted-strong: #52525b;
+  --muted-foreground: #71717a;
 
-  --border: #1b2b40;
-  --border-strong: #284663;
-  --border-hover: #3a658d;
-  --input: #1b2b40;
-  --ring: #5bffbe;
+  /* Border - Subtle but defined */
+  --border: #27272a;
+  --border-strong: #3f3f46;
+  --border-hover: #52525b;
+  --input: #27272a;
+  --ring: #ff5c5c;
 
-  --accent: #5bffbe;
-  --accent-hover: #74ffc8;
-  --accent-muted: #5bffbe;
-  --accent-subtle: rgba(91, 255, 190, 0.14);
-  --accent-foreground: #03140f;
-  --accent-glow: rgba(91, 255, 190, 0.28);
-  --primary: #5bffbe;
-  --primary-foreground: #02110d;
+  /* Accent - Punchy signature red */
+  --accent: #ff5c5c;
+  --accent-hover: #ff7070;
+  --accent-muted: #ff5c5c;
+  --accent-subtle: rgba(255, 92, 92, 0.15);
+  --accent-foreground: #fafafa;
+  --accent-glow: rgba(255, 92, 92, 0.25);
+  --primary: #ff5c5c;
+  --primary-foreground: #ffffff;
 
-  --secondary: #102131;
-  --secondary-foreground: #d9e9fb;
-  --accent-2: #55b8ff;
-  --accent-2-muted: rgba(85, 184, 255, 0.72);
-  --accent-2-subtle: rgba(85, 184, 255, 0.16);
+  /* Secondary - Teal accent for variety */
+  --secondary: #1e2028;
+  --secondary-foreground: #f4f4f5;
+  --accent-2: #14b8a6;
+  --accent-2-muted: rgba(20, 184, 166, 0.7);
+  --accent-2-subtle: rgba(20, 184, 166, 0.15);
 
-  --ok: #50f2a9;
-  --ok-muted: rgba(80, 242, 169, 0.8);
-  --ok-subtle: rgba(80, 242, 169, 0.15);
-  --destructive: #ff5f7d;
-  --destructive-foreground: #fff3f6;
-  --warn: #ffbf6b;
-  --warn-muted: rgba(255, 191, 107, 0.8);
-  --warn-subtle: rgba(255, 191, 107, 0.16);
-  --danger: #ff5f7d;
-  --danger-muted: rgba(255, 95, 125, 0.78);
-  --danger-subtle: rgba(255, 95, 125, 0.16);
-  --info: #55b8ff;
+  /* Semantic - More saturated */
+  --ok: #22c55e;
+  --ok-muted: rgba(34, 197, 94, 0.75);
+  --ok-subtle: rgba(34, 197, 94, 0.12);
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --warn: #f59e0b;
+  --warn-muted: rgba(245, 158, 11, 0.75);
+  --warn-subtle: rgba(245, 158, 11, 0.12);
+  --danger: #ef4444;
+  --danger-muted: rgba(239, 68, 68, 0.75);
+  --danger-subtle: rgba(239, 68, 68, 0.12);
+  --info: #3b82f6;
 
-  --focus: rgba(91, 255, 190, 0.24);
+  /* Focus - With glow */
+  --focus: rgba(255, 92, 92, 0.25);
   --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring);
   --focus-glow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ring), 0 0 20px var(--accent-glow);
 
-  --grid-line: rgba(85, 184, 255, 0.12);
+  /* Grid */
+  --grid-line: rgba(255, 255, 255, 0.04);
 
   /* Theme transition */
   --theme-switch-x: 50%;
   --theme-switch-y: 50%;
 
+  /* Typography - Space Grotesk for personality */
   --mono:
-    "Azeret Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
   --font-body: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display:
     "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  --shadow-sm: 0 1px 2px rgba(1, 4, 10, 0.35);
-  --shadow-md: 0 6px 16px rgba(1, 4, 10, 0.45), 0 0 0 1px rgba(91, 255, 190, 0.05);
-  --shadow-lg: 0 14px 34px rgba(1, 4, 10, 0.5), 0 0 0 1px rgba(91, 255, 190, 0.06);
-  --shadow-xl: 0 28px 56px rgba(1, 4, 10, 0.56), 0 0 0 1px rgba(91, 255, 190, 0.06);
+  /* Shadows - Richer with subtle color */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
   --shadow-glow: 0 0 30px var(--accent-glow);
 
+  /* Radii - Slightly larger for friendlier feel */
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
@@ -189,26 +202,10 @@ body {
   margin: 0;
   font: 400 14px/1.55 var(--font-body);
   letter-spacing: -0.02em;
-  background:
-    radial-gradient(circle at 20% -10%, rgba(91, 255, 190, 0.14), transparent 38%),
-    radial-gradient(circle at 90% 20%, rgba(85, 184, 255, 0.16), transparent 42%),
-    linear-gradient(180deg, #060b13, #080e17 56%, #060b13);
+  background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  position: relative;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px) 0 0 / 100% 4px,
-    linear-gradient(90deg, rgba(85, 184, 255, 0.04) 1px, transparent 1px) 0 0 / 42px 100%;
-  opacity: 0.35;
 }
 
 /* Theme transition */
@@ -244,8 +241,7 @@ html.theme-transition::view-transition-new(theme) {
   }
 }
 
-openclaw-app,
-starforgeos-app {
+openclaw-app {
   display: block;
   position: relative;
   z-index: 1;

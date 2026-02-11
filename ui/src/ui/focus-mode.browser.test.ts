@@ -43,6 +43,12 @@ describe("chat focus mode", () => {
     await app.updateComplete;
     expect(shell?.classList.contains("shell--chat-focus")).toBe(true);
 
+    const opsButton = Array.from(app.querySelectorAll<HTMLButtonElement>(".mode-rail__item")).find(
+      (button) => button.textContent?.includes("OPS"),
+    );
+    opsButton?.click();
+    await app.updateComplete;
+
     const link = app.querySelector<HTMLAnchorElement>('a.nav-item[href="/channels"]');
     expect(link).not.toBeNull();
     link?.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }));
@@ -51,10 +57,10 @@ describe("chat focus mode", () => {
     expect(app.tab).toBe("channels");
     expect(shell?.classList.contains("shell--chat-focus")).toBe(false);
 
-    const chatLink = app.querySelector<HTMLAnchorElement>('a.nav-item[href="/chat"]');
-    chatLink?.dispatchEvent(
-      new MouseEvent("click", { bubbles: true, cancelable: true, button: 0 }),
+    const chatButton = Array.from(app.querySelectorAll<HTMLButtonElement>(".mode-rail__item")).find(
+      (button) => button.textContent?.includes("CHAT"),
     );
+    chatButton?.click();
 
     await app.updateComplete;
     expect(app.tab).toBe("chat");

@@ -1,15 +1,5 @@
 import type { IconName } from "./icons.js";
 
-export const TAB_GROUPS = [
-  { label: "Chat", tabs: ["chat"] },
-  {
-    label: "Control",
-    tabs: ["overview", "channels", "instances", "sessions", "usage", "cron"],
-  },
-  { label: "Agent", tabs: ["agents", "skills", "nodes"] },
-  { label: "Settings", tabs: ["config", "debug", "logs"] },
-] as const;
-
 export type Tab =
   | "agents"
   | "overview"
@@ -24,6 +14,64 @@ export type Tab =
   | "config"
   | "debug"
   | "logs";
+
+export const TAB_GROUPS = [
+  { label: "Chat", tabs: ["chat"] },
+  {
+    label: "Control",
+    tabs: ["overview", "channels", "instances", "sessions", "usage", "cron"],
+  },
+  { label: "Agent", tabs: ["agents", "skills", "nodes"] },
+  { label: "Settings", tabs: ["config", "debug", "logs"] },
+] as const;
+
+export type SurfaceId = "swarm" | "ops" | "chat" | "files" | "bookmarks";
+
+type SurfaceRailItem = {
+  id: SurfaceId;
+  label: string;
+  icon: IconName;
+  defaultTab: Tab;
+  tabs: readonly Tab[];
+};
+
+export const SURFACE_RAIL: readonly SurfaceRailItem[] = [
+  {
+    id: "swarm",
+    label: "SWARM",
+    icon: "radio",
+    defaultTab: "agents",
+    tabs: ["agents", "skills", "nodes"],
+  },
+  {
+    id: "ops",
+    label: "OPS",
+    icon: "zap",
+    defaultTab: "overview",
+    tabs: ["overview", "channels", "instances", "config", "debug", "cron"],
+  },
+  {
+    id: "chat",
+    label: "CHAT",
+    icon: "messageSquare",
+    defaultTab: "chat",
+    tabs: ["chat"],
+  },
+  {
+    id: "files",
+    label: "FILES",
+    icon: "folder",
+    defaultTab: "sessions",
+    tabs: ["sessions", "logs"],
+  },
+  {
+    id: "bookmarks",
+    label: "BOOKMARKS",
+    icon: "book",
+    defaultTab: "usage",
+    tabs: ["usage"],
+  },
+];
 
 const TAB_PATHS: Record<Tab, string> = {
   agents: "/agents",
@@ -42,6 +90,21 @@ const TAB_PATHS: Record<Tab, string> = {
 };
 
 const PATH_TO_TAB = new Map(Object.entries(TAB_PATHS).map(([tab, path]) => [path, tab as Tab]));
+
+export function tabsForSurface(surfaceId: SurfaceId): readonly Tab[] {
+  const found = SURFACE_RAIL.find((surface) => surface.id === surfaceId);
+  return found?.tabs ?? SURFACE_RAIL[1].tabs;
+}
+
+export function defaultTabForSurface(surfaceId: SurfaceId): Tab {
+  const found = SURFACE_RAIL.find((surface) => surface.id === surfaceId);
+  return found?.defaultTab ?? "overview";
+}
+
+export function surfaceForTab(tab: Tab): SurfaceId {
+  const found = SURFACE_RAIL.find((surface) => surface.tabs.includes(tab));
+  return found?.id ?? "ops";
+}
 
 export function normalizeBasePath(basePath: string): string {
   if (!basePath) {

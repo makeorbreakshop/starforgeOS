@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
@@ -39,21 +40,62 @@ function listAgents(cfg: OpenClawConfig): AgentEntry[] {
   return list.filter((entry): entry is AgentEntry => Boolean(entry && typeof entry === "object"));
 }
 
-export function listAgentIds(cfg: OpenClawConfig): string[] {
-  const agents = listAgents(cfg);
-  if (agents.length === 0) {
-    return [DEFAULT_AGENT_ID];
-  }
-  const seen = new Set<string>();
+function listBoundAgentIds(cfg: OpenClawConfig): string[] {
+  const bindings = Array.isArray(cfg.bindings) ? cfg.bindings : [];
   const ids: string[] = [];
-  for (const entry of agents) {
-    const id = normalizeAgentId(entry?.id);
-    if (seen.has(id)) {
+  for (const binding of bindings) {
+    const raw = binding?.agentId;
+    if (typeof raw !== "string" || !raw.trim()) {
       continue;
     }
-    seen.add(id);
+    const id = normalizeAgentId(raw);
     ids.push(id);
   }
+  return ids;
+}
+
+function listAgentIdsFromStateDir(): string[] {
+  const agentsDir = path.join(resolveStateDir(process.env), "agents");
+  try {
+    const entries = fs.readdirSync(agentsDir, { withFileTypes: true });
+    return entries
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => normalizeAgentId(entry.name))
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export function listAgentIds(cfg: OpenClawConfig): string[] {
+  const seen = new Set<string>();
+  const ids: string[] = [];
+  const push = (id: string) => {
+    const normalized = normalizeAgentId(id);
+    if (!normalized || seen.has(normalized)) {
+      return;
+    }
+    seen.add(normalized);
+    ids.push(normalized);
+  };
+
+  push(resolveDefaultAgentId(cfg));
+
+  const agents = listAgents(cfg);
+  for (const entry of agents) {
+    push(entry.id);
+  }
+
+  const boundIds = listBoundAgentIds(cfg).toSorted((a, b) => a.localeCompare(b));
+  for (const id of boundIds) {
+    push(id);
+  }
+
+  const discoveredIds = listAgentIdsFromStateDir().toSorted((a, b) => a.localeCompare(b));
+  for (const id of discoveredIds) {
+    push(id);
+  }
+
   return ids.length > 0 ? ids : [DEFAULT_AGENT_ID];
 }
 

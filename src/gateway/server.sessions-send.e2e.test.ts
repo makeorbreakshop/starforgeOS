@@ -9,6 +9,7 @@ import {
   getFreePort,
   installGatewayTestHooks,
   startGatewayServer,
+  testState,
 } from "./test-helpers.js";
 
 installGatewayTestHooks({ scope: "suite" });
@@ -17,13 +18,20 @@ let server: Awaited<ReturnType<typeof startGatewayServer>>;
 let gatewayPort: number;
 let prevGatewayPort: string | undefined;
 let prevGatewayToken: string | undefined;
+let prevOpenclawGatewayPort: string | undefined;
 
 beforeAll(async () => {
   prevGatewayPort = process.env.STARFORGEOS_GATEWAY_PORT;
   prevGatewayToken = process.env.STARFORGEOS_GATEWAY_TOKEN;
+  prevOpenclawGatewayPort = process.env.OPENCLAW_GATEWAY_PORT;
   gatewayPort = await getFreePort();
+  const gatewayToken =
+    typeof (testState.gatewayAuth as { token?: unknown } | undefined)?.token === "string"
+      ? ((testState.gatewayAuth as { token?: string }).token ?? "test-gateway-token-1234567890")
+      : "test-gateway-token-1234567890";
   process.env.STARFORGEOS_GATEWAY_PORT = String(gatewayPort);
-  process.env.STARFORGEOS_GATEWAY_TOKEN = "test-token";
+  process.env.OPENCLAW_GATEWAY_PORT = String(gatewayPort);
+  process.env.STARFORGEOS_GATEWAY_TOKEN = gatewayToken;
   server = await startGatewayServer(gatewayPort);
 });
 
@@ -33,6 +41,11 @@ afterAll(async () => {
     delete process.env.STARFORGEOS_GATEWAY_PORT;
   } else {
     process.env.STARFORGEOS_GATEWAY_PORT = prevGatewayPort;
+  }
+  if (prevOpenclawGatewayPort === undefined) {
+    delete process.env.OPENCLAW_GATEWAY_PORT;
+  } else {
+    process.env.OPENCLAW_GATEWAY_PORT = prevOpenclawGatewayPort;
   }
   if (prevGatewayToken === undefined) {
     delete process.env.STARFORGEOS_GATEWAY_TOKEN;
@@ -107,6 +120,130 @@ describe("sessions_send gateway loopback", () => {
 
     const firstCall = spy.mock.calls[0]?.[0] as { lane?: string } | undefined;
     expect(firstCall?.lane).toBe("nested");
+  });
+
+  it("returns reply when transcript content uses output_text blocks", async () => {
+    const spy = vi.mocked(agentCommand);
+    spy.mockImplementation(async (opts) => {
+      const params = opts as {
+        sessionId?: string;
+        runId?: string;
+        extraSystemPrompt?: string;
+      };
+      const sessionId = params.sessionId ?? "main";
+      const runId = params.runId ?? sessionId;
+      const sessionFile = resolveSessionTranscriptPath(sessionId);
+      await fs.mkdir(path.dirname(sessionFile), { recursive: true });
+
+      const startedAt = Date.now();
+      emitAgentEvent({
+        runId,
+        stream: "lifecycle",
+        data: { phase: "start", startedAt },
+      });
+
+      let text = "Ackbot here from output_text";
+      if (params.extraSystemPrompt?.includes("Agent-to-agent reply step")) {
+        text = "REPLY_SKIP";
+      } else if (params.extraSystemPrompt?.includes("Agent-to-agent announce step")) {
+        text = "ANNOUNCE_SKIP";
+      }
+      const message = {
+        role: "assistant",
+        content: [{ type: "output_text", text }],
+        timestamp: Date.now(),
+      };
+      await fs.appendFile(sessionFile, `${JSON.stringify({ message })}\n`, "utf8");
+
+      emitAgentEvent({
+        runId,
+        stream: "lifecycle",
+        data: {
+          phase: "end",
+          startedAt,
+          endedAt: Date.now(),
+        },
+      });
+    });
+
+    const tool = createOpenClawTools().find((candidate) => candidate.name === "sessions_send");
+    if (!tool) {
+      throw new Error("missing sessions_send tool");
+    }
+
+    const result = await tool.execute("call-loopback-output-text", {
+      sessionKey: "agent:main:main_output_text",
+      message: "ping",
+      timeoutSeconds: 5,
+    });
+    const details = result.details as {
+      status?: string;
+      reply?: string;
+    };
+    expect(details.status).toBe("ok");
+    expect(details.reply).toBe("Ackbot here from output_text");
+  });
+
+  it("returns reply when transcript content is a plain string", async () => {
+    const spy = vi.mocked(agentCommand);
+    spy.mockImplementation(async (opts) => {
+      const params = opts as {
+        sessionId?: string;
+        runId?: string;
+        extraSystemPrompt?: string;
+      };
+      const sessionId = params.sessionId ?? "main";
+      const runId = params.runId ?? sessionId;
+      const sessionFile = resolveSessionTranscriptPath(sessionId);
+      await fs.mkdir(path.dirname(sessionFile), { recursive: true });
+
+      const startedAt = Date.now();
+      emitAgentEvent({
+        runId,
+        stream: "lifecycle",
+        data: { phase: "start", startedAt },
+      });
+
+      let text = "Ackbot here from string content";
+      if (params.extraSystemPrompt?.includes("Agent-to-agent reply step")) {
+        text = "REPLY_SKIP";
+      } else if (params.extraSystemPrompt?.includes("Agent-to-agent announce step")) {
+        text = "ANNOUNCE_SKIP";
+      }
+      const message = {
+        role: "assistant",
+        content: text,
+        timestamp: Date.now(),
+      };
+      await fs.appendFile(sessionFile, `${JSON.stringify({ message })}\n`, "utf8");
+
+      emitAgentEvent({
+        runId,
+        stream: "lifecycle",
+        data: {
+          phase: "end",
+          startedAt,
+          endedAt: Date.now(),
+        },
+      });
+    });
+
+    const tool = createOpenClawTools().find((candidate) => candidate.name === "sessions_send");
+    if (!tool) {
+      throw new Error("missing sessions_send tool");
+    }
+
+    const result = await tool.execute("call-loopback-string-content", {
+      sessionKey: "agent:main:main_string_content",
+      message: "ping",
+      timeoutSeconds: 5,
+    });
+    const details = result.details as {
+      status?: string;
+      reply?: string;
+    };
+    expect(details.status).toBe("ok");
+    expect(details.reply).toBe("Ackbot here from string content");
   });
 });
 

@@ -1,7 +1,10 @@
+import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import {
+  listAgentIds,
   resolveAgentConfig,
   resolveAgentDir,
   resolveAgentModelFallbacksOverride,
@@ -11,6 +14,35 @@ import {
 
 afterEach(() => {
   vi.unstubAllEnvs();
+});
+
+describe("listAgentIds", () => {
+  it("includes bound + discovered agent ids in addition to configured ids", () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-scope-"));
+    try {
+      vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
+      fs.mkdirSync(path.join(stateDir, "agents", "kyber"), { recursive: true });
+      fs.mkdirSync(path.join(stateDir, "agents", "lobot"), { recursive: true });
+
+      const cfg: OpenClawConfig = {
+        agents: {
+          list: [{ id: "ackbot", default: true }, { id: "threepio" }],
+        },
+        bindings: [
+          {
+            agentId: "lobot",
+            match: { channel: "discord" },
+          },
+        ],
+      };
+
+      const ids = listAgentIds(cfg);
+      expect(ids[0]).toBe("ackbot");
+      expect(ids).toEqual(expect.arrayContaining(["ackbot", "threepio", "kyber", "lobot"]));
+    } finally {
+      fs.rmSync(stateDir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("resolveAgentConfig", () => {

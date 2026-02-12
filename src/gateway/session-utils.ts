@@ -6,7 +6,11 @@ import type {
   GatewaySessionsDefaults,
   SessionsListResult,
 } from "./session-utils.types.js";
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
+import {
+  listAgentIds,
+  resolveAgentWorkspaceDir,
+  resolveDefaultAgentId,
+} from "../agents/agent-scope.js";
 import { lookupContextTokens } from "../agents/context.js";
 import { DEFAULT_CONTEXT_TOKENS, DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
 import {
@@ -14,7 +18,6 @@ import {
   resolveDefaultModelForAgent,
 } from "../agents/model-selection.js";
 import { type OpenClawConfig, loadConfig } from "../config/config.js";
-import { resolveStateDir } from "../config/paths.js";
 import {
   buildGroupDisplayName,
   canonicalizeMainSessionAlias,
@@ -40,6 +43,7 @@ export {
   archiveFileOnDisk,
   capArrayByJsonBytes,
   readFirstUserMessageFromTranscript,
+  readLastAssistantMessageFromTranscript,
   readLastMessagePreviewFromTranscript,
   readSessionPreviewItemsFromTranscript,
   readSessionMessages,
@@ -228,50 +232,15 @@ function isStorePathTemplate(store?: string): boolean {
   return typeof store === "string" && store.includes("{agentId}");
 }
 
-function listExistingAgentIdsFromDisk(): string[] {
-  const root = resolveStateDir();
-  const agentsDir = path.join(root, "agents");
-  try {
-    const entries = fs.readdirSync(agentsDir, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => normalizeAgentId(entry.name))
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
-}
-
-function listConfiguredAgentIds(cfg: OpenClawConfig): string[] {
-  const agents = cfg.agents?.list ?? [];
-  if (agents.length > 0) {
-    const ids = new Set<string>();
-    for (const entry of agents) {
-      if (entry?.id) {
-        ids.add(normalizeAgentId(entry.id));
-      }
-    }
-    const defaultId = normalizeAgentId(resolveDefaultAgentId(cfg));
-    ids.add(defaultId);
-    const sorted = Array.from(ids).filter(Boolean);
-    sorted.sort((a, b) => a.localeCompare(b));
-    return sorted.includes(defaultId)
-      ? [defaultId, ...sorted.filter((id) => id !== defaultId)]
-      : sorted;
-  }
-
-  const ids = new Set<string>();
+function listKnownAgentIds(cfg: OpenClawConfig): string[] {
   const defaultId = normalizeAgentId(resolveDefaultAgentId(cfg));
-  ids.add(defaultId);
-  for (const id of listExistingAgentIdsFromDisk()) {
-    ids.add(id);
+  const discovered = listAgentIds(cfg);
+  const ordered = new Set<string>();
+  ordered.add(defaultId);
+  for (const id of discovered) {
+    ordered.add(normalizeAgentId(id));
   }
-  const sorted = Array.from(ids).filter(Boolean);
-  sorted.sort((a, b) => a.localeCompare(b));
-  if (sorted.includes(defaultId)) {
-    return [defaultId, ...sorted.filter((id) => id !== defaultId)];
-  }
-  return sorted;
+  return [...ordered];
 }
 
 export function listAgentsForGateway(cfg: OpenClawConfig): {
@@ -309,15 +278,7 @@ export function listAgentsForGateway(cfg: OpenClawConfig): {
       identity,
     });
   }
-  const explicitIds = new Set(
-    (cfg.agents?.list ?? [])
-      .map((entry) => (entry?.id ? normalizeAgentId(entry.id) : ""))
-      .filter(Boolean),
-  );
-  const allowedIds = explicitIds.size > 0 ? new Set([...explicitIds, defaultId]) : null;
-  let agentIds = listConfiguredAgentIds(cfg).filter((id) =>
-    allowedIds ? allowedIds.has(id) : true,
-  );
+  let agentIds = listKnownAgentIds(cfg);
   if (mainKey && !agentIds.includes(mainKey)) {
     agentIds = [...agentIds, mainKey];
   }
@@ -485,7 +446,7 @@ export function loadCombinedSessionStoreForGateway(cfg: OpenClawConfig): {
     return { storePath, store: combined };
   }
 
-  const agentIds = listConfiguredAgentIds(cfg);
+  const agentIds = listKnownAgentIds(cfg);
   const combined: Record<string, SessionEntry> = {};
   for (const agentId of agentIds) {
     const storePath = resolveStorePath(storeConfig, { agentId });

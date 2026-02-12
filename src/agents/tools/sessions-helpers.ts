@@ -369,6 +369,17 @@ export function extractAssistantText(message: unknown): string | undefined {
     return undefined;
   }
   const content = (message as { content?: unknown }).content;
+  if (typeof content === "string") {
+    const sanitized = sanitizeTextContent(content).trim();
+    if (!sanitized) {
+      return undefined;
+    }
+    const stopReason = (message as { stopReason?: unknown }).stopReason;
+    const errorMessage = (message as { errorMessage?: unknown }).errorMessage;
+    const errorContext =
+      stopReason === "error" || (typeof errorMessage === "string" && Boolean(errorMessage.trim()));
+    return sanitizeUserFacingText(sanitized, { errorContext });
+  }
   if (!Array.isArray(content)) {
     return undefined;
   }
@@ -377,7 +388,8 @@ export function extractAssistantText(message: unknown): string | undefined {
     if (!block || typeof block !== "object") {
       continue;
     }
-    if ((block as { type?: unknown }).type !== "text") {
+    const blockType = (block as { type?: unknown }).type;
+    if (blockType !== "text" && blockType !== "output_text" && blockType !== "input_text") {
       continue;
     }
     const text = (block as { text?: unknown }).text;

@@ -4,6 +4,7 @@ import { agentHandlers } from "./agent.js";
 
 const mocks = vi.hoisted(() => ({
   loadSessionEntry: vi.fn(),
+  readLastAssistantMessageFromTranscript: vi.fn(),
   updateSessionStore: vi.fn(),
   agentCommand: vi.fn(),
   registerAgentRunContext: vi.fn(),
@@ -12,6 +13,7 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("../session-utils.js", () => ({
   loadSessionEntry: mocks.loadSessionEntry,
+  readLastAssistantMessageFromTranscript: mocks.readLastAssistantMessageFromTranscript,
 }));
 
 vi.mock("../../config/sessions.js", async () => {
@@ -66,6 +68,121 @@ const makeContext = (): GatewayRequestContext =>
   }) as unknown as GatewayRequestContext;
 
 describe("gateway agent handler", () => {
+  it("uses transcript assistant text as final summary when payloads are empty", async () => {
+    mocks.loadSessionEntry.mockReturnValue({
+      cfg: {},
+      storePath: "/tmp/sessions.json",
+      entry: {
+        sessionId: "existing-session-id",
+        updatedAt: Date.now(),
+      },
+      canonicalKey: "agent:main:main",
+    });
+    mocks.updateSessionStore.mockResolvedValue(undefined);
+    mocks.agentCommand.mockResolvedValue({
+      payloads: [],
+      meta: { agentMeta: { sessionId: "session-from-run-meta" } },
+    });
+    mocks.readLastAssistantMessageFromTranscript.mockReturnValue(
+      "  Ackbot here. I can help with this discussion.  ",
+    );
+
+    const respond = vi.fn();
+    await agentHandlers.agent({
+      params: {
+        message: "test",
+        agentId: "main",
+        sessionKey: "agent:main:main",
+        idempotencyKey: "test-idem-summary-transcript",
+      },
+      respond,
+      context: makeContext(),
+      req: { type: "req", id: "summary-transcript-1", method: "agent" },
+      client: null,
+      isWebchatConnect: () => false,
+    });
+
+    await vi.waitFor(() => expect(respond).toHaveBeenCalledTimes(2));
+    const finalPayload = respond.mock.calls[1]?.[1] as { summary?: string; status?: string };
+    expect(finalPayload.status).toBe("ok");
+    expect(finalPayload.summary).toBe("Ackbot here. I can help with this discussion.");
+  });
+
+  it("uses assistant text as final summary when agent payloads include text", async () => {
+    mocks.loadSessionEntry.mockReturnValue({
+      cfg: {},
+      storePath: "/tmp/sessions.json",
+      entry: {
+        sessionId: "existing-session-id",
+        updatedAt: Date.now(),
+      },
+      canonicalKey: "agent:main:main",
+    });
+    mocks.updateSessionStore.mockResolvedValue(undefined);
+    mocks.agentCommand.mockResolvedValue({
+      payloads: [{ text: "draft" }, { text: "  hello from ackbot  " }],
+      meta: { durationMs: 100 },
+    });
+
+    const respond = vi.fn();
+    await agentHandlers.agent({
+      params: {
+        message: "test",
+        agentId: "main",
+        sessionKey: "agent:main:main",
+        idempotencyKey: "test-idem-summary",
+      },
+      respond,
+      context: makeContext(),
+      req: { type: "req", id: "summary-1", method: "agent" },
+      client: null,
+      isWebchatConnect: () => false,
+    });
+
+    await vi.waitFor(() => expect(respond).toHaveBeenCalledTimes(2));
+    const finalPayload = respond.mock.calls[1]?.[1] as { summary?: string; status?: string };
+    expect(finalPayload.status).toBe("ok");
+    expect(finalPayload.summary).toBe("hello from ackbot");
+  });
+
+  it("uses explicit no-reply fallback when no payload or transcript text exists", async () => {
+    mocks.loadSessionEntry.mockReturnValue({
+      cfg: {},
+      storePath: "/tmp/sessions.json",
+      entry: {
+        sessionId: "existing-session-id",
+        updatedAt: Date.now(),
+      },
+      canonicalKey: "agent:main:main",
+    });
+    mocks.updateSessionStore.mockResolvedValue(undefined);
+    mocks.agentCommand.mockResolvedValue({
+      payloads: [],
+      meta: { agentMeta: { sessionId: "session-from-run-meta" } },
+    });
+    mocks.readLastAssistantMessageFromTranscript.mockReturnValue(null);
+
+    const respond = vi.fn();
+    await agentHandlers.agent({
+      params: {
+        message: "test",
+        agentId: "main",
+        sessionKey: "agent:main:main",
+        idempotencyKey: "test-idem-summary-no-reply",
+      },
+      respond,
+      context: makeContext(),
+      req: { type: "req", id: "summary-no-reply-1", method: "agent" },
+      client: null,
+      isWebchatConnect: () => false,
+    });
+
+    await vi.waitFor(() => expect(respond).toHaveBeenCalledTimes(2));
+    const finalPayload = respond.mock.calls[1]?.[1] as { summary?: string; status?: string };
+    expect(finalPayload.status).toBe("ok");
+    expect(finalPayload.summary).toBe("No reply from agent.");
+  });
+
   it("preserves cliSessionIds from existing session entry", async () => {
     const existingCliSessionIds = { "claude-cli": "abc-123-def" };
     const existingClaudeCliSessionId = "abc-123-def";

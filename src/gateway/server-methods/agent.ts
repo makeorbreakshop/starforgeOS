@@ -18,6 +18,7 @@ import {
 import { normalizeAgentId } from "../../routing/session-key.js";
 import { defaultRuntime } from "../../runtime.js";
 import { resolveSendPolicy } from "../../sessions/send-policy.js";
+import { truncateUtf16Safe } from "../../utils.js";
 import { normalizeSessionDeliveryFields } from "../../utils/delivery-context.js";
 import {
   INTERNAL_MESSAGE_CHANNEL,
@@ -37,10 +38,77 @@ import {
   validateAgentParams,
   validateAgentWaitParams,
 } from "../protocol/index.js";
-import { loadSessionEntry } from "../session-utils.js";
+import { loadSessionEntry, readLastAssistantMessageFromTranscript } from "../session-utils.js";
 import { formatForLog } from "../ws-log.js";
 import { waitForAgentJob } from "./agent-job.js";
 import { injectTimestamp, timestampOptsFromConfig } from "./agent-timestamp.js";
+
+const AGENT_SUMMARY_FALLBACK = "No reply from agent.";
+const AGENT_SUMMARY_MAX_CHARS = 2000;
+
+function trimAndTruncateSummary(text: string | undefined): string | undefined {
+  const clean = (text ?? "").trim();
+  if (!clean) {
+    return undefined;
+  }
+  if (clean.length <= AGENT_SUMMARY_MAX_CHARS) {
+    return clean;
+  }
+  return `${truncateUtf16Safe(clean, AGENT_SUMMARY_MAX_CHARS)}…`;
+}
+
+function resolvePayloadSummary(result: unknown): string | undefined {
+  const payloads =
+    (result as { payloads?: Array<{ text?: string | undefined }> } | null | undefined)?.payloads ??
+    [];
+  for (let i = payloads.length - 1; i >= 0; i -= 1) {
+    const summary = trimAndTruncateSummary(payloads[i]?.text);
+    if (summary) {
+      return summary;
+    }
+  }
+  return undefined;
+}
+
+function resolveResultSessionId(result: unknown): string | undefined {
+  return (
+    (
+      result as
+        | { meta?: { agentMeta?: { sessionId?: string | undefined } | undefined } | undefined }
+        | null
+        | undefined
+    )?.meta?.agentMeta?.sessionId?.trim() || undefined
+  );
+}
+
+async function resolveSuccessSummary(params: {
+  result: unknown;
+  sessionId?: string;
+  storePath?: string;
+  agentId?: string;
+}): Promise<string> {
+  const payloadSummary = resolvePayloadSummary(params.result);
+  if (payloadSummary) {
+    return payloadSummary;
+  }
+
+  const sessionId = params.sessionId?.trim() || resolveResultSessionId(params.result);
+  if (sessionId) {
+    const transcriptSummary = trimAndTruncateSummary(
+      readLastAssistantMessageFromTranscript(
+        sessionId,
+        params.storePath,
+        undefined,
+        params.agentId,
+      ) ?? undefined,
+    );
+    if (transcriptSummary) {
+      return transcriptSummary;
+    }
+  }
+
+  return AGENT_SUMMARY_FALLBACK;
+}
 
 export const agentHandlers: GatewayRequestHandlers = {
   agent: async ({ params, respond, context, client }) => {
@@ -210,9 +278,11 @@ export const agentHandlers: GatewayRequestHandlers = {
     let sessionEntry: SessionEntry | undefined;
     let bestEffortDeliver = false;
     let cfgForAgent: ReturnType<typeof loadConfig> | undefined;
+    let resolvedSessionStorePath: string | undefined;
 
     if (requestedSessionKey) {
       const { cfg, storePath, entry, canonicalKey } = loadSessionEntry(requestedSessionKey);
+      resolvedSessionStorePath = storePath;
       cfgForAgent = cfg;
       const now = Date.now();
       const sessionId = entry?.sessionId ?? randomUUID();
@@ -396,11 +466,17 @@ export const agentHandlers: GatewayRequestHandlers = {
       defaultRuntime,
       context.deps,
     )
-      .then((result) => {
+      .then(async (result) => {
+        const summary = await resolveSuccessSummary({
+          result,
+          sessionId: resolvedSessionId,
+          storePath: resolvedSessionStorePath,
+          agentId,
+        });
         const payload = {
           runId,
           status: "ok" as const,
-          summary: "completed",
+          summary,
           result,
         };
         context.dedupe.set(`agent:${idem}`, {

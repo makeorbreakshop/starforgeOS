@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   ensureAgentWorkspace: vi.fn(async () => {}),
   resolveAgentDir: vi.fn(() => "/agents/test-agent"),
   resolveAgentWorkspaceDir: vi.fn(() => "/workspace/test-agent"),
+  listAgentIds: vi.fn(() => ["main"]),
   resolveSessionTranscriptsDirForAgent: vi.fn(() => "/transcripts/test-agent"),
   listAgentsForGateway: vi.fn(() => ({
     defaultId: "main",
@@ -40,7 +41,7 @@ vi.mock("../../commands/agents.config.js", () => ({
 }));
 
 vi.mock("../../agents/agent-scope.js", () => ({
-  listAgentIds: () => ["main"],
+  listAgentIds: mocks.listAgentIds,
   resolveAgentDir: mocks.resolveAgentDir,
   resolveAgentWorkspaceDir: mocks.resolveAgentWorkspaceDir,
 }));
@@ -368,6 +369,40 @@ describe("agents.delete", () => {
       false,
       undefined,
       expect.objectContaining({ message: expect.stringContaining("invalid") }),
+    );
+  });
+});
+
+describe("agents.files.list", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.loadConfigReturn = {};
+    mocks.listAgentIds.mockReturnValue(["main", "ackbot", "kyber", "lobot", "threepio"]);
+  });
+
+  it("accepts discovered agent ids", async () => {
+    const { respond, promise } = makeCall("agents.files.list", {
+      agentId: "ackbot",
+    });
+    await promise;
+
+    expect(respond).toHaveBeenCalledWith(
+      true,
+      expect.objectContaining({ agentId: "ackbot" }),
+      undefined,
+    );
+  });
+
+  it("rejects unknown agent ids", async () => {
+    const { respond, promise } = makeCall("agents.files.list", {
+      agentId: "unknown-agent",
+    });
+    await promise;
+
+    expect(respond).toHaveBeenCalledWith(
+      false,
+      undefined,
+      expect.objectContaining({ message: expect.stringContaining("unknown agent id") }),
     );
   });
 });

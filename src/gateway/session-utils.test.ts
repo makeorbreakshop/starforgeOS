@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, test } from "vitest";
@@ -7,13 +8,68 @@ import {
   capArrayByJsonBytes,
   classifySessionKey,
   deriveSessionTitle,
+  listAgentsForGateway,
   listSessionsFromStore,
   parseGroupKey,
+  readLastAssistantMessageFromTranscript,
   resolveGatewaySessionStoreTarget,
   resolveSessionStoreKey,
 } from "./session-utils.js";
 
 describe("gateway session utils", () => {
+  test("readLastAssistantMessageFromTranscript returns last assistant text from tail", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-utils-tail-"));
+    const storePath = path.join(dir, "sessions.json");
+    const sessionId = "session-1";
+    const transcriptPath = path.join(dir, `${sessionId}.jsonl`);
+    try {
+      const lines = [
+        JSON.stringify({
+          message: { role: "user", content: [{ type: "text", text: "hello?" }] },
+        }),
+        JSON.stringify({
+          message: { role: "assistant", content: [{ type: "text", text: "first answer" }] },
+        }),
+        JSON.stringify({
+          message: { role: "user", content: [{ type: "text", text: "are you there?" }] },
+        }),
+        JSON.stringify({
+          message: { role: "assistant", content: [{ type: "text", text: "yes, I am here" }] },
+        }),
+        JSON.stringify({
+          message: { role: "user", content: [{ type: "text", text: "thanks" }] },
+        }),
+      ].join("\n");
+      fs.writeFileSync(transcriptPath, lines, "utf8");
+
+      const summary = readLastAssistantMessageFromTranscript(sessionId, storePath);
+      expect(summary).toBe("yes, I am here");
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("listAgentsForGateway includes discovered agents even when agents.list exists", () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-utils-"));
+    try {
+      process.env.OPENCLAW_STATE_DIR = stateDir;
+      fs.mkdirSync(path.join(stateDir, "agents", "kyber"), { recursive: true });
+      const cfg = {
+        agents: {
+          list: [{ id: "ackbot", default: true }],
+        },
+        bindings: [{ agentId: "lobot", match: { channel: "discord" } }],
+      } as OpenClawConfig;
+
+      const res = listAgentsForGateway(cfg);
+      const ids = res.agents.map((agent) => agent.id);
+      expect(ids).toEqual(expect.arrayContaining(["ackbot", "kyber", "lobot"]));
+    } finally {
+      delete process.env.OPENCLAW_STATE_DIR;
+      fs.rmSync(stateDir, { recursive: true, force: true });
+    }
+  });
+
   test("capArrayByJsonBytes trims from the front", () => {
     const res = capArrayByJsonBytes(["a", "b", "c"], 10);
     expect(res.items).toEqual(["b", "c"]);

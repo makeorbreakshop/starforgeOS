@@ -1,0 +1,426 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.9",
+    "lastTouchedAt": "2026-02-12T11:40:08.057Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-11T19:23:26.286Z",
+    "lastRunVersion": "2026.2.9",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "logging": {
+    "redactSensitive": "tools",
+    "redactPatterns": [
+      "\\b(ntn_[A-Za-z0-9]{10,})\\b",
+      "\\b(phx_[A-Za-z0-9]+)\\b",
+      "postgres(ql)?://[^\\s\"']+",
+      "mongodb(\\+srv)?://[^\\s\"']+",
+      "\\b(whsec_[A-Za-z0-9]+)\\b"
+    ]
+  },
+  "auth": {
+    "profiles": {
+      "openai-codex:default": {
+        "provider": "openai-codex",
+        "mode": "oauth"
+      },
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "oauth"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "openai-codex/gpt-5.3-codex",
+        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+      },
+      "models": {
+        "openai-codex/gpt-5.2": {},
+        "openai-codex/gpt-5.3": {},
+        "openai-codex/gpt-5.3-codex": {},
+        "anthropic/claude-sonnet-4-5-20250929": {},
+        "anthropic/claude-opus-4-6": {
+          "alias": "opus"
+        }
+      },
+      "workspace": "/Users/lobot/.openclaw/workspace",
+      "contextTokens": "__REDACTED__",
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "5m",
+        "keepLastAssistants": 2,
+        "softTrimRatio": 0.15,
+        "hardClearRatio": 0.2,
+        "minPrunableToolChars": 8000,
+        "tools": {
+          "allow": ["process", "exec"]
+        },
+        "softTrim": {
+          "maxChars": 1200,
+          "headChars": 400,
+          "tailChars": 400
+        },
+        "hardClear": {
+          "enabled": true,
+          "placeholder": "[Old process/exec output cleared to control token usage]"
+        }
+      },
+      "compaction": {
+        "mode": "safeguard",
+        "reserveTokensFloor": "__REDACTED__",
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": "__REDACTED__"
+        }
+      },
+      "timeoutSeconds": 120,
+      "typingIntervalSeconds": 15,
+      "typingMode": "instant",
+      "heartbeat": {
+        "every": "60m",
+        "activeHours": {
+          "start": "05:30",
+          "end": "22:00"
+        },
+        "session": "agent:main:heartbeat",
+        "target": "last"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "lobot",
+        "workspace": "/Users/lobot/.openclaw/workspace-lobot",
+        "model": {
+          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+        },
+        "identity": {
+          "name": "Lobot",
+          "emoji": "🤖"
+        },
+        "tools": {
+          "allow": [
+            "read",
+            "write",
+            "edit",
+            "message",
+            "memory_search",
+            "memory_get",
+            "web_fetch",
+            "web_search",
+            "tts",
+            "exec",
+            "process",
+            "browser"
+          ],
+          "deny": [
+            "gateway",
+            "nodes",
+            "canvas",
+            "sessions_spawn",
+            "sessions_send",
+            "sessions_list",
+            "sessions_history",
+            "agents_list",
+            "cron",
+            "image"
+          ]
+        }
+      },
+      {
+        "id": "threepio",
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
+        "model": {
+          "primary": "openai-codex/gpt-5.2",
+          "fallbacks": ["openai-codex/gpt-5.3-codex"]
+        },
+        "identity": {
+          "name": "Threepio",
+          "emoji": "🤖"
+        },
+        "tools": {
+          "allow": [
+            "read",
+            "message",
+            "memory_search",
+            "memory_get",
+            "web_fetch",
+            "web_search",
+            "exec"
+          ],
+          "deny": [
+            "agents_list",
+            "browser",
+            "canvas",
+            "cron",
+            "edit",
+            "gateway",
+            "image",
+            "nodes",
+            "process",
+            "sessions_history",
+            "sessions_list",
+            "sessions_send",
+            "sessions_spawn",
+            "write"
+          ]
+        }
+      },
+      {
+        "id": "threepio-sonnet-test",
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
+        "model": {
+          "primary": "openai-codex/gpt-5.3-codex",
+          "fallbacks": ["openai-codex/gpt-5.3-codex"]
+        },
+        "identity": {
+          "name": "Threepio (Sonnet Test)",
+          "emoji": "🤖"
+        },
+        "tools": {
+          "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
+          "deny": [
+            "agents_list",
+            "browser",
+            "canvas",
+            "cron",
+            "edit",
+            "exec",
+            "gateway",
+            "image",
+            "nodes",
+            "process",
+            "sessions_history",
+            "sessions_list",
+            "sessions_send",
+            "sessions_spawn",
+            "write"
+          ]
+        }
+      }
+    ]
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "apiKey": "__REDACTED__",
+        "maxResults": 8,
+        "timeoutSeconds": 20,
+        "cacheTtlMinutes": 60
+      },
+      "fetch": {
+        "enabled": true,
+        "maxChars": 12000,
+        "timeoutSeconds": 30,
+        "cacheTtlMinutes": 60,
+        "maxRedirects": 3
+      }
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "threepio",
+      "match": {
+        "channel": "discord",
+        "accountId": "threepio",
+        "peer": {
+          "kind": "dm",
+          "id": "584579716200267808"
+        }
+      }
+    },
+    {
+      "agentId": "lobot",
+      "match": {
+        "channel": "discord",
+        "accountId": "lobot",
+        "peer": {
+          "kind": "group",
+          "id": "channel:1468946967211147377"
+        }
+      }
+    },
+    {
+      "agentId": "threepio",
+      "match": {
+        "channel": "bluebubbles"
+      }
+    },
+    {
+      "agentId": "lobot",
+      "match": {
+        "channel": "discord",
+        "accountId": "lobot",
+        "peer": {
+          "kind": "group",
+          "id": "channel:1469069873056448512"
+        }
+      }
+    },
+    {
+      "agentId": "lobot",
+      "match": {
+        "channel": "discord",
+        "accountId": "lobot",
+        "peer": {
+          "kind": "group",
+          "id": "channel:1469418113396244542"
+        }
+      }
+    },
+    {
+      "agentId": "lobot",
+      "match": {
+        "channel": "discord",
+        "accountId": "lobot",
+        "peer": {
+          "kind": "group",
+          "id": "channel:1469286845731962933"
+        }
+      }
+    },
+    {
+      "agentId": "threepio",
+      "match": {
+        "channel": "discord",
+        "accountId": "threepio",
+        "peer": {
+          "kind": "group",
+          "id": "channel:1469020973201227838"
+        }
+      }
+    }
+  ],
+  "messages": {
+    "inbound": {
+      "debounceMs": 2000,
+      "byChannel": {
+        "bluebubbles": 5000
+      }
+    },
+    "ackReaction": "👍",
+    "ackReactionScope": "all"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "session": {
+    "dmScope": "main"
+  },
+  "channels": {
+    "discord": {
+      "enabled": true,
+      "groupPolicy": "allowlist",
+      "accounts": {
+        "threepio": {
+          "name": "Threepio",
+          "enabled": true,
+          "token": "__REDACTED__",
+          "groupPolicy": "allowlist",
+          "dm": {
+            "policy": "allowlist",
+            "allowFrom": []
+          },
+          "guilds": {
+            "1253735279676756050": {
+              "requireMention": true,
+              "users": ["584579716200267808"],
+              "channels": {
+                "1469020973201227838": {
+                  "requireMention": true
+                }
+              }
+            }
+          }
+        },
+        "lobot": {
+          "name": "Lobot",
+          "enabled": true,
+          "token": "__REDACTED__",
+          "groupPolicy": "allowlist",
+          "dm": {
+            "policy": "allowlist",
+            "allowFrom": []
+          },
+          "guilds": {
+            "1253735279676756050": {
+              "requireMention": true,
+              "users": ["584579716200267808"],
+              "channels": {
+                "1253735280159228097": {
+                  "requireMention": true
+                },
+                "1468946967211147377": {
+                  "requireMention": false,
+                  "systemPrompt": "This is the #home channel. You handle home automation, family calendar, personal tasks, and home infrastructure. Use the personal Gmail (brandonrcullum@gmail.com) for personal email tasks.\n\nInternet use:\n- Prefer headless tools: web_search + web_fetch.\n- If a browser is required, use the isolated OpenClaw-managed browser (profile=openclaw).\n- Do NOT use/attach to the kiosk Chrome tab or anything that touches the physical display."
+                },
+                "1469069873056448512": {
+                  "requireMention": false,
+                  "systemPrompt": "This is the #lobot channel - your dedicated space. Home infrastructure, logs, notes. You respond here without needing @mentions."
+                },
+                "1469418113396244542": {
+                  "requireMention": false,
+                  "systemPrompt": "This is the #dashboard channel. You handle dashboard updates, kiosk status, and related monitoring."
+                },
+                "1469789077107904716": {
+                  "requireMention": false,
+                  "systemPrompt": "This is the #cooking channel. Help with meal planning, recipes, grocery lists, cooking schedules, kid-friendly meals, and kitchen workflow. Ask clarifying questions about servings, dietary restrictions, and timing. Respond without requiring @mentions."
+                },
+                "1469286845731962933": {
+                  "requireMention": true,
+                  "systemPrompt": "This is #monitoring. Respond only when tagged. Help with threepio/BlueBubbles/iMessage listener issues, system health, and cross-machine coordination with Ackbot."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bluebubbles": {
+      "enabled": true,
+      "serverUrl": "http://127.0.0.1:1234",
+      "password": "__REDACTED__",
+      "webhookPath": "__REDACTED__",
+      "dmPolicy": "allowlist",
+      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "groupPolicy": "allowlist",
+      "chunkMode": "length",
+      "sendReadReceipts": false,
+      "blockStreaming": false
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "__REDACTED__"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "memory": {},
+  "plugins": {
+    "entries": {
+      "bluebubbles": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      }
+    }
+  }
+}

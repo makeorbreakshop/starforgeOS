@@ -1,108 +1,75 @@
 {
-  "meta": {
-    "lastTouchedVersion": "2026.2.9",
-    "lastTouchedAt": "2026-02-12T11:40:08.057Z"
-  },
-  "wizard": {
-    "lastRunAt": "2026-02-11T19:23:26.286Z",
-    "lastRunVersion": "2026.2.9",
-    "lastRunCommand": "doctor",
-    "lastRunMode": "local"
-  },
-  "logging": {
-    "redactSensitive": "tools",
-    "redactPatterns": [
-      "\\b(ntn_[A-Za-z0-9]{10,})\\b",
-      "\\b(phx_[A-Za-z0-9]+)\\b",
-      "postgres(ql)?://[^\\s\"']+",
-      "mongodb(\\+srv)?://[^\\s\"']+",
-      "\\b(whsec_[A-Za-z0-9]+)\\b"
-    ]
-  },
-  "auth": {
-    "profiles": {
-      "openai-codex:default": {
-        "provider": "openai-codex",
-        "mode": "oauth"
-      },
-      "anthropic:default": {
-        "provider": "anthropic",
-        "mode": "oauth"
-      }
-    }
-  },
   "agents": {
     "defaults": {
-      "model": {
-        "primary": "openai-codex/gpt-5.3-codex",
-        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+      "compaction": {
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": 6000
+        },
+        "mode": "safeguard",
+        "reserveTokensFloor": 80000
       },
-      "models": {
-        "openai-codex/gpt-5.2": {},
-        "openai-codex/gpt-5.3": {},
-        "openai-codex/gpt-5.3-codex": {},
-        "anthropic/claude-sonnet-4-5-20250929": {},
-        "anthropic/claude-opus-4-6": {
-          "alias": "opus"
-        }
-      },
-      "workspace": "/Users/lobot/.openclaw/workspace",
-      "contextTokens": "__REDACTED__",
       "contextPruning": {
-        "mode": "cache-ttl",
-        "ttl": "5m",
-        "keepLastAssistants": 2,
-        "softTrimRatio": 0.15,
-        "hardClearRatio": 0.2,
-        "minPrunableToolChars": 8000,
-        "tools": {
-          "allow": ["process", "exec"]
-        },
-        "softTrim": {
-          "maxChars": 1200,
-          "headChars": 400,
-          "tailChars": 400
-        },
         "hardClear": {
           "enabled": true,
           "placeholder": "[Old process/exec output cleared to control token usage]"
-        }
+        },
+        "hardClearRatio": 0.2,
+        "keepLastAssistants": 2,
+        "minPrunableToolChars": 8000,
+        "mode": "cache-ttl",
+        "softTrim": {
+          "headChars": 400,
+          "maxChars": 1200,
+          "tailChars": 400
+        },
+        "softTrimRatio": 0.15,
+        "tools": {
+          "allow": ["process", "exec"]
+        },
+        "ttl": "5m"
       },
-      "compaction": {
-        "mode": "safeguard",
-        "reserveTokensFloor": "__REDACTED__",
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": "__REDACTED__"
-        }
+      "contextTokens": 120000,
+      "heartbeat": {
+        "activeHours": {
+          "end": "22:00",
+          "start": "05:30"
+        },
+        "every": "60m",
+        "session": "REDACTED",
+        "target": "last"
+      },
+      "maxConcurrent": 4,
+      "model": {
+        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
+        "primary": "openai-codex/gpt-5.3-codex"
+      },
+      "models": {
+        "anthropic/claude-opus-4-6": {
+          "alias": "opus"
+        },
+        "anthropic/claude-sonnet-4-5-20250929": {},
+        "openai-codex/gpt-5.2": {},
+        "openai-codex/gpt-5.3": {},
+        "openai-codex/gpt-5.3-codex": {}
+      },
+      "subagents": {
+        "maxConcurrent": 8
       },
       "timeoutSeconds": 120,
       "typingIntervalSeconds": 15,
       "typingMode": "instant",
-      "heartbeat": {
-        "every": "60m",
-        "activeHours": {
-          "start": "05:30",
-          "end": "22:00"
-        },
-        "session": "agent:main:heartbeat",
-        "target": "last"
-      },
-      "maxConcurrent": 4,
-      "subagents": {
-        "maxConcurrent": 8
-      }
+      "workspace": "/Users/lobot/.openclaw/workspace"
     },
     "list": [
       {
         "id": "lobot",
-        "workspace": "/Users/lobot/.openclaw/workspace-lobot",
+        "identity": {
+          "emoji": "\ud83e\udd16",
+          "name": "Lobot"
+        },
         "model": {
           "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
-        },
-        "identity": {
-          "name": "Lobot",
-          "emoji": "🤖"
         },
         "tools": {
           "allow": [
@@ -131,18 +98,18 @@
             "cron",
             "image"
           ]
-        }
+        },
+        "workspace": "/Users/lobot/.openclaw/workspace-lobot"
       },
       {
         "id": "threepio",
-        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
-        "model": {
-          "primary": "openai-codex/gpt-5.2",
-          "fallbacks": ["openai-codex/gpt-5.3-codex"]
-        },
         "identity": {
-          "name": "Threepio",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16",
+          "name": "Threepio"
+        },
+        "model": {
+          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
+          "primary": "anthropic/claude-opus-4-6"
         },
         "tools": {
           "allow": [
@@ -170,18 +137,18 @@
             "sessions_spawn",
             "write"
           ]
-        }
+        },
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio"
       },
       {
         "id": "threepio-sonnet-test",
-        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
-        "model": {
-          "primary": "openai-codex/gpt-5.3-codex",
-          "fallbacks": ["openai-codex/gpt-5.3-codex"]
-        },
         "identity": {
-          "name": "Threepio (Sonnet Test)",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16",
+          "name": "Threepio (Sonnet Test)"
+        },
+        "model": {
+          "fallbacks": ["anthropic/claude-opus-4-6"],
+          "primary": "anthropic/claude-sonnet-4-5-20250929"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -202,26 +169,20 @@
             "sessions_spawn",
             "write"
           ]
-        }
+        },
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio"
       }
     ]
   },
-  "tools": {
-    "web": {
-      "search": {
-        "enabled": true,
-        "provider": "brave",
-        "apiKey": "__REDACTED__",
-        "maxResults": 8,
-        "timeoutSeconds": 20,
-        "cacheTtlMinutes": 60
+  "auth": {
+    "profiles": {
+      "anthropic:default": {
+        "mode": "oauth",
+        "provider": "anthropic"
       },
-      "fetch": {
-        "enabled": true,
-        "maxChars": 12000,
-        "timeoutSeconds": 30,
-        "cacheTtlMinutes": 60,
-        "maxRedirects": 3
+      "openai-codex:default": {
+        "mode": "oauth",
+        "provider": "openai-codex"
       }
     }
   },
@@ -229,22 +190,22 @@
     {
       "agentId": "threepio",
       "match": {
-        "channel": "discord",
         "accountId": "threepio",
+        "channel": "discord",
         "peer": {
-          "kind": "dm",
-          "id": "584579716200267808"
+          "id": "584579716200267808",
+          "kind": "dm"
         }
       }
     },
     {
       "agentId": "lobot",
       "match": {
-        "channel": "discord",
         "accountId": "lobot",
+        "channel": "discord",
         "peer": {
-          "kind": "group",
-          "id": "channel:1468946967211147377"
+          "id": "channel:1468946967211147377",
+          "kind": "group"
         }
       }
     },
@@ -257,104 +218,73 @@
     {
       "agentId": "lobot",
       "match": {
-        "channel": "discord",
         "accountId": "lobot",
+        "channel": "discord",
         "peer": {
-          "kind": "group",
-          "id": "channel:1469069873056448512"
+          "id": "channel:1469069873056448512",
+          "kind": "group"
         }
       }
     },
     {
       "agentId": "lobot",
       "match": {
-        "channel": "discord",
         "accountId": "lobot",
+        "channel": "discord",
         "peer": {
-          "kind": "group",
-          "id": "channel:1469418113396244542"
+          "id": "channel:1469418113396244542",
+          "kind": "group"
         }
       }
     },
     {
       "agentId": "lobot",
       "match": {
-        "channel": "discord",
         "accountId": "lobot",
+        "channel": "discord",
         "peer": {
-          "kind": "group",
-          "id": "channel:1469286845731962933"
+          "id": "channel:1469286845731962933",
+          "kind": "group"
         }
       }
     },
     {
       "agentId": "threepio",
       "match": {
-        "channel": "discord",
         "accountId": "threepio",
+        "channel": "discord",
         "peer": {
-          "kind": "group",
-          "id": "channel:1469020973201227838"
+          "id": "channel:1469020973201227838",
+          "kind": "group"
         }
       }
     }
   ],
-  "messages": {
-    "inbound": {
-      "debounceMs": 2000,
-      "byChannel": {
-        "bluebubbles": 5000
-      }
-    },
-    "ackReaction": "👍",
-    "ackReactionScope": "all"
-  },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto"
-  },
-  "session": {
-    "dmScope": "main"
-  },
   "channels": {
-    "discord": {
+    "bluebubbles": {
+      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "blockStreaming": false,
+      "chunkMode": "length",
+      "dmPolicy": "allowlist",
       "enabled": true,
+      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupPolicy": "allowlist",
+      "password": "REDACTED",
+      "sendReadReceipts": false,
+      "serverUrl": "http://127.0.0.1:1234",
+      "webhookPath": "/bluebubbles-webhook"
+    },
+    "discord": {
       "accounts": {
-        "threepio": {
-          "name": "Threepio",
-          "enabled": true,
-          "token": "__REDACTED__",
-          "groupPolicy": "allowlist",
-          "dm": {
-            "policy": "allowlist",
-            "allowFrom": []
-          },
-          "guilds": {
-            "1253735279676756050": {
-              "requireMention": true,
-              "users": ["584579716200267808"],
-              "channels": {
-                "1469020973201227838": {
-                  "requireMention": true
-                }
-              }
-            }
-          }
-        },
         "lobot": {
-          "name": "Lobot",
-          "enabled": true,
-          "token": "__REDACTED__",
-          "groupPolicy": "allowlist",
           "dm": {
-            "policy": "allowlist",
-            "allowFrom": []
+            "allowFrom": [],
+            "policy": "allowlist"
           },
+          "enabled": true,
+          "groupPolicy": "allowlist",
           "guilds": {
             "1253735279676756050": {
-              "requireMention": true,
-              "users": ["584579716200267808"],
               "channels": {
                 "1253735280159228097": {
                   "requireMention": true
@@ -367,6 +297,10 @@
                   "requireMention": false,
                   "systemPrompt": "This is the #lobot channel - your dedicated space. Home infrastructure, logs, notes. You respond here without needing @mentions."
                 },
+                "1469286845731962933": {
+                  "requireMention": true,
+                  "systemPrompt": "This is #monitoring. Respond only when tagged. Help with threepio/BlueBubbles/iMessage listener issues, system health, and cross-machine coordination with Ackbot."
+                },
                 "1469418113396244542": {
                   "requireMention": false,
                   "systemPrompt": "This is the #dashboard channel. You handle dashboard updates, kiosk status, and related monitoring."
@@ -374,45 +308,83 @@
                 "1469789077107904716": {
                   "requireMention": false,
                   "systemPrompt": "This is the #cooking channel. Help with meal planning, recipes, grocery lists, cooking schedules, kid-friendly meals, and kitchen workflow. Ask clarifying questions about servings, dietary restrictions, and timing. Respond without requiring @mentions."
-                },
-                "1469286845731962933": {
-                  "requireMention": true,
-                  "systemPrompt": "This is #monitoring. Respond only when tagged. Help with threepio/BlueBubbles/iMessage listener issues, system health, and cross-machine coordination with Ackbot."
                 }
-              }
+              },
+              "requireMention": true,
+              "users": ["584579716200267808"]
             }
-          }
+          },
+          "name": "Lobot",
+          "token": "REDACTED"
+        },
+        "threepio": {
+          "dm": {
+            "allowFrom": [],
+            "policy": "allowlist"
+          },
+          "enabled": true,
+          "groupPolicy": "allowlist",
+          "guilds": {
+            "1253735279676756050": {
+              "channels": {
+                "1469020973201227838": {
+                  "requireMention": true
+                }
+              },
+              "requireMention": true,
+              "users": ["584579716200267808"]
+            }
+          },
+          "name": "Threepio",
+          "token": "REDACTED"
         }
-      }
-    },
-    "bluebubbles": {
+      },
       "enabled": true,
-      "serverUrl": "http://127.0.0.1:1234",
-      "password": "__REDACTED__",
-      "webhookPath": "__REDACTED__",
-      "dmPolicy": "allowlist",
-      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
-      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
-      "groupPolicy": "allowlist",
-      "chunkMode": "length",
-      "sendReadReceipts": false,
-      "blockStreaming": false
+      "groupPolicy": "allowlist"
     }
   },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
   "gateway": {
-    "port": 18789,
-    "mode": "local",
-    "bind": "loopback",
     "auth": {
       "mode": "token",
-      "token": "__REDACTED__"
+      "token": "REDACTED"
     },
+    "bind": "loopback",
+    "mode": "local",
+    "port": 18789,
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
     }
   },
+  "logging": {
+    "redactPatterns": [
+      "\\b(ntn_[A-Za-z0-9]{10,})\\b",
+      "\\b(phx_[A-Za-z0-9]+)\\b",
+      "postgres(ql)?://[^\\s\"']+",
+      "mongodb(\\+srv)?://[^\\s\"']+",
+      "\\b(whsec_[A-Za-z0-9]+)\\b"
+    ],
+    "redactSensitive": "tools"
+  },
   "memory": {},
+  "messages": {
+    "ackReaction": "\ud83d\udc4d",
+    "ackReactionScope": "all",
+    "inbound": {
+      "byChannel": {
+        "bluebubbles": 5000
+      },
+      "debounceMs": 2000
+    }
+  },
+  "meta": {
+    "lastTouchedAt": "2026-02-12T11:40:08.057Z",
+    "lastTouchedVersion": "2026.2.9"
+  },
   "plugins": {
     "entries": {
       "bluebubbles": {
@@ -422,5 +394,33 @@
         "enabled": true
       }
     }
+  },
+  "session": {
+    "dmScope": "REDACTED"
+  },
+  "tools": {
+    "web": {
+      "fetch": {
+        "cacheTtlMinutes": 60,
+        "enabled": true,
+        "maxChars": 12000,
+        "maxRedirects": 3,
+        "timeoutSeconds": 30
+      },
+      "search": {
+        "apiKey": "REDACTED",
+        "cacheTtlMinutes": 60,
+        "enabled": true,
+        "maxResults": 8,
+        "provider": "brave",
+        "timeoutSeconds": 20
+      }
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-11T19:23:26.286Z",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local",
+    "lastRunVersion": "2026.2.9"
   }
 }

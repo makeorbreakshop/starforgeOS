@@ -1,38 +1,44 @@
 {
-  "meta": {
-    "lastTouchedVersion": "2026.2.9",
-    "lastTouchedAt": "2026-02-12T11:25:27.297Z"
-  },
-  "wizard": {
-    "lastRunAt": "2026-02-04T16:55:47.632Z",
-    "lastRunVersion": "2026.2.2-3",
-    "lastRunCommand": "doctor",
-    "lastRunMode": "local"
-  },
-  "auth": {
-    "profiles": {
-      "anthropic:default": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "anthropic:manual": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "openai-codex:default": {
-        "provider": "openai-codex",
-        "mode": "oauth"
-      }
-    },
-    "order": {
-      "openai-codex": ["openai-codex:default"]
-    }
-  },
   "agents": {
     "defaults": {
+      "compaction": {
+        "memoryFlush": {
+          "enabled": true,
+          "prompt": "Context is hitting limits. Write a checkpoint to memory/YYYY-MM-DD.md (use today's date). Include: 1) Current task/goal 2) Key decisions made 3) Progress (done/in-progress/blocked) 4) Active Codex sessions from memory/active-codex-sessions.json 5) Next steps. Also read memory/active-codex-sessions.json and include any active sessions in your checkpoint. After writing, reply with ONLY: SESSION_CHECKPOINT_COMPLETE",
+          "softThresholdTokens": 100000
+        },
+        "reserveTokensFloor": 80000
+      },
+      "contextPruning": {
+        "hardClear": {
+          "enabled": true,
+          "placeholder": "[Old process/exec output cleared to control token usage]"
+        },
+        "hardClearRatio": 0.2,
+        "keepLastAssistants": 2,
+        "minPrunableToolChars": 8000,
+        "mode": "cache-ttl",
+        "softTrim": {
+          "headChars": 400,
+          "maxChars": 1200,
+          "tailChars": 400
+        },
+        "softTrimRatio": 0.15,
+        "tools": {
+          "allow": ["process", "exec"]
+        },
+        "ttl": "5m"
+      },
+      "contextTokens": 120000,
+      "heartbeat": {
+        "every": "30m",
+        "session": "agent:main:heartbeat",
+        "target": "last"
+      },
+      "maxConcurrent": 4,
       "model": {
-        "primary": "openai-codex/gpt-5.3-codex",
-        "fallbacks": ["openai-codex/gpt-5.3-codex"]
+        "fallbacks": ["openai-codex/gpt-5.3-codex"],
+        "primary": "openai-codex/gpt-5.3-codex"
       },
       "models": {
         "anthropic/claude-opus-4-5": {
@@ -45,109 +51,52 @@
           "alias": "sonnet"
         }
       },
-      "workspace": "/Users/brandoncullum/.openclaw/workspace",
-      "contextPruning": {
-        "mode": "cache-ttl",
-        "ttl": "5m",
-        "keepLastAssistants": 2,
-        "softTrimRatio": 0.15,
-        "hardClearRatio": 0.2,
-        "minPrunableToolChars": 8000,
-        "tools": {
-          "allow": ["process", "exec"]
-        },
-        "softTrim": {
-          "maxChars": 1200,
-          "headChars": 400,
-          "tailChars": 400
-        },
-        "hardClear": {
-          "enabled": true,
-          "placeholder": "[Old process/exec output cleared to control token usage]"
-        }
-      },
-      "compaction": {
-        "reserveTokensFloor": "__REDACTED__",
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": "__REDACTED__",
-          "prompt": "Context is hitting limits. Write a checkpoint to memory/YYYY-MM-DD.md (use today's date). Include: 1) Current task/goal 2) Key decisions made 3) Progress (done/in-progress/blocked) 4) Active Codex sessions from memory/active-codex-sessions.json 5) Next steps. Also read memory/active-codex-sessions.json and include any active sessions in your checkpoint. After writing, reply with ONLY: SESSION_CHECKPOINT_COMPLETE"
-        }
-      },
-      "heartbeat": {
-        "every": "30m",
-        "session": "agent:main:heartbeat",
-        "target": "last"
-      },
-      "maxConcurrent": 4,
       "subagents": {
         "maxConcurrent": 8
       },
-      "contextTokens": "__REDACTED__"
+      "workspace": "/Users/brandoncullum/.openclaw/workspace"
     }
   },
-  "tools": {
-    "exec": {
-      "timeoutSec": 7200
-    }
-  },
-  "messages": {
-    "ackReactionScope": "group-mentions"
-  },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto"
-  },
-  "session": {
-    "resetTriggers": ["SESSION_CHECKPOINT_COMPLETE"]
-  },
-  "hooks": {
-    "enabled": true,
-    "path": "/hooks",
-    "token": "__REDACTED__",
-    "presets": ["gmail"],
-    "gmail": {
-      "account": "brandonrcullum@gmail.com",
-      "label": "INBOX",
-      "topic": "projects/admiral-ackbot/topics/gog-gmail-watch",
-      "subscription": "gog-gmail-watch-push-personal",
-      "pushToken": "__REDACTED__",
-      "hookUrl": "http://127.0.0.1:18789/hooks/gmail",
-      "includeBody": true,
-      "maxBytes": 20000,
-      "renewEveryMinutes": 720,
-      "serve": {
-        "bind": "127.0.0.1",
-        "port": 8789,
-        "path": "/"
+  "auth": {
+    "order": {
+      "openai-codex": ["openai-codex:default"]
+    },
+    "profiles": {
+      "anthropic:default": {
+        "mode": "token",
+        "provider": "anthropic"
       },
-      "tailscale": {
-        "mode": "funnel",
-        "path": "/gmail-pubsub"
+      "anthropic:manual": {
+        "mode": "token",
+        "provider": "anthropic"
+      },
+      "openai-codex:default": {
+        "mode": "oauth",
+        "provider": "openai-codex"
       }
     }
   },
   "channels": {
     "discord": {
       "enabled": true,
-      "token": "__REDACTED__",
       "groupPolicy": "allowlist",
       "guilds": {
         "1253735279676756050": {
-          "requireMention": true,
-          "users": ["584579716200267808"],
           "channels": {
+            "1253735280159228097": {
+              "requireMention": true
+            },
             "1468664591981613293": {
               "requireMention": false
             },
             "1468671572612223238": {
-              "requireMention": false,
               "enabled": true,
+              "requireMention": false,
               "systemPrompt": "This is the #mfm (Machines for Makers) business channel. Use the work email (brandon@makeorbreakshop.com) for email-related tasks. Primary codebase is /Users/brandoncullum/machines-for-makers. Business context: machinesformakers.com, laser/3D printer reviews, Laser Lab SaaS, affiliate income."
             },
             "1468946967211147377": {
-              "requireMention": false,
               "enabled": false,
+              "requireMention": false,
               "systemPrompt": "This is Brandon's #personal channel. When asked about email, always use the personal Gmail account (brandonrcullum@gmail.com), not the work account."
             },
             "1468978750157754411": {
@@ -159,9 +108,6 @@
             "1469020973201227838": {
               "requireMention": true
             },
-            "1253735280159228097": {
-              "requireMention": true
-            },
             "1469069873056448512": {
               "enabled": false
             },
@@ -171,33 +117,66 @@
             "1469418113396244542": {
               "enabled": false
             },
-            "1471097778531864606": {
-              "requireMention": false,
-              "enabled": true,
-              "systemPrompt": "This is #mfm-audit — daily structured morning audit reports. Full overnight ops review, cron job results, price extractor status, SEO work, questions and suggestions for Brandon."
-            },
             "1469860225963266069": {
-              "requireMention": true,
               "enabled": true,
+              "requireMention": true,
               "systemPrompt": "This is the #bookmarks channel for reviewing X/Twitter bookmarks. When Brandon shares a bookmark or URL, analyze the content and extract: 1) Key insights relevant to agent workflows, memory systems, or productivity 2) Actionable ideas we could implement 3) Any techniques or patterns worth adopting. Focus on practical takeaways."
+            },
+            "1471097778531864606": {
+              "enabled": true,
+              "requireMention": false,
+              "systemPrompt": "This is #mfm-audit \u2014 daily structured morning audit reports. Full overnight ops review, cron job results, price extractor status, SEO work, questions and suggestions for Brandon."
             }
-          }
+          },
+          "requireMention": true,
+          "users": ["584579716200267808"]
         }
-      }
+      },
+      "token": "<REDACTED>"
     }
   },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
   "gateway": {
-    "port": 18789,
-    "mode": "local",
-    "bind": "lan",
     "auth": {
       "mode": "token",
-      "token": "__REDACTED__"
+      "token": "<REDACTED>"
     },
+    "bind": "lan",
+    "mode": "local",
+    "port": 18789,
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
     }
+  },
+  "hooks": {
+    "enabled": true,
+    "gmail": {
+      "account": "brandonrcullum@gmail.com",
+      "hookUrl": "http://127.0.0.1:18789/hooks/gmail",
+      "includeBody": true,
+      "label": "INBOX",
+      "maxBytes": 20000,
+      "pushToken": "<REDACTED>",
+      "renewEveryMinutes": 720,
+      "serve": {
+        "bind": "127.0.0.1",
+        "path": "/",
+        "port": 8789
+      },
+      "subscription": "gog-gmail-watch-push-personal",
+      "tailscale": {
+        "mode": "funnel",
+        "path": "/gmail-pubsub"
+      },
+      "topic": "projects/admiral-ackbot/topics/gog-gmail-watch"
+    },
+    "path": "/hooks",
+    "presets": ["gmail"],
+    "token": "<REDACTED>"
   },
   "memory": {
     "backend": "qmd",
@@ -205,13 +184,13 @@
       "includeDefaultMemory": true,
       "paths": [
         {
-          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "name": "life",
+          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.md"
         },
         {
-          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "name": "life-json",
+          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.json"
         }
       ],
@@ -220,18 +199,12 @@
       }
     }
   },
-  "skills": {
-    "install": {
-      "nodeManager": "npm"
-    },
-    "entries": {
-      "goplaces": {
-        "apiKey": "__REDACTED__"
-      },
-      "local-places": {
-        "apiKey": "__REDACTED__"
-      }
-    }
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "meta": {
+    "lastTouchedAt": "2026-02-12T11:25:27.297Z",
+    "lastTouchedVersion": "2026.2.9"
   },
   "plugins": {
     "entries": {
@@ -239,5 +212,32 @@
         "enabled": true
       }
     }
+  },
+  "session": {
+    "resetTriggers": ["SESSION_CHECKPOINT_COMPLETE"]
+  },
+  "skills": {
+    "entries": {
+      "goplaces": {
+        "apiKey": "<REDACTED>"
+      },
+      "local-places": {
+        "apiKey": "<REDACTED>"
+      }
+    },
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "tools": {
+    "exec": {
+      "timeoutSec": 7200
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-04T16:55:47.632Z",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local",
+    "lastRunVersion": "2026.2.2-3"
   }
 }

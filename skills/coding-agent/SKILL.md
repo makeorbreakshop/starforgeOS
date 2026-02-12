@@ -253,6 +253,42 @@ git worktree remove /tmp/issue-99
 
 ---
 
+## 🔁 Bug Fix Workflow (MANDATORY TDD)
+
+For **any bug-fix request** ("broken", "regression", "doesn't work", etc.), use a strict discovery → code → test loop.
+
+### Required loop
+
+1. **Discovery**
+   - Reproduce the bug first.
+   - Identify the exact path/component where behavior diverges from expected.
+   - Define acceptance criteria in observable terms (not vibes).
+
+2. **TDD (Red → Green → Refactor)**
+   - Write a failing test that reproduces the bug (**RED**).
+   - Run the test and confirm it fails for the expected reason.
+   - Implement the minimal fix (**GREEN**).
+   - Re-run the test and confirm pass.
+   - Refactor safely if needed, then re-run tests.
+
+3. **Verification**
+   - Run targeted tests for the changed area.
+   - Run broader related tests to catch regressions.
+   - Do not mark complete unless behavior is proven by tests.
+
+### Completion gate (must be true before reporting "fixed")
+
+- Repro test existed and failed before the fix.
+- Repro test now passes.
+- Related suite passes.
+- User-facing claim matches what was actually validated.
+
+### Prompt requirement for bug-fix Codex runs
+
+Include this sentence in bug-fix prompts:
+
+`Use strict TDD: write failing tests first, confirm failure, implement minimal fix, and run targeted + related tests before declaring done.`
+
 ## ⚠️ Rules
 
 1. **Always use pty:true** - coding agents need a terminal!

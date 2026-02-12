@@ -12,9 +12,11 @@ import {
   setJobTtlMs,
 } from "./bash-process-registry.js";
 import {
+  clampWithDefault,
   deriveSessionName,
   killSession,
   pad,
+  readEnvInt,
   sliceLogLines,
   truncateMiddle,
 } from "./bash-tools.shared.js";
@@ -24,6 +26,36 @@ export type ProcessToolDefaults = {
   cleanupMs?: number;
   scopeKey?: string;
 };
+
+const DEFAULT_LOG_LIMIT_LINES = clampWithDefault(
+  readEnvInt("OPENCLAW_PROCESS_LOG_DEFAULT_LINES"),
+  120,
+  10,
+  2000,
+);
+const DEFAULT_RESULT_MAX_CHARS = clampWithDefault(
+  readEnvInt("OPENCLAW_PROCESS_RESULT_MAX_CHARS"),
+  4000,
+  500,
+  32_000,
+);
+
+function truncateProcessText(text: string, maxChars = DEFAULT_RESULT_MAX_CHARS) {
+  const originalChars = text.length;
+  if (originalChars <= maxChars) {
+    return { text, truncated: false, originalChars };
+  }
+
+  // Keep a stable head/tail preview to avoid injecting huge process buffers into session context.
+  const reserveForNote = 160;
+  const available = Math.max(maxChars - reserveForNote, 200);
+  const headChars = Math.max(50, Math.floor(available / 2));
+  const tailChars = Math.max(50, available - headChars);
+  const head = text.slice(0, headChars);
+  const tail = text.slice(Math.max(0, originalChars - tailChars));
+  const note = `\n\n[process output truncated: ${originalChars} chars total]`;
+  return { text: `${head}\n...\n${tail}${note}`, truncated: true, originalChars };
+}
 
 const processSchema = Type.Object({
   action: Type.String({ description: "Process action" }),
@@ -147,6 +179,7 @@ export function createProcessTool(
         case "poll": {
           if (!scopedSession) {
             if (scopedFinished) {
+              const aggregatedPreview = truncateProcessText(scopedFinished.aggregated);
               return {
                 content: [
                   {
@@ -167,7 +200,9 @@ export function createProcessTool(
                   status: scopedFinished.status === "completed" ? "completed" : "failed",
                   sessionId: params.sessionId,
                   exitCode: scopedFinished.exitCode ?? undefined,
-                  aggregated: scopedFinished.aggregated,
+                  aggregated: aggregatedPreview.text,
+                  aggregatedChars: scopedFinished.aggregated.length,
+                  aggregatedTruncated: aggregatedPreview.truncated,
                   name: deriveSessionName(scopedFinished.command),
                 },
               };
@@ -212,6 +247,7 @@ export function createProcessTool(
               : "failed"
             : "running";
           const output = [stdout.trimEnd(), stderr.trimEnd()].filter(Boolean).join("\n").trim();
+          const aggregatedPreview = truncateProcessText(scopedSession.aggregated);
           return {
             content: [
               {
@@ -229,7 +265,9 @@ export function createProcessTool(
               status,
               sessionId: params.sessionId,
               exitCode: exited ? exitCode : undefined,
-              aggregated: scopedSession.aggregated,
+              aggregated: aggregatedPreview.text,
+              aggregatedChars: scopedSession.aggregated.length,
+              aggregatedTruncated: aggregatedPreview.truncated,
               name: deriveSessionName(scopedSession.command),
             },
           };
@@ -251,16 +289,19 @@ export function createProcessTool(
             const { slice, totalLines, totalChars } = sliceLogLines(
               scopedSession.aggregated,
               params.offset,
-              params.limit,
+              params.limit ?? DEFAULT_LOG_LIMIT_LINES,
             );
+            const preview = truncateProcessText(slice || "(no output yet)");
             return {
-              content: [{ type: "text", text: slice || "(no output yet)" }],
+              content: [{ type: "text", text: preview.text }],
               details: {
                 status: scopedSession.exited ? "completed" : "running",
                 sessionId: params.sessionId,
                 total: totalLines,
                 totalLines,
                 totalChars,
+                returnedChars: preview.text.length,
+                outputTruncated: preview.truncated,
                 truncated: scopedSession.truncated,
                 name: deriveSessionName(scopedSession.command),
               },
@@ -270,17 +311,20 @@ export function createProcessTool(
             const { slice, totalLines, totalChars } = sliceLogLines(
               scopedFinished.aggregated,
               params.offset,
-              params.limit,
+              params.limit ?? DEFAULT_LOG_LIMIT_LINES,
             );
             const status = scopedFinished.status === "completed" ? "completed" : "failed";
+            const preview = truncateProcessText(slice || "(no output recorded)");
             return {
-              content: [{ type: "text", text: slice || "(no output recorded)" }],
+              content: [{ type: "text", text: preview.text }],
               details: {
                 status,
                 sessionId: params.sessionId,
                 total: totalLines,
                 totalLines,
                 totalChars,
+                returnedChars: preview.text.length,
+                outputTruncated: preview.truncated,
                 truncated: scopedFinished.truncated,
                 exitCode: scopedFinished.exitCode ?? undefined,
                 exitSignal: scopedFinished.exitSignal ?? undefined,

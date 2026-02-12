@@ -239,6 +239,52 @@ describe("exec tool backgrounding", () => {
     expect(normalizeText(textBlock?.text)).toBe("beta");
   });
 
+  it("caps oversized process log payloads", async () => {
+    const result = await execTool.execute("call1", {
+      command: "node -e \"process.stdout.write('A'.repeat(30000))\"",
+      background: true,
+    });
+    const sessionId = (result.details as { sessionId: string }).sessionId;
+    await waitForCompletion(sessionId);
+
+    const log = await processTool.execute("call2", {
+      action: "log",
+      sessionId,
+    });
+    const textBlock = log.content.find((c) => c.type === "text");
+    const text = textBlock?.text ?? "";
+    const details = log.details as { outputTruncated?: boolean; totalChars?: number };
+
+    expect(text).toContain("[process output truncated:");
+    expect(text.length).toBeLessThan(5000);
+    expect(details.outputTruncated).toBe(true);
+    expect(details.totalChars).toBeGreaterThan(20_000);
+  });
+
+  it("caps aggregated preview returned by process poll", async () => {
+    const result = await execTool.execute("call1", {
+      command: "node -e \"process.stdout.write('B'.repeat(25000))\"",
+      background: true,
+    });
+    const sessionId = (result.details as { sessionId: string }).sessionId;
+    await waitForCompletion(sessionId);
+
+    const poll = await processTool.execute("call2", {
+      action: "poll",
+      sessionId,
+    });
+    const details = poll.details as {
+      aggregated?: string;
+      aggregatedChars?: number;
+      aggregatedTruncated?: boolean;
+    };
+
+    expect(details.aggregated ?? "").toContain("[process output truncated:");
+    expect((details.aggregated ?? "").length).toBeLessThan(5000);
+    expect(details.aggregatedTruncated).toBe(true);
+    expect(details.aggregatedChars).toBeGreaterThan(20_000);
+  });
+
   it("scopes process sessions by scopeKey", async () => {
     const bashA = createExecTool({ backgroundMs: 10, scopeKey: "agent:alpha" });
     const processA = createProcessTool({ scopeKey: "agent:alpha" });

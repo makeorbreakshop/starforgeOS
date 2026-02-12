@@ -11,6 +11,7 @@ export type MemoryConfig = {
 
 export type MemoryQmdConfig = {
   command?: string;
+  indexScope?: "agent" | "machine";
   includeDefaultMemory?: boolean;
   paths?: MemoryQmdIndexPath[];
   sessions?: MemoryQmdSessionConfig;

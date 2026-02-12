@@ -213,6 +213,7 @@ export const FIELD_LABELS: Record<string, string> = {
   "memory.backend": "Memory Backend",
   "memory.citations": "Memory Citations Mode",
   "memory.qmd.command": "QMD Binary",
+  "memory.qmd.indexScope": "QMD Index Scope",
   "memory.qmd.includeDefaultMemory": "QMD Include Default Memory",
   "memory.qmd.paths": "QMD Extra Paths",
   "memory.qmd.paths.path": "QMD Path",
@@ -541,6 +542,8 @@ export const FIELD_HELP: Record<string, string> = {
   "memory.backend": 'Memory backend ("builtin" for OpenClaw embeddings, "qmd" for QMD sidecar).',
   "memory.citations": 'Default citation behavior ("auto", "on", or "off").',
   "memory.qmd.command": "Path to the qmd binary (default: resolves from PATH).",
+  "memory.qmd.indexScope":
+    'QMD index scope ("agent" keeps a separate index per agent, "machine" shares one index per host).',
   "memory.qmd.includeDefaultMemory":
     "Whether to automatically index MEMORY.md + memory/**/*.md (default: true).",
   "memory.qmd.paths":

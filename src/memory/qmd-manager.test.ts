@@ -105,6 +105,71 @@ describe("QmdMemoryManager", () => {
     await fs.rm(tmpRoot, { recursive: true, force: true });
   });
 
+  it("uses machine-scoped qmd index paths when configured", async () => {
+    cfg = {
+      ...cfg,
+      memory: {
+        backend: "qmd",
+        qmd: {
+          indexScope: "machine",
+          includeDefaultMemory: false,
+          update: { interval: "0s", debounceMs: 60_000, onBoot: false },
+          paths: [{ path: workspaceDir, pattern: "**/*.md", name: "workspace" }],
+        },
+      },
+    } as OpenClawConfig;
+
+    const resolved = resolveMemoryBackendConfig({ cfg, agentId });
+    const manager = await QmdMemoryManager.create({ cfg, agentId, resolved });
+    expect(manager).toBeTruthy();
+    if (!manager) {
+      throw new Error("manager missing");
+    }
+
+    const status = manager.status();
+    expect(status.dbPath).toBe(path.join(stateDir, "qmd", "xdg-cache", "qmd", "index.sqlite"));
+    expect((status.custom as { qmd?: { indexScope?: string } } | undefined)?.qmd?.indexScope).toBe(
+      "machine",
+    );
+
+    await manager.close();
+  });
+
+  it("uses agent-specific session exports under machine-scoped qmd indexes", async () => {
+    cfg = {
+      ...cfg,
+      memory: {
+        backend: "qmd",
+        qmd: {
+          indexScope: "machine",
+          includeDefaultMemory: false,
+          sessions: { enabled: true },
+          update: { interval: "0s", debounceMs: 60_000, onBoot: false },
+          paths: [{ path: workspaceDir, pattern: "**/*.md", name: "workspace" }],
+        },
+      },
+    } as OpenClawConfig;
+
+    const resolved = resolveMemoryBackendConfig({ cfg, agentId });
+    const manager = await QmdMemoryManager.create({ cfg, agentId, resolved });
+    expect(manager).toBeTruthy();
+    if (!manager) {
+      throw new Error("manager missing");
+    }
+
+    const collectionAddCalls = spawnMock.mock.calls
+      .map((call) => call[1] as string[])
+      .filter((args) => args[0] === "collection" && args[1] === "add");
+    const hasAgentScopedSessions = collectionAddCalls.some(
+      (args) =>
+        args.includes(path.join(stateDir, "qmd", "sessions", agentId)) &&
+        args.includes("sessions-main"),
+    );
+    expect(hasAgentScopedSessions).toBe(true);
+
+    await manager.close();
+  });
+
   it("debounces back-to-back sync calls", async () => {
     const resolved = resolveMemoryBackendConfig({ cfg, agentId });
     const manager = await QmdMemoryManager.create({ cfg, agentId, resolved });

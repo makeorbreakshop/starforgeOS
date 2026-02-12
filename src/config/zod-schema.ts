@@ -73,6 +73,7 @@ const MemoryQmdLimitsSchema = z
 const MemoryQmdSchema = z
   .object({
     command: z.string().optional(),
+    indexScope: z.union([z.literal("agent"), z.literal("machine")]).optional(),
     includeDefaultMemory: z.boolean().optional(),
     paths: z.array(MemoryQmdPathSchema).optional(),
     sessions: MemoryQmdSessionSchema.optional(),

@@ -202,6 +202,9 @@ class FallbackMemoryManager implements MemorySearchManager {
 }
 
 function buildQmdCacheKey(agentId: string, config: ResolvedQmdConfig): string {
+  if (config.indexScope === "machine") {
+    return `machine:${stableSerialize(config)}`;
+  }
   return `${agentId}:${stableSerialize(config)}`;
 }
 

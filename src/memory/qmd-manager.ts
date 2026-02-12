@@ -30,6 +30,14 @@ const log = createSubsystemLogger("memory");
 const SNIPPET_HEADER_RE = /@@\s*-([0-9]+),([0-9]+)/;
 const SEARCH_PENDING_UPDATE_WAIT_MS = 500;
 
+function sanitizeName(input: string): string {
+  const normalized = (input || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-");
+  return normalized.replace(/^-+|-+$/g, "") || "agent";
+}
+
 type QmdQueryResult = {
   docid?: string;
   score?: number;
@@ -67,6 +75,7 @@ export class QmdMemoryManager implements MemorySearchManager {
   private readonly cfg: OpenClawConfig;
   private readonly agentId: string;
   private readonly qmd: ResolvedQmdConfig;
+  private readonly indexScope: "agent" | "machine";
   private readonly workspaceDir: string;
   private readonly stateDir: string;
   private readonly agentStateDir: string;
@@ -99,10 +108,14 @@ export class QmdMemoryManager implements MemorySearchManager {
     this.cfg = params.cfg;
     this.agentId = params.agentId;
     this.qmd = params.resolved;
+    this.indexScope = this.qmd.indexScope;
     this.workspaceDir = resolveAgentWorkspaceDir(params.cfg, params.agentId);
     this.stateDir = resolveStateDir(process.env, os.homedir);
     this.agentStateDir = path.join(this.stateDir, "agents", this.agentId);
-    this.qmdDir = path.join(this.agentStateDir, "qmd");
+    this.qmdDir =
+      this.indexScope === "machine"
+        ? path.join(this.stateDir, "qmd")
+        : path.join(this.agentStateDir, "qmd");
     // QMD uses XDG base dirs for its internal state.
     // Collections are managed via `qmd collection add` and stored inside the index DB.
     // - config:  $XDG_CONFIG_HOME (contexts, etc.)
@@ -117,13 +130,19 @@ export class QmdMemoryManager implements MemorySearchManager {
       XDG_CACHE_HOME: this.xdgCacheHome,
       NO_COLOR: "1",
     };
+    const defaultSessionExportDir =
+      this.indexScope === "machine"
+        ? path.join(this.qmdDir, "sessions", this.agentId)
+        : path.join(this.qmdDir, "sessions");
+    const defaultSessionCollectionName =
+      this.indexScope === "machine" ? `sessions-${sanitizeName(this.agentId)}` : "sessions";
     this.sessionExporter = this.qmd.sessions.enabled
       ? {
-          dir: this.qmd.sessions.exportDir ?? path.join(this.qmdDir, "sessions"),
+          dir: this.qmd.sessions.exportDir ?? defaultSessionExportDir,
           retentionMs: this.qmd.sessions.retentionDays
             ? this.qmd.sessions.retentionDays * 24 * 60 * 60 * 1000
             : undefined,
-          collectionName: this.pickSessionCollectionName(),
+          collectionName: this.pickSessionCollectionName(defaultSessionCollectionName),
         }
       : null;
     if (this.sessionExporter) {
@@ -144,12 +163,12 @@ export class QmdMemoryManager implements MemorySearchManager {
     await fs.mkdir(this.xdgCacheHome, { recursive: true });
     await fs.mkdir(path.dirname(this.indexPath), { recursive: true });
 
-    // QMD stores its ML models under $XDG_CACHE_HOME/qmd/models/.  Because we
-    // override XDG_CACHE_HOME to isolate the index per-agent, qmd would not
-    // find models installed at the default location (~/.cache/qmd/models/) and
-    // would attempt to re-download them on every invocation.  Symlink the
-    // default models directory into our custom cache so the index stays
-    // isolated while models are shared.
+    // QMD stores its ML models under $XDG_CACHE_HOME/qmd/models/. Because we
+    // override XDG_CACHE_HOME for managed indexes (agent- or machine-scoped),
+    // qmd would not find models installed at the default location
+    // (~/.cache/qmd/models/) and would attempt to re-download them on every
+    // invocation. Symlink the default models directory into our custom cache so
+    // indexes remain scoped while models are shared.
     await this.symlinkSharedModels();
 
     this.bootstrapCollections();
@@ -377,6 +396,7 @@ export class QmdMemoryManager implements MemorySearchManager {
       },
       custom: {
         qmd: {
+          indexScope: this.indexScope,
           collections: this.qmd.collections.length,
           lastUpdateAt: this.lastUpdateAt,
         },
@@ -634,16 +654,16 @@ export class QmdMemoryManager implements MemorySearchManager {
     return `${header}\n\n${body}\n`;
   }
 
-  private pickSessionCollectionName(): string {
+  private pickSessionCollectionName(base = "sessions"): string {
     const existing = new Set(this.qmd.collections.map((collection) => collection.name));
-    if (!existing.has("sessions")) {
-      return "sessions";
+    if (!existing.has(base)) {
+      return base;
     }
     let counter = 2;
-    let candidate = `sessions-${counter}`;
+    let candidate = `${base}-${counter}`;
     while (existing.has(candidate)) {
       counter += 1;
-      candidate = `sessions-${counter}`;
+      candidate = `${base}-${counter}`;
     }
     return candidate;
   }

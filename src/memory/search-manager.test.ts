@@ -101,6 +101,27 @@ describe("getMemorySearchManager caching", () => {
     expect(QmdMemoryManager.create).toHaveBeenCalledTimes(1);
   });
 
+  it("shares one QMD manager across agents when indexScope is machine", async () => {
+    const cfg = {
+      memory: { backend: "qmd", qmd: { indexScope: "machine" } },
+      agents: {
+        list: [
+          { id: "ackbot", workspace: "/tmp/workspace" },
+          { id: "lobot", workspace: "/tmp/workspace" },
+        ],
+      },
+    } as const;
+
+    const first = await getMemorySearchManager({ cfg, agentId: "ackbot" });
+    const second = await getMemorySearchManager({ cfg, agentId: "lobot" });
+
+    expect(first.manager).toBeTruthy();
+    expect(second.manager).toBeTruthy();
+    expect(first.manager).toBe(second.manager);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(QmdMemoryManager.create).toHaveBeenCalledTimes(1);
+  });
+
   it("evicts failed qmd wrapper so next call retries qmd", async () => {
     const retryAgentId = "retry-agent";
     const cfg = {

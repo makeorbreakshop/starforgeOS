@@ -18,6 +18,8 @@ export type ResolvedMemoryBackendConfig = {
   qmd?: ResolvedQmdConfig;
 };
 
+export type QmdIndexScope = "agent" | "machine";
+
 export type ResolvedQmdCollection = {
   name: string;
   path: string;
@@ -52,6 +54,7 @@ export type ResolvedQmdSessionConfig = {
 export type ResolvedQmdConfig = {
   command: string;
   collections: ResolvedQmdCollection[];
+  indexScope: QmdIndexScope;
   sessions: ResolvedQmdSessionConfig;
   update: ResolvedQmdUpdateConfig;
   limits: ResolvedQmdLimitsConfig;
@@ -64,6 +67,7 @@ const DEFAULT_CITATIONS: MemoryCitationsMode = "auto";
 const DEFAULT_QMD_INTERVAL = "5m";
 const DEFAULT_QMD_DEBOUNCE_MS = 15_000;
 const DEFAULT_QMD_TIMEOUT_MS = 4_000;
+const DEFAULT_QMD_INDEX_SCOPE: QmdIndexScope = "agent";
 const DEFAULT_QMD_EMBED_INTERVAL = "60m";
 const DEFAULT_QMD_COMMAND_TIMEOUT_MS = 30_000;
 const DEFAULT_QMD_UPDATE_TIMEOUT_MS = 120_000;
@@ -152,6 +156,13 @@ function resolveTimeoutMs(raw: number | undefined, fallback: number): number {
     return Math.floor(raw);
   }
   return fallback;
+}
+
+function resolveQmdIndexScope(raw: MemoryQmdConfig["indexScope"]): QmdIndexScope {
+  if (raw === "machine" || raw === "agent") {
+    return raw;
+  }
+  return DEFAULT_QMD_INDEX_SCOPE;
 }
 
 function resolveLimits(raw?: MemoryQmdConfig["limits"]): ResolvedQmdLimitsConfig {
@@ -253,6 +264,7 @@ export function resolveMemoryBackendConfig(params: {
 
   const workspaceDir = resolveAgentWorkspaceDir(params.cfg, params.agentId);
   const qmdCfg = params.cfg.memory?.qmd;
+  const indexScope = resolveQmdIndexScope(qmdCfg?.indexScope);
   const includeDefaultMemory = qmdCfg?.includeDefaultMemory !== false;
   const nameSet = new Set<string>();
   const collections = [
@@ -266,6 +278,7 @@ export function resolveMemoryBackendConfig(params: {
   const resolved: ResolvedQmdConfig = {
     command,
     collections,
+    indexScope,
     includeDefaultMemory,
     sessions: resolveSessionConfig(qmdCfg?.sessions, workspaceDir),
     update: {

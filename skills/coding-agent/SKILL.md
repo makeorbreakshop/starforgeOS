@@ -1,353 +1,113 @@
 ---
 name: coding-agent
-description: Run Codex CLI, Claude Code, OpenCode, or Pi Coding Agent via background process for programmatic control.
-metadata:
-  {
-    "openclaw": { "emoji": "🧩", "requires": { "anyBins": ["claude", "codex", "opencode", "pi"] } },
-  }
+description: Run coding work through CLI agents (Codex default, Claude Code when explicitly requested or for design/frontend/copy). Use for implementation, refactors, bug fixes, and test work that should run in a project directory via PTY/background process.
+metadata: { "openclaw": { "emoji": "🧩", "requires": { "anyBins": ["codex", "claude"] } } }
 ---
 
-# Coding Agent (bash-first)
+# Coding Agent
 
-Use **bash** (with optional background mode) for all coding agent work. Simple and effective.
+Use CLI coding agents for all implementation work. Do not hand-code patches directly in orchestrator mode.
 
-## ⚠️ PTY Mode Required!
+## Defaults
 
-Coding agents (Codex, Claude Code, Pi) are **interactive terminal applications** that need a pseudo-terminal (PTY) to work correctly. Without PTY, you'll get broken output, missing colors, or the agent may hang.
+- **Default agent:** Codex
+- **Default Codex command:** `codex --yolo exec '<prompt>'`
+- **Default model:** `gpt-5.3-codex`
+- **Claude usage:** only when user explicitly asks, or task is primarily design/frontend/copy
+- **Claude command:** `claude --dangerously-skip-permissions '<prompt>'`
+- **Always:** `pty:true`, correct `workdir`, background mode for longer runs
 
-**Always use `pty:true`** when running coding agents:
+## Clarify First (when needed)
+
+Before launch, ask concise clarifying questions only if missing details would risk wrong implementation.
+
+Minimum checklist:
+
+1. Target repo/path?
+2. Desired behavior / acceptance criteria?
+3. Any constraints (files to avoid, test scope, no schema changes, etc.)?
+
+If clear enough, launch immediately.
+
+## Launch Protocol (mandatory)
+
+1. **Announce start** in one line (what + where).
+2. **Launch with PTY** in project directory.
+3. **Track session** in `memory/active-codex-sessions.json`.
+4. **Require wake callback** in prompt.
+5. **Poll as backup** until completion; report results.
+
+### Canonical launch examples
 
 ```bash
-# ✅ Correct - with PTY
-bash pty:true command:"codex exec 'Your prompt'"
+# Codex (default)
+exec pty:true background:true workdir:<TARGET_DIR> command:"codex --yolo exec '<prompt>'"
 
-# ❌ Wrong - no PTY, agent may break
-bash command:"codex exec 'Your prompt'"
+# Claude Code (when explicitly requested / design/frontend/copy)
+exec pty:true background:true workdir:<TARGET_DIR> command:"claude --dangerously-skip-permissions '<prompt>'"
 ```
 
-### Bash Tool Parameters
+## Quote-safe prompting (required for apostrophes/multiline)
 
-| Parameter    | Type    | Description                                                                 |
-| ------------ | ------- | --------------------------------------------------------------------------- |
-| `command`    | string  | The shell command to run                                                    |
-| `pty`        | boolean | **Use for coding agents!** Allocates a pseudo-terminal for interactive CLIs |
-| `workdir`    | string  | Working directory (agent sees only this folder's context)                   |
-| `background` | boolean | Run in background, returns sessionId for monitoring                         |
-| `timeout`    | number  | Timeout in seconds (kills process on expiry)                                |
-| `elevated`   | boolean | Run on host instead of sandbox (if allowed)                                 |
-
-### Process Tool Actions (for background sessions)
-
-| Action      | Description                                          |
-| ----------- | ---------------------------------------------------- |
-| `list`      | List all running/recent sessions                     |
-| `poll`      | Check if session is still running                    |
-| `log`       | Get session output (with optional offset/limit)      |
-| `write`     | Send raw data to stdin                               |
-| `submit`    | Send data + newline (like typing and pressing Enter) |
-| `send-keys` | Send key tokens or hex bytes                         |
-| `paste`     | Paste text (with optional bracketed mode)            |
-| `kill`      | Terminate the session                                |
-
-### Output Safety (Prevent Context Flooding)
-
-When monitoring background coding sessions, keep output small and scoped:
-
-- Always pass `limit` to `process action:log` (recommended: `40-120` lines).
-- Prefer `process action:poll` for status checks.
-- Do **not** dump full logs into chat; summarize what changed and include only key lines/errors.
-- If you need more history, page with `offset` + `limit` instead of requesting everything at once.
-
----
-
-## Quick Start: One-Shot Tasks
-
-For quick prompts/chats, create a temp git repo and run:
+Use prompt files/heredocs instead of fragile inline quoting.
 
 ```bash
-# Quick chat (Codex needs a git repo!)
-SCRATCH=$(mktemp -d) && cd $SCRATCH && git init && codex exec "Your prompt here"
-
-# Or in a real project - with PTY!
-bash pty:true workdir:~/Projects/myproject command:"codex exec 'Add error handling to the API calls'"
-```
-
-**Why git init?** Codex refuses to run outside a trusted git directory. Creating a temp repo solves this for scratch work.
-
----
-
-## Quote-Safe Prompt Launch (Use This for Apostrophes)
-
-Prompts that include `'` often break shell quoting when passed inline (for example `don't`, `Brandon's`, JSON snippets).
-
-Use a heredoc and prompt file instead of inline single-quoted prompts:
-
-```bash
-# 1) Write prompt safely (no shell escaping needed inside heredoc body)
 PROMPT_FILE=$(mktemp)
 cat > "$PROMPT_FILE" <<'EOF'
-Audit Discord routing. Explain why /new feels like a soft reset, then fix Brandon's config safely.
+<full prompt here>
 EOF
 
-# 2) Run agent with the prompt file content
-bash pty:true workdir:~/project command:"codex exec --full-auto \"$(cat \"$PROMPT_FILE\")\""
-
-# 3) Cleanup
+codex --yolo exec "$(cat "$PROMPT_FILE")"
 rm -f "$PROMPT_FILE"
 ```
 
-Prefer this pattern whenever the prompt may contain apostrophes/single-quotes, shell metacharacters, or multi-line text.
+## Testing & Quality Gates
 
----
+### Bug fixes: strict TDD required
 
-## The Pattern: workdir + background + pty
+Use red → green → refactor every time.
 
-For longer tasks, use background mode with PTY:
+- Write failing test first.
+- Confirm it fails for the right reason.
+- Implement minimal fix.
+- Re-run and confirm pass.
+- Refactor safely; re-run tests.
 
-```bash
-# Start agent in target directory (with PTY!)
-bash pty:true workdir:~/project background:true command:"codex exec --full-auto 'Build a snake game'"
-# Returns sessionId for tracking
+### All code changes: test coverage required
 
-# Monitor progress
-process action:log sessionId:XXX limit:80
+Even for non-bug changes, run appropriate tests for changed behavior before declaring done.
 
-# Check if done
-process action:poll sessionId:XXX
+### Completion gate (must pass before saying "fixed")
 
-# Send input (if agent asks a question)
-process action:write sessionId:XXX data:"y"
+- For bug fixes: failing repro test existed before fix.
+- Changed-area tests pass.
+- Related regression tests pass.
+- User-facing claim matches verified evidence.
 
-# Submit with Enter (like typing "yes" and pressing Enter)
-process action:submit sessionId:XXX data:"yes"
-
-# Kill if needed
-process action:kill sessionId:XXX
-```
-
-**Why workdir matters:** Agent wakes up in a focused directory, doesn't wander off reading unrelated files (like your soul.md 😅).
-
----
-
-## Codex CLI
-
-**Model:** `gpt-5.2-codex` is the default (set in ~/.codex/config.toml)
-
-### Flags
-
-| Flag            | Effect                                             |
-| --------------- | -------------------------------------------------- |
-| `exec "prompt"` | One-shot execution, exits when done                |
-| `--full-auto`   | Sandboxed but auto-approves in workspace           |
-| `--yolo`        | NO sandbox, NO approvals (fastest, most dangerous) |
-
-### Building/Creating
-
-```bash
-# Quick one-shot (auto-approves) - remember PTY!
-bash pty:true workdir:~/project command:"codex exec --full-auto 'Build a dark mode toggle'"
-
-# Background for longer work
-bash pty:true workdir:~/project background:true command:"codex --yolo 'Refactor the auth module'"
-```
-
-### Reviewing PRs
-
-**⚠️ CRITICAL: Never review PRs in OpenClaw's own project folder!**
-Clone to temp folder or use git worktree.
-
-```bash
-# Clone to temp for safe review
-REVIEW_DIR=$(mktemp -d)
-git clone https://github.com/user/repo.git $REVIEW_DIR
-cd $REVIEW_DIR && gh pr checkout 130
-bash pty:true workdir:$REVIEW_DIR command:"codex review --base origin/main"
-# Clean up after: trash $REVIEW_DIR
-
-# Or use git worktree (keeps main intact)
-git worktree add /tmp/pr-130-review pr-130-branch
-bash pty:true workdir:/tmp/pr-130-review command:"codex review --base main"
-```
-
-### Batch PR Reviews (parallel army!)
-
-```bash
-# Fetch all PR refs first
-git fetch origin '+refs/pull/*/head:refs/remotes/origin/pr/*'
-
-# Deploy the army - one Codex per PR (all with PTY!)
-bash pty:true workdir:~/project background:true command:"codex exec 'Review PR #86. git diff origin/main...origin/pr/86'"
-bash pty:true workdir:~/project background:true command:"codex exec 'Review PR #87. git diff origin/main...origin/pr/87'"
-
-# Monitor all
-process action:list
-
-# Post results to GitHub
-gh pr comment <PR#> --body "<review content>"
-```
-
----
-
-## Claude Code
-
-```bash
-# With PTY for proper terminal output
-bash pty:true workdir:~/project command:"claude 'Your task'"
-
-# Background
-bash pty:true workdir:~/project background:true command:"claude 'Your task'"
-```
-
----
-
-## OpenCode
-
-```bash
-bash pty:true workdir:~/project command:"opencode run 'Your task'"
-```
-
----
-
-## Pi Coding Agent
-
-```bash
-# Install: npm install -g @mariozechner/pi-coding-agent
-bash pty:true workdir:~/project command:"pi 'Your task'"
-
-# Non-interactive mode (PTY still recommended)
-bash pty:true command:"pi -p 'Summarize src/'"
-
-# Different provider/model
-bash pty:true command:"pi --provider openai --model gpt-4o-mini -p 'Your task'"
-```
-
-**Note:** Pi now has Anthropic prompt caching enabled (PR #584, merged Jan 2026)!
-
----
-
-## Parallel Issue Fixing with git worktrees
-
-For fixing multiple issues in parallel, use git worktrees:
-
-```bash
-# 1. Create worktrees for each issue
-git worktree add -b fix/issue-78 /tmp/issue-78 main
-git worktree add -b fix/issue-99 /tmp/issue-99 main
-
-# 2. Launch Codex in each (background + PTY!)
-bash pty:true workdir:/tmp/issue-78 background:true command:"pnpm install && codex --yolo 'Fix issue #78: <description>. Commit and push.'"
-bash pty:true workdir:/tmp/issue-99 background:true command:"pnpm install && codex --yolo 'Fix issue #99: <description>. Commit and push.'"
-
-# 3. Monitor progress
-process action:list
-process action:log sessionId:XXX limit:80
-
-# 4. Create PRs after fixes
-cd /tmp/issue-78 && git push -u origin fix/issue-78
-gh pr create --repo user/repo --head fix/issue-78 --title "fix: ..." --body "..."
-
-# 5. Cleanup
-git worktree remove /tmp/issue-78
-git worktree remove /tmp/issue-99
-```
-
----
-
-## 🔁 Bug Fix Workflow (MANDATORY TDD)
-
-For **any bug-fix request** ("broken", "regression", "doesn't work", etc.), use a strict discovery → code → test loop.
-
-### Required loop
-
-1. **Discovery**
-   - Reproduce the bug first.
-   - Identify the exact path/component where behavior diverges from expected.
-   - Define acceptance criteria in observable terms (not vibes).
-
-2. **TDD (Red → Green → Refactor)**
-   - Write a failing test that reproduces the bug (**RED**).
-   - Run the test and confirm it fails for the expected reason.
-   - Implement the minimal fix (**GREEN**).
-   - Re-run the test and confirm pass.
-   - Refactor safely if needed, then re-run tests.
-
-3. **Verification**
-   - Run targeted tests for the changed area.
-   - Run broader related tests to catch regressions.
-   - Do not mark complete unless behavior is proven by tests.
-
-### Completion gate (must be true before reporting "fixed")
-
-- Repro test existed and failed before the fix.
-- Repro test now passes.
-- Related suite passes.
-- User-facing claim matches what was actually validated.
-
-### Prompt requirement for bug-fix Codex runs
-
-Include this sentence in bug-fix prompts:
+Include this line in bug-fix prompts:
 
 `Use strict TDD: write failing tests first, confirm failure, implement minimal fix, and run targeted + related tests before declaring done.`
 
-## ⚠️ Rules
+## Monitoring
 
-1. **Always use pty:true** - coding agents need a terminal!
-2. **Respect tool choice** - if user asks for Codex, use Codex.
-   - Orchestrator mode: do NOT hand-code patches yourself.
-   - If an agent fails/hangs, respawn it or ask the user for direction, but don't silently take over.
-3. **Be patient** - don't kill sessions because they're "slow"
-4. **Monitor safely** - use `process:poll` for status and `process:log limit:80` (or similar), then summarize
-5. **--full-auto for building** - auto-approves changes
-6. **vanilla for reviewing** - no special flags needed
-7. **Parallel is OK** - run many Codex processes at once for batch work
-8. **NEVER start Codex in ~/clawd/** - it'll read your soul docs and get weird ideas about the org chart!
-9. **NEVER checkout branches in ~/Projects/openclaw/** - that's the LIVE OpenClaw instance!
+- Use `process action:poll` for status.
+- Use `process action:log` with `limit` (40–120 lines).
+- Do not dump full logs into chat.
+- If run fails/stalls, report immediately with key error lines.
 
----
+## Wake callback (mandatory in prompt)
 
-## Progress Updates (Critical)
+Append this to all long runs:
 
-When you spawn coding agents in the background, keep the user in the loop.
-
-- Send 1 short message when you start (what's running + where).
-- Then only update again when something changes:
-  - a milestone completes (build finished, tests passed)
-  - the agent asks a question / needs input
-  - you hit an error or need user action
-  - the agent finishes (include what changed + where)
-- If you kill a session, immediately say you killed it and why.
-
-This prevents the user from seeing only "Agent failed before reply" and having no idea what happened.
-
----
-
-## Auto-Notify on Completion
-
-For long-running background tasks, append a wake trigger to your prompt so OpenClaw gets notified immediately when the agent finishes (instead of waiting for the next heartbeat):
-
-```
-... your task here.
-
-When completely finished, run this command to notify me:
-openclaw system event --text "Done: [brief summary of what was built]" --mode now
+```text
+When done: cd /Users/brandoncullum/starforgeOS && pnpm openclaw gateway call wake --params '{"text":"Done: <brief summary>","mode":"now"}'
 ```
 
-**Example:**
+## Hard rules
 
-```bash
-bash pty:true workdir:~/project background:true command:"codex --yolo exec 'Build a REST API for todos.
-
-When completely finished, run: openclaw system event --text \"Done: Built todos REST API with CRUD endpoints\" --mode now'"
-```
-
-This triggers an immediate wake event — Skippy gets pinged in seconds, not 10 minutes.
-
----
-
-## Learnings (Jan 2026)
-
-- **PTY is essential:** Coding agents are interactive terminal apps. Without `pty:true`, output breaks or agent hangs.
-- **Git repo required:** Codex won't run outside a git directory. Use `mktemp -d && git init` for scratch work.
-- **exec is your friend:** `codex exec "prompt"` runs and exits cleanly - perfect for one-shots.
-- **submit vs write:** Use `submit` to send input + Enter, `write` for raw data without newline.
-- **Sass works:** Codex responds well to playful prompts. Asked it to write a haiku about being second fiddle to a space lobster, got: _"Second chair, I code / Space lobster sets the tempo / Keys glow, I follow"_ 🦞
+1. Always `pty:true`.
+2. Use Codex by default.
+3. Use Claude only when requested or clearly design/frontend/copy heavy.
+4. Do not use `--full-auto` for Codex unless Brandon explicitly asks.
+5. Never claim completion without tests.
+6. Never silently abandon a run; report status/failure.

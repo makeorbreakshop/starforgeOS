@@ -338,6 +338,9 @@ export async function initSessionState(params: {
     sessionEntry.compactionCount = 0;
     sessionEntry.memoryFlushCompactionCount = undefined;
     sessionEntry.memoryFlushAt = undefined;
+    // Reset provider-native session handles so /new and /reset start a truly fresh backend session.
+    sessionEntry.cliSessionIds = undefined;
+    sessionEntry.claudeCliSessionId = undefined;
     // Clear stale token metrics from previous session so /status doesn't
     // display the old session's context usage after /new or /reset.
     sessionEntry.totalTokens = undefined;

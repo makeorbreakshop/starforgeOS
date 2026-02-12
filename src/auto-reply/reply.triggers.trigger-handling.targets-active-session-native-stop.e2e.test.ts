@@ -95,6 +95,28 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+async function seedSessionEntry(params: {
+  storePath: string;
+  sessionKey: string;
+  sessionId: string;
+  sessionFile: string;
+}) {
+  await fs.writeFile(
+    params.storePath,
+    JSON.stringify(
+      {
+        [params.sessionKey]: {
+          sessionId: params.sessionId,
+          sessionFile: params.sessionFile,
+          updatedAt: Date.now(),
+        },
+      },
+      null,
+      2,
+    ),
+  );
+}
+
 describe("trigger handling", () => {
   it("targets the active session for native /stop", async () => {
     await withTempHome(async (home) => {
@@ -280,6 +302,137 @@ describe("trigger handling", () => {
 
       const text = Array.isArray(res) ? res[0]?.text : res?.text;
       expect(text).toContain("minimax/MiniMax-M2.1");
+    });
+  });
+
+  it("rotates the Discord guild target session for native /new and ACKs that same target session", async () => {
+    await withTempHome(async (home) => {
+      const cfg = makeCfg(home);
+      const routeReplyModule = await import("./reply/route-reply.js");
+      const routeReplySpy = vi
+        .spyOn(routeReplyModule, "routeReply")
+        .mockResolvedValue({ ok: true, messageId: "m-ack" });
+      const runMock = vi.mocked(runEmbeddedPiAgent).mockResolvedValue({
+        payloads: [{ text: "hello from new session" }],
+        meta: {
+          durationMs: 5,
+          agentMeta: { sessionId: "agent-sid", provider: "anthropic", model: "claude-opus-4-5" },
+        },
+      });
+      const slashSessionKey = "agent:main:discord:slash:user-1";
+      const targetSessionKey = "agent:main:discord:channel:c1";
+      const existingSessionId = "discord-channel-old-session";
+      const oldSessionFile = join(home, "old-session.jsonl");
+
+      await seedSessionEntry({
+        storePath: cfg.session.store,
+        sessionKey: targetSessionKey,
+        sessionId: existingSessionId,
+        sessionFile: oldSessionFile,
+      });
+
+      await getReplyFromConfig(
+        {
+          Body: "/new",
+          From: "discord:channel:c1",
+          To: "slash:user-1",
+          ChatType: "channel",
+          Provider: "discord",
+          Surface: "discord",
+          SessionKey: slashSessionKey,
+          CommandSource: "native",
+          CommandTargetSessionKey: targetSessionKey,
+          CommandAuthorized: true,
+          SenderId: "user-1",
+        },
+        {},
+        cfg,
+      );
+
+      const store = loadSessionStore(cfg.session.store);
+      const updated = store[targetSessionKey];
+      expect(updated?.sessionId).toBeDefined();
+      expect(updated?.sessionId).not.toBe(existingSessionId);
+      expect(updated?.sessionFile).toBeDefined();
+      expect(updated?.sessionFile).not.toBe(oldSessionFile);
+      expect(store[slashSessionKey]).toBeUndefined();
+
+      expect(runMock).toHaveBeenCalledOnce();
+      expect(runMock.mock.calls[0]?.[0]).toEqual(
+        expect.objectContaining({
+          sessionKey: targetSessionKey,
+          sessionId: updated?.sessionId,
+          sessionFile: updated?.sessionFile,
+        }),
+      );
+
+      const ackCall = routeReplySpy.mock.calls.find(
+        (call) =>
+          typeof call[0]?.payload?.text === "string" &&
+          call[0]?.payload?.text.startsWith("✅ New session started"),
+      );
+      expect(ackCall?.[0]?.sessionKey).toBe(targetSessionKey);
+    });
+  });
+
+  it("rotates the Discord guild target session for native /reset", async () => {
+    await withTempHome(async (home) => {
+      const cfg = makeCfg(home);
+      const routeReplyModule = await import("./reply/route-reply.js");
+      const routeReplySpy = vi
+        .spyOn(routeReplyModule, "routeReply")
+        .mockResolvedValue({ ok: true, messageId: "m-ack" });
+      vi.mocked(runEmbeddedPiAgent).mockResolvedValue({
+        payloads: [{ text: "hello from reset session" }],
+        meta: {
+          durationMs: 5,
+          agentMeta: { sessionId: "agent-sid", provider: "anthropic", model: "claude-opus-4-5" },
+        },
+      });
+      const slashSessionKey = "agent:main:discord:slash:user-1";
+      const targetSessionKey = "agent:main:discord:channel:c1";
+      const existingSessionId = "discord-channel-old-session";
+      const oldSessionFile = join(home, "old-session.jsonl");
+
+      await seedSessionEntry({
+        storePath: cfg.session.store,
+        sessionKey: targetSessionKey,
+        sessionId: existingSessionId,
+        sessionFile: oldSessionFile,
+      });
+
+      await getReplyFromConfig(
+        {
+          Body: "/reset",
+          From: "discord:channel:c1",
+          To: "slash:user-1",
+          ChatType: "channel",
+          Provider: "discord",
+          Surface: "discord",
+          SessionKey: slashSessionKey,
+          CommandSource: "native",
+          CommandTargetSessionKey: targetSessionKey,
+          CommandAuthorized: true,
+          SenderId: "user-1",
+        },
+        {},
+        cfg,
+      );
+
+      const store = loadSessionStore(cfg.session.store);
+      const updated = store[targetSessionKey];
+      expect(updated?.sessionId).toBeDefined();
+      expect(updated?.sessionId).not.toBe(existingSessionId);
+      expect(updated?.sessionFile).toBeDefined();
+      expect(updated?.sessionFile).not.toBe(oldSessionFile);
+      expect(store[slashSessionKey]).toBeUndefined();
+
+      const ackCall = routeReplySpy.mock.calls.find(
+        (call) =>
+          typeof call[0]?.payload?.text === "string" &&
+          call[0]?.payload?.text.startsWith("✅ New session started"),
+      );
+      expect(ackCall?.[0]?.sessionKey).toBe(targetSessionKey);
     });
   });
 });

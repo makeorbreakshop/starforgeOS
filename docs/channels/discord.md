@@ -63,6 +63,7 @@ Minimal config:
     - Reaction removal semantics: see [/tools/reactions](/tools/reactions).
     - The `discord` tool is only exposed when the current channel is Discord.
 13. Native commands use isolated session keys (`agent:<agentId>:discord:slash:<userId>`) rather than the shared `main` session.
+    - `/new` and `/reset` apply to the target chat session (`CommandTargetSessionKey`), not the isolated slash key. For guild channels this means `agent:<agentId>:discord:channel:<channelId>` is reset with a new `sessionId`, and provider backend session handles (for example CLI session ids) are cleared.
 
 Note: Name → id resolution uses guild member search and requires Server Members Intent; if the bot can’t search members, use ids or `<@id>` mentions.
 Note: Slugs are lowercase with spaces replaced by `-`. Channel names are slugged without the leading `#`.

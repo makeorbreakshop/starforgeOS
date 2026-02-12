@@ -1,12 +1,21 @@
 ---
 name: coding-agent
-description: Run coding work through CLI agents (Codex default, Claude Code when explicitly requested or for design/frontend/copy). Use for implementation, refactors, bug fixes, and test work that should run in a project directory via PTY/background process.
+description: "Run coding work through CLI agents (Codex default, Claude Code when explicitly requested or for design/frontend/copy). Use for implementation, refactors, bug fixes, and test work that should run in a project directory via PTY/background process. NOT for: reading/analyzing code without changes, research questions, file organization, git status checks, or quick shell commands you can run directly."
 metadata: { "openclaw": { "emoji": "🧩", "requires": { "anyBins": ["codex", "claude"] } } }
 ---
 
 # Coding Agent
 
 Use CLI coding agents for all implementation work. Do not hand-code patches directly in orchestrator mode.
+
+## When NOT to use this skill
+
+- **Reading/reviewing code** — just read the files directly
+- **Quick shell commands** — `git status`, `npm test`, `ls` — run them yourself
+- **Research or analysis** — use deep-research or web search
+- **File organization/renaming** — use exec directly
+- **Config edits** — small targeted edits don't need a full Codex session
+- **Asking questions about code** — read the files and answer directly
 
 ## Defaults
 
@@ -102,6 +111,32 @@ Append this to all long runs:
 ```text
 When done: cd /Users/brandoncullum/starforgeOS && pnpm openclaw gateway call wake --params '{"text":"Done: <brief summary>","mode":"now"}'
 ```
+
+## Session tracking template
+
+Write to `memory/active-codex-sessions.json`:
+
+```json
+{
+  "sessions": [
+    {
+      "sessionId": "<process-session-id>",
+      "task": "<brief description>",
+      "startedAt": "<ISO timestamp>",
+      "workdir": "/path/to/project"
+    }
+  ]
+}
+```
+
+## Lessons learned (why launches fail)
+
+1. Launching without PTY → session hangs/dies silently
+2. Not tracking session IDs → compaction erases them from memory
+3. Not polling → session finishes, nobody notices
+4. Not following through → "I'll check on it" then never do
+
+The tracking file + heartbeat check is the safety net. But the PRIMARY path is: stay on it, poll it, report back.
 
 ## Hard rules
 

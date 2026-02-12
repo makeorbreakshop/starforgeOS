@@ -177,6 +177,41 @@ describe("initSessionState RawBody", () => {
     expect(result.triggerBodyNormalized).toBe("/NEW KeepThisCase");
   });
 
+  it("keeps /new and /reset active when custom resetTriggers are configured", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-trigger-defaults-"));
+    const storePath = path.join(root, "sessions.json");
+
+    const cfg = {
+      session: {
+        store: storePath,
+        resetTriggers: ["SESSION_CHECKPOINT_COMPLETE"],
+      },
+    } as OpenClawConfig;
+
+    const newResult = await initSessionState({
+      ctx: {
+        RawBody: "/new",
+        ChatType: "direct",
+        SessionKey: "agent:main:discord:channel:c1",
+      },
+      cfg,
+      commandAuthorized: true,
+    });
+    expect(newResult.isNewSession).toBe(true);
+    expect(newResult.resetTriggered).toBe(true);
+
+    const customResult = await initSessionState({
+      ctx: {
+        RawBody: "SESSION_CHECKPOINT_COMPLETE",
+        ChatType: "direct",
+        SessionKey: "agent:main:discord:channel:c1",
+      },
+      cfg,
+      commandAuthorized: true,
+    });
+    expect(customResult.resetTriggered).toBe(true);
+  });
+
   it("falls back to Body when RawBody is undefined", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-rawbody-fallback-"));
     const storePath = path.join(root, "sessions.json");

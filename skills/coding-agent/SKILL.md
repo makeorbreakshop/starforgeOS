@@ -76,6 +76,30 @@ bash pty:true workdir:~/Projects/myproject command:"codex exec 'Add error handli
 
 ---
 
+## Quote-Safe Prompt Launch (Use This for Apostrophes)
+
+Prompts that include `'` often break shell quoting when passed inline (for example `don't`, `Brandon's`, JSON snippets).
+
+Use a heredoc and prompt file instead of inline single-quoted prompts:
+
+```bash
+# 1) Write prompt safely (no shell escaping needed inside heredoc body)
+PROMPT_FILE=$(mktemp)
+cat > "$PROMPT_FILE" <<'EOF'
+Audit Discord routing. Explain why /new feels like a soft reset, then fix Brandon's config safely.
+EOF
+
+# 2) Run agent with the prompt file content
+bash pty:true workdir:~/project command:"codex exec --full-auto \"$(cat \"$PROMPT_FILE\")\""
+
+# 3) Cleanup
+rm -f "$PROMPT_FILE"
+```
+
+Prefer this pattern whenever the prompt may contain apostrophes/single-quotes, shell metacharacters, or multi-line text.
+
+---
+
 ## The Pattern: workdir + background + pty
 
 For longer tasks, use background mode with PTY:

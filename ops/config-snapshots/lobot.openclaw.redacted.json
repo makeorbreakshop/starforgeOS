@@ -204,8 +204,8 @@
         "accountId": "lobot",
         "channel": "discord",
         "peer": {
-          "id": "channel:1468946967211147377",
-          "kind": "group"
+          "id": "1468946967211147377",
+          "kind": "channel"
         }
       }
     },
@@ -221,8 +221,8 @@
         "accountId": "lobot",
         "channel": "discord",
         "peer": {
-          "id": "channel:1469069873056448512",
-          "kind": "group"
+          "id": "1469069873056448512",
+          "kind": "channel"
         }
       }
     },
@@ -232,8 +232,8 @@
         "accountId": "lobot",
         "channel": "discord",
         "peer": {
-          "id": "channel:1469418113396244542",
-          "kind": "group"
+          "id": "1469418113396244542",
+          "kind": "channel"
         }
       }
     },
@@ -243,8 +243,8 @@
         "accountId": "lobot",
         "channel": "discord",
         "peer": {
-          "id": "channel:1469286845731962933",
-          "kind": "group"
+          "id": "1469286845731962933",
+          "kind": "channel"
         }
       }
     },
@@ -254,8 +254,8 @@
         "accountId": "threepio",
         "channel": "discord",
         "peer": {
-          "id": "channel:1469020973201227838",
-          "kind": "group"
+          "id": "1469020973201227838",
+          "kind": "channel"
         }
       }
     }

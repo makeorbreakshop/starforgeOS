@@ -214,7 +214,7 @@
     }
   },
   "session": {
-    "resetTriggers": ["SESSION_CHECKPOINT_COMPLETE"]
+    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
   },
   "skills": {
     "entries": {

@@ -112,9 +112,9 @@ export async function initSessionState(params: {
     config: cfg,
   });
   const groupResolution = resolveGroupSessionKey(sessionCtxForState) ?? undefined;
-  const resetTriggers = sessionCfg?.resetTriggers?.length
-    ? sessionCfg.resetTriggers
-    : DEFAULT_RESET_TRIGGERS;
+  const resetTriggers = Array.from(
+    new Set([...(sessionCfg?.resetTriggers ?? []), ...DEFAULT_RESET_TRIGGERS]),
+  );
   const sessionScope = sessionCfg?.scope ?? "per-sender";
   const storePath = resolveStorePath(sessionCfg?.store, { agentId });
 

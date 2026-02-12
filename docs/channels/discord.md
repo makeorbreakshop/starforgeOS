@@ -67,6 +67,7 @@ Minimal config:
 Note: Name → id resolution uses guild member search and requires Server Members Intent; if the bot can’t search members, use ids or `<@id>` mentions.
 Note: Slugs are lowercase with spaces replaced by `-`. Channel names are slugged without the leading `#`.
 Note: Guild context `[from:]` lines include `author.tag` + `id` to make ping-ready replies easy.
+Note: `session.resetTriggers` extends defaults. `"/new"` and `"/reset"` remain active even when you add custom triggers.
 
 ## Config writes
 

@@ -49,6 +49,15 @@ bash command:"codex exec 'Your prompt'"
 | `paste`     | Paste text (with optional bracketed mode)            |
 | `kill`      | Terminate the session                                |
 
+### Output Safety (Prevent Context Flooding)
+
+When monitoring background coding sessions, keep output small and scoped:
+
+- Always pass `limit` to `process action:log` (recommended: `40-120` lines).
+- Prefer `process action:poll` for status checks.
+- Do **not** dump full logs into chat; summarize what changed and include only key lines/errors.
+- If you need more history, page with `offset` + `limit` instead of requesting everything at once.
+
 ---
 
 ## Quick Start: One-Shot Tasks
@@ -77,7 +86,7 @@ bash pty:true workdir:~/project background:true command:"codex exec --full-auto 
 # Returns sessionId for tracking
 
 # Monitor progress
-process action:log sessionId:XXX
+process action:log sessionId:XXX limit:80
 
 # Check if done
 process action:poll sessionId:XXX
@@ -207,7 +216,7 @@ bash pty:true workdir:/tmp/issue-99 background:true command:"pnpm install && cod
 
 # 3. Monitor progress
 process action:list
-process action:log sessionId:XXX
+process action:log sessionId:XXX limit:80
 
 # 4. Create PRs after fixes
 cd /tmp/issue-78 && git push -u origin fix/issue-78
@@ -227,7 +236,7 @@ git worktree remove /tmp/issue-99
    - Orchestrator mode: do NOT hand-code patches yourself.
    - If an agent fails/hangs, respawn it or ask the user for direction, but don't silently take over.
 3. **Be patient** - don't kill sessions because they're "slow"
-4. **Monitor with process:log** - check progress without interfering
+4. **Monitor safely** - use `process:poll` for status and `process:log limit:80` (or similar), then summarize
 5. **--full-auto for building** - auto-approves changes
 6. **vanilla for reviewing** - no special flags needed
 7. **Parallel is OK** - run many Codex processes at once for batch work

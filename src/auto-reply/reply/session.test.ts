@@ -8,7 +8,7 @@ import { initSessionState } from "./session.js";
 
 describe("initSessionState thread forking", () => {
   it("forks a new session from the parent session file", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-thread-session-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-thread-session-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -80,7 +80,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("records topic-specific session files when MessageThreadId is present", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-topic-session-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-topic-session-"));
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -107,7 +107,7 @@ describe("initSessionState thread forking", () => {
 
 describe("initSessionState RawBody", () => {
   it("triggerBodyNormalized correctly extracts commands when Body contains context but RawBody is clean", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-rawbody-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -128,7 +128,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("Reset triggers (/new, /reset) work with RawBody", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-rawbody-reset-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-reset-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -150,7 +150,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("preserves argument casing while still matching reset triggers case-insensitively", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-rawbody-reset-case-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-reset-case-"));
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -177,43 +177,8 @@ describe("initSessionState RawBody", () => {
     expect(result.triggerBodyNormalized).toBe("/NEW KeepThisCase");
   });
 
-  it("keeps /new and /reset active when custom resetTriggers are configured", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-trigger-defaults-"));
-    const storePath = path.join(root, "sessions.json");
-
-    const cfg = {
-      session: {
-        store: storePath,
-        resetTriggers: ["SESSION_CHECKPOINT_COMPLETE"],
-      },
-    } as OpenClawConfig;
-
-    const newResult = await initSessionState({
-      ctx: {
-        RawBody: "/new",
-        ChatType: "direct",
-        SessionKey: "agent:main:discord:channel:c1",
-      },
-      cfg,
-      commandAuthorized: true,
-    });
-    expect(newResult.isNewSession).toBe(true);
-    expect(newResult.resetTriggered).toBe(true);
-
-    const customResult = await initSessionState({
-      ctx: {
-        RawBody: "SESSION_CHECKPOINT_COMPLETE",
-        ChatType: "direct",
-        SessionKey: "agent:main:discord:channel:c1",
-      },
-      cfg,
-      commandAuthorized: true,
-    });
-    expect(customResult.resetTriggered).toBe(true);
-  });
-
   it("falls back to Body when RawBody is undefined", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-rawbody-fallback-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rawbody-fallback-"));
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -237,7 +202,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-daily-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-daily-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s1";
       const existingSessionId = "daily-session-id";
@@ -267,7 +232,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 3, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-daily-edge-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-daily-edge-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s-edge";
       const existingSessionId = "daily-edge-session";
@@ -297,7 +262,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-idle-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-idle-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s2";
       const existingSessionId = "idle-session-id";
@@ -332,7 +297,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-thread-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-thread-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:slack:channel:c1:thread:123";
       const existingSessionId = "thread-session-id";
@@ -368,7 +333,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-thread-nosuffix-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-thread-nosuffix-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:discord:channel:c1";
       const existingSessionId = "thread-nosuffix";
@@ -403,7 +368,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-type-default-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-type-default-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s4";
       const existingSessionId = "type-default-session";
@@ -438,7 +403,7 @@ describe("initSessionState reset policy", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-reset-legacy-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reset-legacy-"));
       const storePath = path.join(root, "sessions.json");
       const sessionKey = "agent:main:whatsapp:dm:s3";
       const existingSessionId = "legacy-session-id";
@@ -472,7 +437,7 @@ describe("initSessionState reset policy", () => {
 
 describe("initSessionState channel reset overrides", () => {
   it("uses channel-specific reset policy when configured", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-channel-idle-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-channel-idle-"));
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:dm:123";
     const sessionId = "session-override";

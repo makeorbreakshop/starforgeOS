@@ -105,7 +105,7 @@ export function buildGroupIntro(params: {
     : undefined;
   const silenceLine =
     activation === "always"
-      ? `If no response is needed, reply with exactly "${params.silentToken}" (and nothing else) so StarforgeOS stays silent. Do not add any other words, punctuation, tags, markdown/code blocks, or explanations.`
+      ? `If no response is needed, reply with exactly "${params.silentToken}" (and nothing else) so OpenClaw stays silent. Do not add any other words, punctuation, tags, markdown/code blocks, or explanations.`
       : undefined;
   const cautionLine =
     activation === "always"

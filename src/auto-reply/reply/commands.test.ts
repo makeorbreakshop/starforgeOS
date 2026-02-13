@@ -31,7 +31,7 @@ vi.mock("./commands-context-report.js", () => ({
 let testWorkspaceDir = os.tmpdir();
 
 beforeAll(async () => {
-  testWorkspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "starforge-commands-"));
+  testWorkspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-commands-"));
   await fs.writeFile(path.join(testWorkspaceDir, "AGENTS.md"), "# Agents\n", "utf-8");
 });
 

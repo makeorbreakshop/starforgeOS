@@ -70,7 +70,7 @@ async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
       vi.mocked(abortEmbeddedPiRun).mockClear();
       return await fn(home);
     },
-    { prefix: "starforge-triggers-" },
+    { prefix: "openclaw-triggers-" },
   );
 }
 
@@ -79,7 +79,7 @@ function makeCfg(home: string) {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: join(home, "starforge"),
+        workspace: join(home, "openclaw"),
       },
     },
     channels: {

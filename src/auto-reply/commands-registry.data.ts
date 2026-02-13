@@ -355,7 +355,7 @@ function buildChatCommands(): ChatCommandDefinition[] {
     defineChatCommand({
       key: "restart",
       nativeName: "restart",
-      description: "Restart StarforgeOS.",
+      description: "Restart OpenClaw.",
       textAlias: "/restart",
       category: "tools",
     }),

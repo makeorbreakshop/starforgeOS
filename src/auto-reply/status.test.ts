@@ -71,7 +71,7 @@ describe("buildStatusMessage", () => {
     });
     const normalized = normalizeTestText(text);
 
-    expect(normalized).toContain("StarforgeOS");
+    expect(normalized).toContain("OpenClaw");
     expect(normalized).toContain("Model: anthropic/pi:opus");
     expect(normalized).toContain("api-key");
     expect(normalized).toContain("Tokens: 1.2k in / 800 out");
@@ -354,7 +354,7 @@ describe("buildStatusMessage", () => {
         const sessionId = "sess-1";
         const logPath = path.join(
           dir,
-          ".starforge",
+          ".openclaw",
           "agents",
           "main",
           "sessions",
@@ -403,7 +403,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Context: 1.0k/32k");
       },
-      { prefix: "starforge-status-" },
+      { prefix: "openclaw-status-" },
     );
   });
 });

@@ -115,9 +115,9 @@ export async function initSessionState(params: {
     config: cfg,
   });
   const groupResolution = resolveGroupSessionKey(sessionCtxForState) ?? undefined;
-  const resetTriggers = Array.from(
-    new Set([...(sessionCfg?.resetTriggers ?? []), ...DEFAULT_RESET_TRIGGERS]),
-  );
+  const resetTriggers = sessionCfg?.resetTriggers?.length
+    ? sessionCfg.resetTriggers
+    : DEFAULT_RESET_TRIGGERS;
   const sessionScope = sessionCfg?.scope ?? "per-sender";
   const storePath = resolveStorePath(sessionCfg?.store, { agentId });
 
@@ -351,9 +351,6 @@ export async function initSessionState(params: {
     sessionEntry.compactionCount = 0;
     sessionEntry.memoryFlushCompactionCount = undefined;
     sessionEntry.memoryFlushAt = undefined;
-    // Reset provider-native session handles so /new and /reset start a truly fresh backend session.
-    sessionEntry.cliSessionIds = undefined;
-    sessionEntry.claudeCliSessionId = undefined;
     // Clear stale token metrics from previous session so /status doesn't
     // display the old session's context usage after /new or /reset.
     sessionEntry.totalTokens = undefined;

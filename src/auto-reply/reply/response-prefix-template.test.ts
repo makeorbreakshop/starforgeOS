@@ -51,16 +51,16 @@ describe("resolveResponsePrefixTemplate", () => {
 
   it("resolves {identity.name} variable", () => {
     const result = resolveResponsePrefixTemplate("[{identity.name}]", {
-      identityName: "StarforgeOS",
+      identityName: "OpenClaw",
     });
-    expect(result).toBe("[StarforgeOS]");
+    expect(result).toBe("[OpenClaw]");
   });
 
   it("resolves {identityName} as alias", () => {
     const result = resolveResponsePrefixTemplate("[{identityName}]", {
-      identityName: "StarforgeOS",
+      identityName: "OpenClaw",
     });
-    expect(result).toBe("[StarforgeOS]");
+    expect(result).toBe("[OpenClaw]");
   });
 
   it("resolves multiple variables", () => {
@@ -103,13 +103,13 @@ describe("resolveResponsePrefixTemplate", () => {
     const result = resolveResponsePrefixTemplate(
       "[{identity.name}] {provider}/{model} (think:{thinkingLevel})",
       {
-        identityName: "StarforgeOS",
+        identityName: "OpenClaw",
         provider: "anthropic",
         model: "claude-opus-4-5",
         thinkingLevel: "high",
       },
     );
-    expect(result).toBe("[StarforgeOS] anthropic/claude-opus-4-5 (think:high)");
+    expect(result).toBe("[OpenClaw] anthropic/claude-opus-4-5 (think:high)");
   });
 });
 

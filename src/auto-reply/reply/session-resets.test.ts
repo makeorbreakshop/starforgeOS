@@ -4,7 +4,6 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { buildModelAliasIndex } from "../../agents/model-selection.js";
-import { loadSessionStore } from "../../config/sessions.js";
 import { enqueueSystemEvent, resetSystemEventsForTest } from "../../infra/system-events.js";
 import { applyResetModelOverride } from "./session-reset-model.js";
 import { prependSystemEvents } from "./session-updates.js";
@@ -50,7 +49,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   }
 
   it("Reset trigger /new works for authorized sender in WhatsApp group", async () => {
-    const storePath = await createStorePath("starforge-group-reset-");
+    const storePath = await createStorePath("openclaw-group-reset-");
     const sessionKey = "agent:main:whatsapp:group:120363406150318674@g.us";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -92,7 +91,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   });
 
   it("Reset trigger /new blocked for unauthorized sender in existing session", async () => {
-    const storePath = await createStorePath("starforge-group-reset-unauth-");
+    const storePath = await createStorePath("openclaw-group-reset-unauth-");
     const sessionKey = "agent:main:whatsapp:group:120363406150318674@g.us";
     const existingSessionId = "existing-session-123";
 
@@ -134,7 +133,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   });
 
   it("Reset trigger works when RawBody is clean but Body has wrapped context", async () => {
-    const storePath = await createStorePath("starforge-group-rawbody-");
+    const storePath = await createStorePath("openclaw-group-rawbody-");
     const sessionKey = "agent:main:whatsapp:group:g1";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -173,7 +172,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   });
 
   it("Reset trigger /new works when SenderId is LID but SenderE164 is authorized", async () => {
-    const storePath = await createStorePath("starforge-group-reset-lid-");
+    const storePath = await createStorePath("openclaw-group-reset-lid-");
     const sessionKey = "agent:main:whatsapp:group:120363406150318674@g.us";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -215,7 +214,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   });
 
   it("Reset trigger /new blocked when SenderId is LID but SenderE164 is unauthorized", async () => {
-    const storePath = await createStorePath("starforge-group-reset-lid-unauth-");
+    const storePath = await createStorePath("openclaw-group-reset-lid-unauth-");
     const sessionKey = "agent:main:whatsapp:group:120363406150318674@g.us";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -277,7 +276,7 @@ describe("initSessionState reset triggers in Slack channels", () => {
   }
 
   it("Reset trigger /reset works when Slack message has a leading <@...> mention token", async () => {
-    const storePath = await createStorePath("starforge-slack-channel-reset-");
+    const storePath = await createStorePath("openclaw-slack-channel-reset-");
     const sessionKey = "agent:main:slack:channel:c1";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -317,7 +316,7 @@ describe("initSessionState reset triggers in Slack channels", () => {
   });
 
   it("Reset trigger /new preserves args when Slack message has a leading <@...> mention token", async () => {
-    const storePath = await createStorePath("starforge-slack-channel-new-");
+    const storePath = await createStorePath("openclaw-slack-channel-new-");
     const sessionKey = "agent:main:slack:channel:c2";
     const existingSessionId = "existing-session-123";
     await seedSessionStore({
@@ -354,111 +353,6 @@ describe("initSessionState reset triggers in Slack channels", () => {
     expect(result.resetTriggered).toBe(true);
     expect(result.sessionId).not.toBe(existingSessionId);
     expect(result.bodyStripped).toBe("take notes");
-  });
-});
-
-describe("initSessionState Discord native resets", () => {
-  async function createStorePath(prefix: string): Promise<string> {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), prefix));
-    return path.join(root, "sessions.json");
-  }
-
-  it("clears persisted CLI session identifiers for Discord channel /new", async () => {
-    const storePath = await createStorePath("starforge-discord-native-new-");
-    const slashSessionKey = "agent:main:discord:slash:u1";
-    const targetSessionKey = "agent:main:discord:channel:c1";
-    const existingSessionId = "existing-session-123";
-
-    const { saveSessionStore } = await import("../../config/sessions.js");
-    await saveSessionStore(storePath, {
-      [targetSessionKey]: {
-        sessionId: existingSessionId,
-        updatedAt: Date.now(),
-        cliSessionIds: { "claude-cli": "cli-old" },
-        claudeCliSessionId: "cli-old",
-      },
-    });
-
-    const cfg = {
-      session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
-
-    const result = await initSessionState({
-      ctx: {
-        Body: "/new",
-        RawBody: "/new",
-        CommandBody: "/new",
-        From: "discord:channel:c1",
-        To: "slash:u1",
-        ChatType: "channel",
-        Provider: "discord",
-        Surface: "discord",
-        SessionKey: slashSessionKey,
-        CommandSource: "native",
-        CommandTargetSessionKey: targetSessionKey,
-      },
-      cfg,
-      commandAuthorized: true,
-    });
-
-    expect(result.sessionKey).toBe(targetSessionKey);
-    expect(result.isNewSession).toBe(true);
-    expect(result.sessionId).not.toBe(existingSessionId);
-
-    const store = loadSessionStore(storePath);
-    expect(store[targetSessionKey]?.sessionId).toBe(result.sessionId);
-    expect(store[targetSessionKey]?.cliSessionIds).toBeUndefined();
-    expect(store[targetSessionKey]?.claudeCliSessionId).toBeUndefined();
-    expect(store[slashSessionKey]).toBeUndefined();
-  });
-
-  it("clears persisted CLI session identifiers for Discord channel /reset", async () => {
-    const storePath = await createStorePath("starforge-discord-native-reset-");
-    const slashSessionKey = "agent:main:discord:slash:u1";
-    const targetSessionKey = "agent:main:discord:channel:c1";
-    const existingSessionId = "existing-session-123";
-
-    const { saveSessionStore } = await import("../../config/sessions.js");
-    await saveSessionStore(storePath, {
-      [targetSessionKey]: {
-        sessionId: existingSessionId,
-        updatedAt: Date.now(),
-        cliSessionIds: { "claude-cli": "cli-old" },
-        claudeCliSessionId: "cli-old",
-      },
-    });
-
-    const cfg = {
-      session: { store: storePath, idleMinutes: 999 },
-    } as OpenClawConfig;
-
-    const result = await initSessionState({
-      ctx: {
-        Body: "/reset",
-        RawBody: "/reset",
-        CommandBody: "/reset",
-        From: "discord:channel:c1",
-        To: "slash:u1",
-        ChatType: "channel",
-        Provider: "discord",
-        Surface: "discord",
-        SessionKey: slashSessionKey,
-        CommandSource: "native",
-        CommandTargetSessionKey: targetSessionKey,
-      },
-      cfg,
-      commandAuthorized: true,
-    });
-
-    expect(result.sessionKey).toBe(targetSessionKey);
-    expect(result.isNewSession).toBe(true);
-    expect(result.sessionId).not.toBe(existingSessionId);
-
-    const store = loadSessionStore(storePath);
-    expect(store[targetSessionKey]?.sessionId).toBe(result.sessionId);
-    expect(store[targetSessionKey]?.cliSessionIds).toBeUndefined();
-    expect(store[targetSessionKey]?.claudeCliSessionId).toBeUndefined();
-    expect(store[slashSessionKey]).toBeUndefined();
   });
 });
 

@@ -4,15 +4,15 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "prompt": "Context is hitting limits. Write a checkpoint to memory/YYYY-MM-DD.md (use today's date). Include: 1) Current task/goal 2) Key decisions made 3) Progress (done/in-progress/blocked) 4) Active Codex sessions from memory/active-codex-sessions.json 5) Next steps. Also read memory/active-codex-sessions.json and include any active sessions in your checkpoint. After writing, reply with ONLY: SESSION_CHECKPOINT_COMPLETE",
-          "softThresholdTokens": 100000
+          "softThresholdTokens": "<REDACTED>"
         },
-        "reserveTokensFloor": 80000
+        "mode": "default",
+        "reserveTokensFloor": "<REDACTED>"
       },
       "contextPruning": {
         "hardClear": {
           "enabled": true,
-          "placeholder": "[Old process/exec output cleared to control token usage]"
+          "placeholder": "<REDACTED>"
         },
         "hardClearRatio": 0.2,
         "keepLastAssistants": 2,
@@ -29,7 +29,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": 120000,
+      "contextTokens": "<REDACTED>",
       "heartbeat": {
         "every": "30m",
         "session": "agent:main:heartbeat",
@@ -37,8 +37,8 @@
       },
       "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["openai-codex/gpt-5.3-codex"],
-        "primary": "openai-codex/gpt-5.3-codex"
+        "fallbacks": ["anthropic/claude-opus-4-6"],
+        "primary": "anthropic/claude-opus-4-6"
       },
       "models": {
         "anthropic/claude-opus-4-5": {
@@ -63,11 +63,11 @@
     },
     "profiles": {
       "anthropic:default": {
-        "mode": "token",
+        "mode": "<REDACTED>",
         "provider": "anthropic"
       },
       "anthropic:manual": {
-        "mode": "token",
+        "mode": "<REDACTED>",
         "provider": "anthropic"
       },
       "openai-codex:default": {
@@ -120,7 +120,7 @@
             "1469860225963266069": {
               "enabled": true,
               "requireMention": true,
-              "systemPrompt": "This is the #bookmarks channel for reviewing X/Twitter bookmarks. When Brandon shares a bookmark or URL, analyze the content and extract: 1) Key insights relevant to agent workflows, memory systems, or productivity 2) Actionable ideas we could implement 3) Any techniques or patterns worth adopting. Focus on practical takeaways."
+              "systemPrompt": "<REDACTED>"
             },
             "1471097778531864606": {
               "enabled": true,
@@ -132,7 +132,7 @@
           "users": ["584579716200267808"]
         }
       },
-      "token": "REDACTED"
+      "token": "<REDACTED>"
     }
   },
   "commands": {
@@ -141,8 +141,8 @@
   },
   "gateway": {
     "auth": {
-      "mode": "token",
-      "token": "REDACTED"
+      "mode": "<REDACTED>",
+      "token": "<REDACTED>"
     },
     "bind": "lan",
     "mode": "local",
@@ -160,7 +160,7 @@
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
-      "pushToken": "REDACTED",
+      "pushToken": "<REDACTED>",
       "renewEveryMinutes": 720,
       "serve": {
         "bind": "127.0.0.1",
@@ -176,26 +176,49 @@
     },
     "path": "/hooks",
     "presets": ["gmail"],
-    "token": "REDACTED"
+    "token": "<REDACTED>"
   },
   "memory": {
     "backend": "qmd",
     "qmd": {
-      "includeDefaultMemory": true,
+      "includeDefaultMemory": false,
+      "limits": {
+        "maxInjectedChars": 8000,
+        "maxResults": 8,
+        "maxSnippetChars": 900,
+        "timeoutMs": 45000
+      },
       "paths": [
         {
-          "name": "life",
+          "name": "memory-root",
+          "path": "/Users/brandoncullum/shared-memory",
+          "pattern": "MEMORY.md"
+        },
+        {
+          "name": "memory-md",
+          "path": "/Users/brandoncullum/shared-memory/memory",
+          "pattern": "**/*.md"
+        },
+        {
+          "name": "knowledge-md",
           "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.md"
         },
         {
-          "name": "life-json",
+          "name": "knowledge-json",
           "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.json"
         }
       ],
+      "scope": {
+        "default": "allow",
+        "rules": []
+      },
       "update": {
-        "interval": "5m"
+        "commandTimeoutMs": 30000,
+        "embedTimeoutMs": 600000,
+        "interval": "5m",
+        "updateTimeoutMs": 300000
       }
     }
   },
@@ -204,7 +227,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-12T11:25:27.297Z",
-    "lastTouchedVersion": "2026.2.9"
+    "lastTouchedVersion": "<REDACTED>"
   },
   "plugins": {
     "entries": {
@@ -214,15 +237,15 @@
     }
   },
   "session": {
-    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
+    "resetTriggers": ["SESSION_CHECKPOINT_COMPLETE"]
   },
   "skills": {
     "entries": {
       "goplaces": {
-        "apiKey": "REDACTED"
+        "apiKey": "<REDACTED>"
       },
       "local-places": {
-        "apiKey": "REDACTED"
+        "apiKey": "<REDACTED>"
       }
     },
     "install": {
@@ -238,6 +261,6 @@
     "lastRunAt": "2026-02-04T16:55:47.632Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "2026.2.2-3"
+    "lastRunVersion": "<REDACTED>"
   }
 }

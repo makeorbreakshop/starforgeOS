@@ -12,7 +12,10 @@ export type GeminiEmbeddingClient = {
 
 const DEFAULT_GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta";
 export const DEFAULT_GEMINI_EMBEDDING_MODEL = "gemini-embedding-001";
-const debugEmbeddings = isTruthyEnvValue(process.env.STARFORGEOS_DEBUG_MEMORY_EMBEDDINGS);
+const GEMINI_MAX_INPUT_TOKENS: Record<string, number> = {
+  "text-embedding-004": 2048,
+};
+const debugEmbeddings = isTruthyEnvValue(process.env.OPENCLAW_DEBUG_MEMORY_EMBEDDINGS);
 const log = createSubsystemLogger("memory/embeddings");
 
 const debugLog = (message: string, meta?: Record<string, unknown>) => {
@@ -117,6 +120,7 @@ export async function createGeminiEmbeddingProvider(
     provider: {
       id: "gemini",
       model: client.model,
+      maxInputTokens: GEMINI_MAX_INPUT_TOKENS[client.model],
       embedQuery,
       embedBatch,
     },

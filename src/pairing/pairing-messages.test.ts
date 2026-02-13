@@ -5,19 +5,24 @@ describe("buildPairingReply", () => {
   let previousProfile: string | undefined;
 
   beforeEach(() => {
-    previousProfile = process.env.STARFORGEOS_PROFILE;
-    process.env.STARFORGEOS_PROFILE = "isolated";
+    previousProfile = process.env.OPENCLAW_PROFILE;
+    process.env.OPENCLAW_PROFILE = "isolated";
   });
 
   afterEach(() => {
     if (previousProfile === undefined) {
-      delete process.env.STARFORGEOS_PROFILE;
+      delete process.env.OPENCLAW_PROFILE;
       return;
     }
-    process.env.STARFORGEOS_PROFILE = previousProfile;
+    process.env.OPENCLAW_PROFILE = previousProfile;
   });
 
   const cases = [
+    {
+      channel: "telegram",
+      idLine: "Your Telegram user id: 42",
+      code: "QRS678",
+    },
     {
       channel: "discord",
       idLine: "Your Discord user id: 1",
@@ -50,9 +55,9 @@ describe("buildPairingReply", () => {
       const text = buildPairingReply(testCase);
       expect(text).toContain(testCase.idLine);
       expect(text).toContain(`Pairing code: ${testCase.code}`);
-      // CLI commands should respect STARFORGEOS_PROFILE when set (most tests run with isolated profile)
+      // CLI commands should respect OPENCLAW_PROFILE when set (most tests run with isolated profile)
       const commandRe = new RegExp(
-        `(?:starforge|starforge) --profile isolated pairing approve ${testCase.channel} <code>`,
+        `(?:openclaw|openclaw) --profile isolated pairing approve ${testCase.channel} ${testCase.code}`,
       );
       expect(text).toMatch(commandRe);
     });

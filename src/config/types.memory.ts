@@ -2,6 +2,7 @@ import type { SessionSendPolicyConfig } from "./types.base.js";
 
 export type MemoryBackend = "builtin" | "qmd";
 export type MemoryCitationsMode = "auto" | "on" | "off";
+export type MemoryQmdSearchMode = "query" | "search" | "vsearch";
 
 export type MemoryConfig = {
   backend?: MemoryBackend;
@@ -11,7 +12,7 @@ export type MemoryConfig = {
 
 export type MemoryQmdConfig = {
   command?: string;
-  indexScope?: "agent" | "machine";
+  searchMode?: MemoryQmdSearchMode;
   includeDefaultMemory?: boolean;
   paths?: MemoryQmdIndexPath[];
   sessions?: MemoryQmdSessionConfig;

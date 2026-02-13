@@ -1,12 +1,12 @@
 ---
-summary: "CLI reference for `starforge hooks` (agent hooks)"
+summary: "CLI reference for `openclaw hooks` (agent hooks)"
 read_when:
   - You want to manage agent hooks
   - You want to install or update hooks
 title: "hooks"
 ---
 
-# `starforge hooks`
+# `openclaw hooks`
 
 Manage agent hooks (event-driven automations for commands like `/new`, `/reset`, and gateway startup).
 
@@ -18,7 +18,7 @@ Related:
 ## List All Hooks
 
 ```bash
-starforge hooks list
+openclaw hooks list
 ```
 
 List all discovered hooks from workspace, managed, and bundled directories.
@@ -32,19 +32,18 @@ List all discovered hooks from workspace, managed, and bundled directories.
 **Example output:**
 
 ```
-Hooks (4/4 ready)
+Hooks (3/3 ready)
 
 Ready:
   🚀 boot-md ✓ - Run BOOT.md on gateway startup
   📝 command-logger ✓ - Log all command events to a centralized audit file
   💾 session-memory ✓ - Save session context to memory when /new command is issued
-  😈 soul-evil ✓ - Swap injected SOUL content during a purge window or by random chance
 ```
 
 **Example (verbose):**
 
 ```bash
-starforge hooks list --verbose
+openclaw hooks list --verbose
 ```
 
 Shows missing requirements for ineligible hooks.
@@ -52,7 +51,7 @@ Shows missing requirements for ineligible hooks.
 **Example (JSON):**
 
 ```bash
-starforge hooks list --json
+openclaw hooks list --json
 ```
 
 Returns structured JSON for programmatic use.
@@ -60,7 +59,7 @@ Returns structured JSON for programmatic use.
 ## Get Hook Information
 
 ```bash
-starforge hooks info <name>
+openclaw hooks info <name>
 ```
 
 Show detailed information about a specific hook.
@@ -76,7 +75,7 @@ Show detailed information about a specific hook.
 **Example:**
 
 ```bash
-starforge hooks info session-memory
+openclaw hooks info session-memory
 ```
 
 **Output:**
@@ -87,10 +86,10 @@ starforge hooks info session-memory
 Save session context to memory when /new command is issued
 
 Details:
-  Source: starforgeos-bundled
-  Path: /path/to/starforgeos/hooks/bundled/session-memory/HOOK.md
-  Handler: /path/to/starforgeos/hooks/bundled/session-memory/handler.ts
-  Homepage: https://docs.starforgeos.ai/hooks#session-memory
+  Source: openclaw-bundled
+  Path: /path/to/openclaw/hooks/bundled/session-memory/HOOK.md
+  Handler: /path/to/openclaw/hooks/bundled/session-memory/handler.ts
+  Homepage: https://docs.openclaw.ai/hooks#session-memory
   Events: command:new
 
 Requirements:
@@ -100,7 +99,7 @@ Requirements:
 ## Check Hooks Eligibility
 
 ```bash
-starforge hooks check
+openclaw hooks check
 ```
 
 Show summary of hook eligibility status (how many are ready vs. not ready).
@@ -122,12 +121,12 @@ Not ready: 0
 ## Enable a Hook
 
 ```bash
-starforge hooks enable <name>
+openclaw hooks enable <name>
 ```
 
-Enable a specific hook by adding it to your config (`~/.starforgeos/config.json`).
+Enable a specific hook by adding it to your config (`~/.openclaw/config.json`).
 
-**Note:** Hooks managed by plugins show `plugin:<id>` in `starforge hooks list` and
+**Note:** Hooks managed by plugins show `plugin:<id>` in `openclaw hooks list` and
 can’t be enabled/disabled here. Enable/disable the plugin instead.
 
 **Arguments:**
@@ -137,7 +136,7 @@ can’t be enabled/disabled here. Enable/disable the plugin instead.
 **Example:**
 
 ```bash
-starforge hooks enable session-memory
+openclaw hooks enable session-memory
 ```
 
 **Output:**
@@ -159,7 +158,7 @@ starforge hooks enable session-memory
 ## Disable a Hook
 
 ```bash
-starforge hooks disable <name>
+openclaw hooks disable <name>
 ```
 
 Disable a specific hook by updating your config.
@@ -171,7 +170,7 @@ Disable a specific hook by updating your config.
 **Example:**
 
 ```bash
-starforge hooks disable command-logger
+openclaw hooks disable command-logger
 ```
 
 **Output:**
@@ -187,14 +186,14 @@ starforge hooks disable command-logger
 ## Install Hooks
 
 ```bash
-starforge hooks install <path-or-spec>
+openclaw hooks install <path-or-spec>
 ```
 
 Install a hook pack from a local folder/archive or npm.
 
 **What it does:**
 
-- Copies the hook pack into `~/.starforgeos/hooks/<id>`
+- Copies the hook pack into `~/.openclaw/hooks/<id>`
 - Enables the installed hooks in `hooks.internal.entries.*`
 - Records the install under `hooks.internal.installs`
 
@@ -208,23 +207,23 @@ Install a hook pack from a local folder/archive or npm.
 
 ```bash
 # Local directory
-starforge hooks install ./my-hook-pack
+openclaw hooks install ./my-hook-pack
 
 # Local archive
-starforge hooks install ./my-hook-pack.zip
+openclaw hooks install ./my-hook-pack.zip
 
 # NPM package
-starforge hooks install @openclaw/my-hook-pack
+openclaw hooks install @openclaw/my-hook-pack
 
 # Link a local directory without copying
-starforge hooks install -l ./my-hook-pack
+openclaw hooks install -l ./my-hook-pack
 ```
 
 ## Update Hooks
 
 ```bash
-starforge hooks update <id>
-starforge hooks update --all
+openclaw hooks update <id>
+openclaw hooks update --all
 ```
 
 Update installed hook packs (npm installs only).
@@ -243,10 +242,10 @@ Saves session context to memory when you issue `/new`.
 **Enable:**
 
 ```bash
-starforge hooks enable session-memory
+openclaw hooks enable session-memory
 ```
 
-**Output:** `~/.starforgeos/workspace/memory/YYYY-MM-DD-slug.md`
+**Output:** `~/.openclaw/workspace/memory/YYYY-MM-DD-slug.md`
 
 **See:** [session-memory documentation](/automation/hooks#session-memory)
 
@@ -257,37 +256,25 @@ Logs all command events to a centralized audit file.
 **Enable:**
 
 ```bash
-starforge hooks enable command-logger
+openclaw hooks enable command-logger
 ```
 
-**Output:** `~/.starforgeos/logs/commands.log`
+**Output:** `~/.openclaw/logs/commands.log`
 
 **View logs:**
 
 ```bash
 # Recent commands
-tail -n 20 ~/.starforgeos/logs/commands.log
+tail -n 20 ~/.openclaw/logs/commands.log
 
 # Pretty-print
-cat ~/.starforgeos/logs/commands.log | jq .
+cat ~/.openclaw/logs/commands.log | jq .
 
 # Filter by action
-grep '"action":"new"' ~/.starforgeos/logs/commands.log | jq .
+grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
 **See:** [command-logger documentation](/automation/hooks#command-logger)
-
-### soul-evil
-
-Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by random chance.
-
-**Enable:**
-
-```bash
-starforge hooks enable soul-evil
-```
-
-**See:** [SOUL Evil Hook](/hooks/soul-evil)
 
 ### boot-md
 
@@ -298,7 +285,7 @@ Runs `BOOT.md` when the gateway starts (after channels start).
 **Enable**:
 
 ```bash
-starforge hooks enable boot-md
+openclaw hooks enable boot-md
 ```
 
 **See:** [boot-md documentation](/automation/hooks#boot-md)

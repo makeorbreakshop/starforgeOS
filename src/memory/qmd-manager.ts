@@ -24,27 +24,12 @@ import { requireNodeSqlite } from "./sqlite.js";
 
 type SqliteDatabase = import("node:sqlite").DatabaseSync;
 import type { ResolvedMemoryBackendConfig, ResolvedQmdConfig } from "./backend-config.js";
+import { parseQmdQueryJson } from "./qmd-query-parser.js";
 
 const log = createSubsystemLogger("memory");
 
 const SNIPPET_HEADER_RE = /@@\s*-([0-9]+),([0-9]+)/;
 const SEARCH_PENDING_UPDATE_WAIT_MS = 500;
-
-function sanitizeName(input: string): string {
-  const normalized = (input || "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, "-");
-  return normalized.replace(/^-+|-+$/g, "") || "agent";
-}
-
-type QmdQueryResult = {
-  docid?: string;
-  score?: number;
-  file?: string;
-  snippet?: string;
-  body?: string;
-};
 
 type CollectionRoot = {
   path: string;
@@ -75,7 +60,6 @@ export class QmdMemoryManager implements MemorySearchManager {
   private readonly cfg: OpenClawConfig;
   private readonly agentId: string;
   private readonly qmd: ResolvedQmdConfig;
-  private readonly indexScope: "agent" | "machine";
   private readonly workspaceDir: string;
   private readonly stateDir: string;
   private readonly agentStateDir: string;
@@ -108,14 +92,10 @@ export class QmdMemoryManager implements MemorySearchManager {
     this.cfg = params.cfg;
     this.agentId = params.agentId;
     this.qmd = params.resolved;
-    this.indexScope = this.qmd.indexScope;
     this.workspaceDir = resolveAgentWorkspaceDir(params.cfg, params.agentId);
     this.stateDir = resolveStateDir(process.env, os.homedir);
     this.agentStateDir = path.join(this.stateDir, "agents", this.agentId);
-    this.qmdDir =
-      this.indexScope === "machine"
-        ? path.join(this.stateDir, "qmd")
-        : path.join(this.agentStateDir, "qmd");
+    this.qmdDir = path.join(this.agentStateDir, "qmd");
     // QMD uses XDG base dirs for its internal state.
     // Collections are managed via `qmd collection add` and stored inside the index DB.
     // - config:  $XDG_CONFIG_HOME (contexts, etc.)
@@ -130,19 +110,13 @@ export class QmdMemoryManager implements MemorySearchManager {
       XDG_CACHE_HOME: this.xdgCacheHome,
       NO_COLOR: "1",
     };
-    const defaultSessionExportDir =
-      this.indexScope === "machine"
-        ? path.join(this.qmdDir, "sessions", this.agentId)
-        : path.join(this.qmdDir, "sessions");
-    const defaultSessionCollectionName =
-      this.indexScope === "machine" ? `sessions-${sanitizeName(this.agentId)}` : "sessions";
     this.sessionExporter = this.qmd.sessions.enabled
       ? {
-          dir: this.qmd.sessions.exportDir ?? defaultSessionExportDir,
+          dir: this.qmd.sessions.exportDir ?? path.join(this.qmdDir, "sessions"),
           retentionMs: this.qmd.sessions.retentionDays
             ? this.qmd.sessions.retentionDays * 24 * 60 * 60 * 1000
             : undefined,
-          collectionName: this.pickSessionCollectionName(defaultSessionCollectionName),
+          collectionName: this.pickSessionCollectionName(),
         }
       : null;
     if (this.sessionExporter) {
@@ -163,12 +137,12 @@ export class QmdMemoryManager implements MemorySearchManager {
     await fs.mkdir(this.xdgCacheHome, { recursive: true });
     await fs.mkdir(path.dirname(this.indexPath), { recursive: true });
 
-    // QMD stores its ML models under $XDG_CACHE_HOME/qmd/models/. Because we
-    // override XDG_CACHE_HOME for managed indexes (agent- or machine-scoped),
-    // qmd would not find models installed at the default location
-    // (~/.cache/qmd/models/) and would attempt to re-download them on every
-    // invocation. Symlink the default models directory into our custom cache so
-    // indexes remain scoped while models are shared.
+    // QMD stores its ML models under $XDG_CACHE_HOME/qmd/models/.  Because we
+    // override XDG_CACHE_HOME to isolate the index per-agent, qmd would not
+    // find models installed at the default location (~/.cache/qmd/models/) and
+    // would attempt to re-download them on every invocation.  Symlink the
+    // default models directory into our custom cache so the index stays
+    // isolated while models are shared.
     await this.symlinkSharedModels();
 
     this.bootstrapCollections();
@@ -286,23 +260,40 @@ export class QmdMemoryManager implements MemorySearchManager {
       log.warn("qmd query skipped: no managed collections configured");
       return [];
     }
-    const args = ["query", trimmed, "--json", "-n", String(limit), ...collectionFilterArgs];
+    const qmdSearchCommand = this.qmd.searchMode;
+    const args = this.buildSearchArgs(qmdSearchCommand, trimmed, limit);
+    if (qmdSearchCommand === "query") {
+      args.push(...collectionFilterArgs);
+    }
     let stdout: string;
+    let stderr: string;
     try {
       const result = await this.runQmd(args, { timeoutMs: this.qmd.limits.timeoutMs });
       stdout = result.stdout;
+      stderr = result.stderr;
     } catch (err) {
-      log.warn(`qmd query failed: ${String(err)}`);
-      throw err instanceof Error ? err : new Error(String(err));
+      if (qmdSearchCommand !== "query" && this.isUnsupportedQmdOptionError(err)) {
+        log.warn(
+          `qmd ${qmdSearchCommand} does not support configured flags; retrying search with qmd query`,
+        );
+        try {
+          const fallbackArgs = this.buildSearchArgs("query", trimmed, limit);
+          fallbackArgs.push(...collectionFilterArgs);
+          const fallback = await this.runQmd(fallbackArgs, {
+            timeoutMs: this.qmd.limits.timeoutMs,
+          });
+          stdout = fallback.stdout;
+          stderr = fallback.stderr;
+        } catch (fallbackErr) {
+          log.warn(`qmd query fallback failed: ${String(fallbackErr)}`);
+          throw fallbackErr instanceof Error ? fallbackErr : new Error(String(fallbackErr));
+        }
+      } else {
+        log.warn(`qmd ${qmdSearchCommand} failed: ${String(err)}`);
+        throw err instanceof Error ? err : new Error(String(err));
+      }
     }
-    let parsed: QmdQueryResult[] = [];
-    try {
-      parsed = JSON.parse(stdout);
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      log.warn(`qmd query returned invalid JSON: ${message}`);
-      throw new Error(`qmd query returned invalid JSON: ${message}`, { cause: err });
-    }
+    const parsed = parseQmdQueryJson(stdout, stderr);
     const results: MemorySearchResult[] = [];
     for (const entry of parsed) {
       const doc = await this.resolveDocLocation(entry.docid);
@@ -396,7 +387,6 @@ export class QmdMemoryManager implements MemorySearchManager {
       },
       custom: {
         qmd: {
-          indexScope: this.indexScope,
           collections: this.qmd.collections.length,
           lastUpdateAt: this.lastUpdateAt,
         },
@@ -654,16 +644,16 @@ export class QmdMemoryManager implements MemorySearchManager {
     return `${header}\n\n${body}\n`;
   }
 
-  private pickSessionCollectionName(base = "sessions"): string {
+  private pickSessionCollectionName(): string {
     const existing = new Set(this.qmd.collections.map((collection) => collection.name));
-    if (!existing.has(base)) {
-      return base;
+    if (!existing.has("sessions")) {
+      return "sessions";
     }
     let counter = 2;
-    let candidate = `${base}-${counter}`;
+    let candidate = `sessions-${counter}`;
     while (existing.has(candidate)) {
       counter += 1;
-      candidate = `${base}-${counter}`;
+      candidate = `sessions-${counter}`;
     }
     return candidate;
   }
@@ -985,6 +975,18 @@ export class QmdMemoryManager implements MemorySearchManager {
     return normalized.includes("sqlite_busy") || normalized.includes("database is locked");
   }
 
+  private isUnsupportedQmdOptionError(err: unknown): boolean {
+    const message = err instanceof Error ? err.message : String(err);
+    const normalized = message.toLowerCase();
+    return (
+      normalized.includes("unknown flag") ||
+      normalized.includes("unknown option") ||
+      normalized.includes("unrecognized option") ||
+      normalized.includes("flag provided but not defined") ||
+      normalized.includes("unexpected argument")
+    );
+  }
+
   private createQmdBusyError(err: unknown): Error {
     const message = err instanceof Error ? err.message : String(err);
     return new Error(`qmd index busy while reading results: ${message}`);
@@ -1007,5 +1009,16 @@ export class QmdMemoryManager implements MemorySearchManager {
       return [];
     }
     return names.flatMap((name) => ["-c", name]);
+  }
+
+  private buildSearchArgs(
+    command: "query" | "search" | "vsearch",
+    query: string,
+    limit: number,
+  ): string[] {
+    if (command === "query") {
+      return ["query", query, "--json", "-n", String(limit)];
+    }
+    return [command, query, "--json"];
   }
 }

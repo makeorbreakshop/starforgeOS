@@ -8,14 +8,14 @@ title: "Hooks"
 
 # Hooks
 
-Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be managed via CLI commands, similar to how skills work in StarforgeOS.
+Hooks provide an extensible event-driven system for automating actions in response to agent commands and events. Hooks are automatically discovered from directories and can be managed via CLI commands, similar to how skills work in OpenClaw.
 
 ## Getting Oriented
 
 Hooks are small scripts that run when something happens. There are two kinds:
 
 - **Hooks** (this page): run inside the Gateway when agent events fire, like `/new`, `/reset`, `/stop`, or lifecycle events.
-- **Webhooks**: external HTTP webhooks that let other systems trigger work in StarforgeOS. See [Webhook Hooks](/automation/webhook) or use `starforge webhooks` for Gmail helper commands.
+- **Webhooks**: external HTTP webhooks that let other systems trigger work in OpenClaw. See [Webhook Hooks](/automation/webhook) or use `openclaw webhooks` for Gmail helper commands.
 
 Hooks can also be bundled inside plugins; see [Plugins](/tools/plugin#plugin-hooks).
 
@@ -35,54 +35,53 @@ The hooks system allows you to:
 - Save session context to memory when `/new` is issued
 - Log all commands for auditing
 - Trigger custom automations on agent lifecycle events
-- Extend StarforgeOS's behavior without modifying core code
+- Extend OpenClaw's behavior without modifying core code
 
 ## Getting Started
 
 ### Bundled Hooks
 
-StarforgeOS ships with four bundled hooks that are automatically discovered:
+OpenClaw ships with three bundled hooks that are automatically discovered:
 
-- **💾 session-memory**: Saves session context to your agent workspace (default `~/.starforgeos/workspace/memory/`) when you issue `/new`
-- **📝 command-logger**: Logs all command events to `~/.starforgeos/logs/commands.log`
+- **💾 session-memory**: Saves session context to your agent workspace (default `~/.openclaw/workspace/memory/`) when you issue `/new`
+- **📝 command-logger**: Logs all command events to `~/.openclaw/logs/commands.log`
 - **🚀 boot-md**: Runs `BOOT.md` when the gateway starts (requires internal hooks enabled)
-- **😈 soul-evil**: Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by random chance
 
 List available hooks:
 
 ```bash
-starforge hooks list
+openclaw hooks list
 ```
 
 Enable a hook:
 
 ```bash
-starforge hooks enable session-memory
+openclaw hooks enable session-memory
 ```
 
 Check hook status:
 
 ```bash
-starforge hooks check
+openclaw hooks check
 ```
 
 Get detailed information:
 
 ```bash
-starforge hooks info session-memory
+openclaw hooks info session-memory
 ```
 
 ### Onboarding
 
-During onboarding (`starforge onboard`), you'll be prompted to enable recommended hooks. The wizard automatically discovers eligible hooks and presents them for selection.
+During onboarding (`openclaw onboard`), you'll be prompted to enable recommended hooks. The wizard automatically discovers eligible hooks and presents them for selection.
 
 ## Hook Discovery
 
 Hooks are automatically discovered from three directories (in order of precedence):
 
 1. **Workspace hooks**: `<workspace>/hooks/` (per-agent, highest precedence)
-2. **Managed hooks**: `~/.starforgeos/hooks/` (user-installed, shared across workspaces)
-3. **Bundled hooks**: `<starforgeos>/dist/hooks/bundled/` (shipped with StarforgeOS)
+2. **Managed hooks**: `~/.openclaw/hooks/` (user-installed, shared across workspaces)
+3. **Bundled hooks**: `<openclaw>/dist/hooks/bundled/` (shipped with OpenClaw)
 
 Managed hook directories can be either a **single hook** or a **hook pack** (package directory).
 
@@ -96,11 +95,11 @@ my-hook/
 
 ## Hook Packs (npm/archives)
 
-Hook packs are standard npm packages that export one or more hooks via `starforgeos.hooks` in
+Hook packs are standard npm packages that export one or more hooks via `openclaw.hooks` in
 `package.json`. Install them with:
 
 ```bash
-starforge hooks install <path-or-spec>
+openclaw hooks install <path-or-spec>
 ```
 
 Example `package.json`:
@@ -109,14 +108,14 @@ Example `package.json`:
 {
   "name": "@acme/my-hooks",
   "version": "0.1.0",
-  "starforgeos": {
+  "openclaw": {
     "hooks": ["./hooks/my-hook", "./hooks/other-hook"]
   }
 }
 ```
 
 Each entry points to a hook directory containing `HOOK.md` and `handler.ts` (or `index.ts`).
-Hook packs can ship dependencies; they will be installed under `~/.starforgeos/hooks/<id>`.
+Hook packs can ship dependencies; they will be installed under `~/.openclaw/hooks/<id>`.
 
 ## Hook Structure
 
@@ -128,9 +127,9 @@ The `HOOK.md` file contains metadata in YAML frontmatter plus Markdown documenta
 ---
 name: my-hook
 description: "Short description of what this hook does"
-homepage: https://docs.starforgeos.ai/hooks#my-hook
+homepage: https://docs.openclaw.ai/hooks#my-hook
 metadata:
-  { "starforgeos": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
+  { "openclaw": { "emoji": "🔗", "events": ["command:new"], "requires": { "bins": ["node"] } } }
 ---
 
 # My Hook
@@ -154,7 +153,7 @@ No configuration needed.
 
 ### Metadata Fields
 
-The `metadata.starforgeos` object supports:
+The `metadata.openclaw` object supports:
 
 - **`emoji`**: Display emoji for CLI (e.g., `"💾"`)
 - **`events`**: Array of events to listen for (e.g., `["command:new", "command:reset"]`)
@@ -242,7 +241,7 @@ Triggered when the gateway starts:
 
 ### Tool Result Hooks (Plugin API)
 
-These hooks are not event-stream listeners; they let plugins synchronously adjust tool results before StarforgeOS persists them.
+These hooks are not event-stream listeners; they let plugins synchronously adjust tool results before OpenClaw persists them.
 
 - **`tool_result_persist`**: transform tool results before they are written to the session transcript. Must be synchronous; return the updated tool result payload or `undefined` to keep it as-is. See [Agent Loop](/concepts/agent-loop).
 
@@ -261,13 +260,13 @@ Planned event types:
 ### 1. Choose Location
 
 - **Workspace hooks** (`<workspace>/hooks/`): Per-agent, highest precedence
-- **Managed hooks** (`~/.starforgeos/hooks/`): Shared across workspaces
+- **Managed hooks** (`~/.openclaw/hooks/`): Shared across workspaces
 
 ### 2. Create Directory Structure
 
 ```bash
-mkdir -p ~/.starforgeos/hooks/my-hook
-cd ~/.starforgeos/hooks/my-hook
+mkdir -p ~/.openclaw/hooks/my-hook
+cd ~/.openclaw/hooks/my-hook
 ```
 
 ### 3. Create HOOK.md
@@ -276,7 +275,7 @@ cd ~/.starforgeos/hooks/my-hook
 ---
 name: my-hook
 description: "Does something useful"
-metadata: { "starforgeos": { "emoji": "🎯", "events": ["command:new"] } }
+metadata: { "openclaw": { "emoji": "🎯", "events": ["command:new"] } }
 ---
 
 # My Custom Hook
@@ -305,10 +304,10 @@ export default handler;
 
 ```bash
 # Verify hook is discovered
-starforge hooks list
+openclaw hooks list
 
 # Enable it
-starforge hooks enable my-hook
+openclaw hooks enable my-hook
 
 # Restart your gateway process (menu bar app restart on macOS, or restart your dev process)
 
@@ -402,46 +401,46 @@ The old config format still works for backwards compatibility:
 
 ```bash
 # List all hooks
-starforge hooks list
+openclaw hooks list
 
 # Show only eligible hooks
-starforge hooks list --eligible
+openclaw hooks list --eligible
 
 # Verbose output (show missing requirements)
-starforge hooks list --verbose
+openclaw hooks list --verbose
 
 # JSON output
-starforge hooks list --json
+openclaw hooks list --json
 ```
 
 ### Hook Information
 
 ```bash
 # Show detailed info about a hook
-starforge hooks info session-memory
+openclaw hooks info session-memory
 
 # JSON output
-starforge hooks info session-memory --json
+openclaw hooks info session-memory --json
 ```
 
 ### Check Eligibility
 
 ```bash
 # Show eligibility summary
-starforge hooks check
+openclaw hooks check
 
 # JSON output
-starforge hooks check --json
+openclaw hooks check --json
 ```
 
 ### Enable/Disable
 
 ```bash
 # Enable a hook
-starforge hooks enable session-memory
+openclaw hooks enable session-memory
 
 # Disable a hook
-starforge hooks disable command-logger
+openclaw hooks disable command-logger
 ```
 
 ## Bundled hook reference
@@ -454,7 +453,7 @@ Saves session context to memory when you issue `/new`.
 
 **Requirements**: `workspace.dir` must be configured
 
-**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.starforgeos/workspace`)
+**Output**: `<workspace>/memory/YYYY-MM-DD-slug.md` (defaults to `~/.openclaw/workspace`)
 
 **What it does**:
 
@@ -482,7 +481,7 @@ Saves session context to memory when you issue `/new`.
 **Enable**:
 
 ```bash
-starforge hooks enable session-memory
+openclaw hooks enable session-memory
 ```
 
 ### command-logger
@@ -493,7 +492,7 @@ Logs all command events to a centralized audit file.
 
 **Requirements**: None
 
-**Output**: `~/.starforgeos/logs/commands.log`
+**Output**: `~/.openclaw/logs/commands.log`
 
 **What it does**:
 
@@ -512,55 +511,19 @@ Logs all command events to a centralized audit file.
 
 ```bash
 # View recent commands
-tail -n 20 ~/.starforgeos/logs/commands.log
+tail -n 20 ~/.openclaw/logs/commands.log
 
 # Pretty-print with jq
-cat ~/.starforgeos/logs/commands.log | jq .
+cat ~/.openclaw/logs/commands.log | jq .
 
 # Filter by action
-grep '"action":"new"' ~/.starforgeos/logs/commands.log | jq .
+grep '"action":"new"' ~/.openclaw/logs/commands.log | jq .
 ```
 
 **Enable**:
 
 ```bash
-starforge hooks enable command-logger
-```
-
-### soul-evil
-
-Swaps injected `SOUL.md` content with `SOUL_EVIL.md` during a purge window or by random chance.
-
-**Events**: `agent:bootstrap`
-
-**Docs**: [SOUL Evil Hook](/hooks/soul-evil)
-
-**Output**: No files written; swaps happen in-memory only.
-
-**Enable**:
-
-```bash
-starforge hooks enable soul-evil
-```
-
-**Config**:
-
-```json
-{
-  "hooks": {
-    "internal": {
-      "enabled": true,
-      "entries": {
-        "soul-evil": {
-          "enabled": true,
-          "file": "SOUL_EVIL.md",
-          "chance": 0.1,
-          "purge": { "at": "21:00", "duration": "15m" }
-        }
-      }
-    }
-  }
-}
+openclaw hooks enable command-logger
 ```
 
 ### boot-md
@@ -581,7 +544,7 @@ Internal hooks must be enabled for this to run.
 **Enable**:
 
 ```bash
-starforge hooks enable boot-md
+openclaw hooks enable boot-md
 ```
 
 ## Best Practices
@@ -638,13 +601,13 @@ const handler: HookHandler = async (event) => {
 Specify exact events in metadata when possible:
 
 ```yaml
-metadata: { "starforgeos": { "events": ["command:new"] } } # Specific
+metadata: { "openclaw": { "events": ["command:new"] } } # Specific
 ```
 
 Rather than:
 
 ```yaml
-metadata: { "starforgeos": { "events": ["command"] } } # General - more overhead
+metadata: { "openclaw": { "events": ["command"] } } # General - more overhead
 ```
 
 ## Debugging
@@ -664,7 +627,7 @@ Registered hook: boot-md -> gateway:startup
 List all discovered hooks:
 
 ```bash
-starforge hooks list --verbose
+openclaw hooks list --verbose
 ```
 
 ### Check Registration
@@ -683,7 +646,7 @@ const handler: HookHandler = async (event) => {
 Check why a hook isn't eligible:
 
 ```bash
-starforge hooks info my-hook
+openclaw hooks info my-hook
 ```
 
 Look for missing requirements in the output.
@@ -699,7 +662,7 @@ Monitor gateway logs to see hook execution:
 ./scripts/clawlog.sh -f
 
 # Other platforms
-tail -f ~/.starforgeos/gateway.log
+tail -f ~/.openclaw/gateway.log
 ```
 
 ### Test Hooks Directly
@@ -775,21 +738,21 @@ Session reset
 1. Check directory structure:
 
    ```bash
-   ls -la ~/.starforgeos/hooks/my-hook/
+   ls -la ~/.openclaw/hooks/my-hook/
    # Should show: HOOK.md, handler.ts
    ```
 
 2. Verify HOOK.md format:
 
    ```bash
-   cat ~/.starforgeos/hooks/my-hook/HOOK.md
+   cat ~/.openclaw/hooks/my-hook/HOOK.md
    # Should have YAML frontmatter with name and metadata
    ```
 
 3. List all discovered hooks:
 
    ```bash
-   starforge hooks list
+   openclaw hooks list
    ```
 
 ### Hook Not Eligible
@@ -797,7 +760,7 @@ Session reset
 Check requirements:
 
 ```bash
-starforge hooks info my-hook
+openclaw hooks info my-hook
 ```
 
 Look for missing:
@@ -812,7 +775,7 @@ Look for missing:
 1. Verify hook is enabled:
 
    ```bash
-   starforge hooks list
+   openclaw hooks list
    # Should show ✓ next to enabled hooks
    ```
 
@@ -860,8 +823,8 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 1. Create hook directory:
 
    ```bash
-   mkdir -p ~/.starforgeos/hooks/my-hook
-   mv ./hooks/handlers/my-handler.ts ~/.starforgeos/hooks/my-hook/handler.ts
+   mkdir -p ~/.openclaw/hooks/my-hook
+   mv ./hooks/handlers/my-handler.ts ~/.openclaw/hooks/my-hook/handler.ts
    ```
 
 2. Create HOOK.md:
@@ -870,7 +833,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
    ---
    name: my-hook
    description: "My custom hook"
-   metadata: { "starforgeos": { "emoji": "🎯", "events": ["command:new"] } }
+   metadata: { "openclaw": { "emoji": "🎯", "events": ["command:new"] } }
    ---
 
    # My Hook
@@ -896,7 +859,7 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 4. Verify and restart your gateway process:
 
    ```bash
-   starforge hooks list
+   openclaw hooks list
    # Should show: 🎯 my-hook ✓
    ```
 
@@ -911,6 +874,6 @@ node -e "import('./path/to/handler.ts').then(console.log)"
 ## See Also
 
 - [CLI Reference: hooks](/cli/hooks)
-- [Bundled Hooks README](https://github.com/makeorbreakshop/starforgeOS/tree/main/src/hooks/bundled)
+- [Bundled Hooks README](https://github.com/openclaw/openclaw/tree/main/src/hooks/bundled)
 - [Webhook Hooks](/automation/webhook)
 - [Configuration](/gateway/configuration#hooks)

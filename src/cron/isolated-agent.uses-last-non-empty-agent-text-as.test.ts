@@ -20,11 +20,14 @@ import { runEmbeddedPiAgent } from "../agents/pi-embedded.js";
 import { runCronIsolatedAgentTurn } from "./isolated-agent.js";
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "starforge-cron-" });
+  return withTempHomeBase(fn, { prefix: "openclaw-cron-" });
 }
 
-async function writeSessionStore(home: string) {
-  const dir = path.join(home, ".starforge", "sessions");
+async function writeSessionStore(
+  home: string,
+  entries: Record<string, Record<string, unknown>> = {},
+) {
+  const dir = path.join(home, ".openclaw", "sessions");
   await fs.mkdir(dir, { recursive: true });
   const storePath = path.join(dir, "sessions.json");
   await fs.writeFile(
@@ -37,6 +40,7 @@ async function writeSessionStore(home: string) {
           lastProvider: "webchat",
           lastTo: "",
         },
+        ...entries,
       },
       null,
       2,
@@ -61,7 +65,7 @@ function makeCfg(
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-5",
-        workspace: path.join(home, "starforge"),
+        workspace: path.join(home, "openclaw"),
       },
     },
     session: { store: storePath, mainKey: "main" },
@@ -211,7 +215,7 @@ describe("runCronIsolatedAgentTurn", () => {
 
       const cfg = makeCfg(
         home,
-        path.join(home, ".starforge", "agents", "{agentId}", "sessions", "sessions.json"),
+        path.join(home, ".openclaw", "agents", "{agentId}", "sessions", "sessions.json"),
         {
           agents: {
             defaults: { workspace: path.join(home, "default-workspace") },
@@ -294,9 +298,152 @@ describe("runCronIsolatedAgentTurn", () => {
     });
   });
 
+  it("uses stored session override when no job model override is provided", async () => {
+    await withTempHome(async (home) => {
+      const storePath = await writeSessionStore(home, {
+        "agent:main:cron:job-1": {
+          sessionId: "existing-cron-session",
+          updatedAt: Date.now(),
+          providerOverride: "openai",
+          modelOverride: "gpt-4.1-mini",
+        },
+      });
+      const deps: CliDeps = {
+        sendMessageWhatsApp: vi.fn(),
+        sendMessageTelegram: vi.fn(),
+        sendMessageDiscord: vi.fn(),
+        sendMessageSignal: vi.fn(),
+        sendMessageIMessage: vi.fn(),
+      };
+      vi.mocked(runEmbeddedPiAgent).mockResolvedValue({
+        payloads: [{ text: "ok" }],
+        meta: {
+          durationMs: 5,
+          agentMeta: { sessionId: "s", provider: "p", model: "m" },
+        },
+      });
+
+      const res = await runCronIsolatedAgentTurn({
+        cfg: makeCfg(home, storePath),
+        deps,
+        job: makeJob({ kind: "agentTurn", message: "do it", deliver: false }),
+        message: "do it",
+        sessionKey: "cron:job-1",
+        lane: "cron",
+      });
+
+      expect(res.status).toBe("ok");
+      const call = vi.mocked(runEmbeddedPiAgent).mock.calls[0]?.[0] as {
+        provider?: string;
+        model?: string;
+      };
+      expect(call?.provider).toBe("openai");
+      expect(call?.model).toBe("gpt-4.1-mini");
+    });
+  });
+
+  it("prefers job model override over stored session override", async () => {
+    await withTempHome(async (home) => {
+      const storePath = await writeSessionStore(home, {
+        "agent:main:cron:job-1": {
+          sessionId: "existing-cron-session",
+          updatedAt: Date.now(),
+          providerOverride: "openai",
+          modelOverride: "gpt-4.1-mini",
+        },
+      });
+      const deps: CliDeps = {
+        sendMessageWhatsApp: vi.fn(),
+        sendMessageTelegram: vi.fn(),
+        sendMessageDiscord: vi.fn(),
+        sendMessageSignal: vi.fn(),
+        sendMessageIMessage: vi.fn(),
+      };
+      vi.mocked(runEmbeddedPiAgent).mockResolvedValue({
+        payloads: [{ text: "ok" }],
+        meta: {
+          durationMs: 5,
+          agentMeta: { sessionId: "s", provider: "p", model: "m" },
+        },
+      });
+
+      const res = await runCronIsolatedAgentTurn({
+        cfg: makeCfg(home, storePath),
+        deps,
+        job: makeJob({
+          kind: "agentTurn",
+          message: "do it",
+          model: "anthropic/claude-opus-4-5",
+          deliver: false,
+        }),
+        message: "do it",
+        sessionKey: "cron:job-1",
+        lane: "cron",
+      });
+
+      expect(res.status).toBe("ok");
+      const call = vi.mocked(runEmbeddedPiAgent).mock.calls[0]?.[0] as {
+        provider?: string;
+        model?: string;
+      };
+      expect(call?.provider).toBe("anthropic");
+      expect(call?.model).toBe("claude-opus-4-5");
+    });
+  });
+
   it("uses hooks.gmail.model for Gmail hook sessions", async () => {
     await withTempHome(async (home) => {
       const storePath = await writeSessionStore(home);
+      const deps: CliDeps = {
+        sendMessageWhatsApp: vi.fn(),
+        sendMessageTelegram: vi.fn(),
+        sendMessageDiscord: vi.fn(),
+        sendMessageSignal: vi.fn(),
+        sendMessageIMessage: vi.fn(),
+      };
+      vi.mocked(runEmbeddedPiAgent).mockResolvedValue({
+        payloads: [{ text: "ok" }],
+        meta: {
+          durationMs: 5,
+          agentMeta: { sessionId: "s", provider: "p", model: "m" },
+        },
+      });
+
+      const res = await runCronIsolatedAgentTurn({
+        cfg: makeCfg(home, storePath, {
+          hooks: {
+            gmail: {
+              model: "openrouter/meta-llama/llama-3.3-70b:free",
+            },
+          },
+        }),
+        deps,
+        job: makeJob({ kind: "agentTurn", message: "do it", deliver: false }),
+        message: "do it",
+        sessionKey: "hook:gmail:msg-1",
+        lane: "cron",
+      });
+
+      expect(res.status).toBe("ok");
+      const call = vi.mocked(runEmbeddedPiAgent).mock.calls[0]?.[0] as {
+        provider?: string;
+        model?: string;
+      };
+      expect(call?.provider).toBe("openrouter");
+      expect(call?.model).toBe("meta-llama/llama-3.3-70b:free");
+    });
+  });
+
+  it("keeps hooks.gmail.model precedence over stored session override", async () => {
+    await withTempHome(async (home) => {
+      const storePath = await writeSessionStore(home, {
+        "agent:main:hook:gmail:msg-1": {
+          sessionId: "existing-gmail-session",
+          updatedAt: Date.now(),
+          providerOverride: "anthropic",
+          modelOverride: "claude-opus-4-5",
+        },
+      });
       const deps: CliDeps = {
         sendMessageWhatsApp: vi.fn(),
         sendMessageTelegram: vi.fn(),

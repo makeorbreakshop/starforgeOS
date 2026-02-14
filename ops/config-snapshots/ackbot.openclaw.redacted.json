@@ -1,18 +1,19 @@
 {
   "agents": {
     "defaults": {
+      "bootstrapMaxChars": 4000,
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "<REDACTED>"
+          "softThresholdTokens": 4000
         },
-        "mode": "default",
-        "reserveTokensFloor": "<REDACTED>"
+        "mode": "safeguard",
+        "reserveTokensFloor": 20000
       },
       "contextPruning": {
         "hardClear": {
           "enabled": true,
-          "placeholder": "<REDACTED>"
+          "placeholder": "[Old process/exec output cleared to control token usage]"
         },
         "hardClearRatio": 0.2,
         "keepLastAssistants": 2,
@@ -29,7 +30,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": "<REDACTED>",
+      "contextTokens": 120000,
       "heartbeat": {
         "every": "30m",
         "session": "agent:main:heartbeat",
@@ -37,7 +38,7 @@
       },
       "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["anthropic/claude-opus-4-6"],
+        "fallbacks": ["anthropic/claude-sonnet-4-5"],
         "primary": "anthropic/claude-opus-4-6"
       },
       "models": {
@@ -63,11 +64,11 @@
     },
     "profiles": {
       "anthropic:default": {
-        "mode": "<REDACTED>",
+        "mode": "token",
         "provider": "anthropic"
       },
       "anthropic:manual": {
-        "mode": "<REDACTED>",
+        "mode": "token",
         "provider": "anthropic"
       },
       "openai-codex:default": {
@@ -120,7 +121,7 @@
             "1469860225963266069": {
               "enabled": true,
               "requireMention": true,
-              "systemPrompt": "<REDACTED>"
+              "systemPrompt": "This is the #bookmarks channel for reviewing X/Twitter bookmarks. When Brandon shares a bookmark or URL, analyze the content and extract: 1) Key insights relevant to agent workflows, memory systems, or productivity 2) Actionable ideas we could implement 3) Any techniques or patterns worth adopting. Focus on practical takeaways."
             },
             "1471097778531864606": {
               "enabled": true,
@@ -132,7 +133,7 @@
           "users": ["584579716200267808"]
         }
       },
-      "token": "<REDACTED>"
+      "token": "REDACTED"
     }
   },
   "commands": {
@@ -141,10 +142,10 @@
   },
   "gateway": {
     "auth": {
-      "mode": "<REDACTED>",
-      "token": "<REDACTED>"
+      "mode": "token",
+      "token": "REDACTED"
     },
-    "bind": "lan",
+    "bind": "loopback",
     "mode": "local",
     "port": 18789,
     "tailscale": {
@@ -160,7 +161,7 @@
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
-      "pushToken": "<REDACTED>",
+      "pushToken": "REDACTED",
       "renewEveryMinutes": 720,
       "serve": {
         "bind": "127.0.0.1",
@@ -176,16 +177,16 @@
     },
     "path": "/hooks",
     "presets": ["gmail"],
-    "token": "<REDACTED>"
+    "token": "REDACTED"
   },
   "memory": {
     "backend": "qmd",
     "qmd": {
       "includeDefaultMemory": false,
       "limits": {
-        "maxInjectedChars": 8000,
-        "maxResults": 8,
-        "maxSnippetChars": 900,
+        "maxInjectedChars": 4000,
+        "maxResults": 6,
+        "maxSnippetChars": 700,
         "timeoutMs": 45000
       },
       "paths": [
@@ -226,8 +227,8 @@
     "ackReactionScope": "group-mentions"
   },
   "meta": {
-    "lastTouchedAt": "2026-02-12T11:25:27.297Z",
-    "lastTouchedVersion": "<REDACTED>"
+    "lastTouchedAt": "2026-02-13T18:40:07.069Z",
+    "lastTouchedVersion": "REDACTED"
   },
   "plugins": {
     "entries": {
@@ -242,10 +243,10 @@
   "skills": {
     "entries": {
       "goplaces": {
-        "apiKey": "<REDACTED>"
+        "apiKey": "REDACTED"
       },
       "local-places": {
-        "apiKey": "<REDACTED>"
+        "apiKey": "REDACTED"
       }
     },
     "install": {
@@ -261,6 +262,6 @@
     "lastRunAt": "2026-02-04T16:55:47.632Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "<REDACTED>"
+    "lastRunVersion": "REDACTED"
   }
 }

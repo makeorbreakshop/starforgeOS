@@ -4,10 +4,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": 4000
+          "softThresholdTokens": "[REDACTED]"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": 20000
+        "reserveTokensFloor": "[REDACTED]"
       },
       "contextPruning": {
         "hardClear": {
@@ -29,7 +29,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": 120000,
+      "contextTokens": "[REDACTED]",
       "heartbeat": {
         "every": "15m",
         "session": "agent:main:heartbeat",
@@ -265,10 +265,10 @@
       "enabled": true,
       "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupPolicy": "allowlist",
-      "password": "REDACTED",
+      "password": "[REDACTED]",
       "sendReadReceipts": false,
       "serverUrl": "http://127.0.0.1:1234",
-      "webhookPath": "REDACTED"
+      "webhookPath": "[REDACTED]"
     },
     "discord": {
       "accounts": {
@@ -311,7 +311,7 @@
             }
           },
           "name": "Lobot",
-          "token": "REDACTED"
+          "token": "[REDACTED]"
         },
         "threepio": {
           "dm": {
@@ -332,7 +332,7 @@
             }
           },
           "name": "Threepio",
-          "token": "REDACTED"
+          "token": "[REDACTED]"
         }
       },
       "enabled": true,
@@ -346,7 +346,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "REDACTED"
+      "token": "[REDACTED]"
     },
     "bind": "loopback",
     "mode": "local",
@@ -423,7 +423,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-12T11:40:08.057Z",
-    "lastTouchedVersion": "REDACTED"
+    "lastTouchedVersion": "[REDACTED]"
   },
   "plugins": {
     "entries": {
@@ -449,7 +449,7 @@
         "timeoutSeconds": 30
       },
       "search": {
-        "apiKey": "REDACTED",
+        "apiKey": "[REDACTED]",
         "cacheTtlMinutes": 60,
         "enabled": true,
         "maxResults": 8,
@@ -462,6 +462,6 @@
     "lastRunAt": "2026-02-11T19:23:26.286Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "REDACTED"
+    "lastRunVersion": "[REDACTED]"
   }
 }

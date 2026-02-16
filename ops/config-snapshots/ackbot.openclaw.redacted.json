@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastTouchedVersion": "[REDACTED]",
-    "lastTouchedAt": "2026-02-14T12:03:40.415Z"
+    "lastTouchedAt": "2026-02-15T12:26:36.317Z"
   },
   "wizard": {
     "lastRunAt": "2026-02-04T16:55:47.632Z",
@@ -47,7 +47,7 @@
       },
       "workspace": "/Users/brandoncullum/.openclaw/workspace",
       "bootstrapMaxChars": 4000,
-      "contextTokens": "[REDACTED]",
+      "contextTokens": 120000,
       "contextPruning": {
         "mode": "cache-ttl",
         "ttl": "5m",
@@ -70,10 +70,10 @@
       },
       "compaction": {
         "mode": "safeguard",
-        "reserveTokensFloor": "[REDACTED]",
+        "reserveTokensFloor": 20000,
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "[REDACTED]"
+          "softThresholdTokens": 4000
         }
       },
       "heartbeat": {
@@ -106,6 +106,7 @@
     "enabled": true,
     "path": "/hooks",
     "token": "[REDACTED]",
+    "defaultSessionKey": "hook:ingress",
     "presets": ["gmail"],
     "gmail": {
       "account": "brandonrcullum@gmail.com",

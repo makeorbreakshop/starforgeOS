@@ -4,10 +4,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "[REDACTED]"
+          "softThresholdTokens": 4000
         },
         "mode": "safeguard",
-        "reserveTokensFloor": "[REDACTED]"
+        "reserveTokensFloor": 20000
       },
       "contextPruning": {
         "hardClear": {
@@ -29,7 +29,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": "[REDACTED]",
+      "contextTokens": 120000,
       "heartbeat": {
         "every": "15m",
         "session": "agent:main:heartbeat",
@@ -37,7 +37,7 @@
       },
       "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
+        "fallbacks": ["[REDACTED]"],
         "primary": "openai-codex/gpt-5.3-codex"
       },
       "models": {
@@ -65,7 +65,7 @@
           "name": "Lobot"
         },
         "model": {
-          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+          "fallbacks": ["[REDACTED]"]
         },
         "tools": {
           "allow": [
@@ -104,7 +104,7 @@
           "name": "Threepio"
         },
         "model": {
-          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
+          "fallbacks": ["[REDACTED]"],
           "primary": "anthropic/claude-opus-4-6"
         },
         "tools": {
@@ -144,7 +144,7 @@
         },
         "model": {
           "fallbacks": ["anthropic/claude-opus-4-6"],
-          "primary": "anthropic/claude-sonnet-4-5-20250929"
+          "primary": "[REDACTED]"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],

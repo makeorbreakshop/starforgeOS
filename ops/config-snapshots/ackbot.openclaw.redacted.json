@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastTouchedVersion": "[REDACTED]",
-    "lastTouchedAt": "2026-02-15T12:26:36.317Z"
+    "lastTouchedAt": "2026-02-16T23:37:37.095Z"
   },
   "wizard": {
     "lastRunAt": "2026-02-04T16:55:47.632Z",
@@ -9,25 +9,7 @@
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
   },
-  "auth": {
-    "profiles": {
-      "anthropic:default": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "anthropic:manual": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "openai-codex:default": {
-        "provider": "openai-codex",
-        "mode": "oauth"
-      }
-    },
-    "order": {
-      "openai-codex": ["openai-codex:default"]
-    }
-  },
+  "auth": "[REDACTED]",
   "agents": {
     "defaults": {
       "model": {
@@ -106,7 +88,7 @@
     "enabled": true,
     "path": "/hooks",
     "token": "[REDACTED]",
-    "defaultSessionKey": "hook:ingress",
+    "defaultSessionKey": "[REDACTED]",
     "presets": ["gmail"],
     "gmail": {
       "account": "brandonrcullum@gmail.com",
@@ -131,6 +113,7 @@
   },
   "channels": {
     "discord": {
+      "capabilities": ["inlineButtons"],
       "enabled": true,
       "token": "[REDACTED]",
       "groupPolicy": "allowlist",
@@ -192,10 +175,7 @@
     "port": 18789,
     "mode": "local",
     "bind": "loopback",
-    "auth": {
-      "mode": "token",
-      "token": "[REDACTED]"
-    },
+    "auth": "[REDACTED]",
     "tailscale": {
       "mode": "off",
       "resetOnExit": false

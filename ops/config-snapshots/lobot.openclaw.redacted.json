@@ -37,7 +37,7 @@
       },
       "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["[REDACTED]"],
+        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
         "primary": "openai-codex/gpt-5.3-codex"
       },
       "models": {
@@ -65,7 +65,7 @@
           "name": "Lobot"
         },
         "model": {
-          "fallbacks": ["[REDACTED]"]
+          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
         },
         "tools": {
           "allow": [
@@ -104,7 +104,7 @@
           "name": "Threepio"
         },
         "model": {
-          "fallbacks": ["[REDACTED]"],
+          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
           "primary": "anthropic/claude-opus-4-6"
         },
         "tools": {
@@ -144,7 +144,7 @@
         },
         "model": {
           "fallbacks": ["anthropic/claude-opus-4-6"],
-          "primary": "[REDACTED]"
+          "primary": "anthropic/claude-sonnet-4-5-20250929"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -170,18 +170,7 @@
       }
     ]
   },
-  "auth": {
-    "profiles": {
-      "anthropic:default": {
-        "mode": "oauth",
-        "provider": "anthropic"
-      },
-      "openai-codex:default": {
-        "mode": "oauth",
-        "provider": "openai-codex"
-      }
-    }
-  },
+  "auth": "[REDACTED]",
   "bindings": [
     {
       "agentId": "threepio",
@@ -268,7 +257,7 @@
       "password": "[REDACTED]",
       "sendReadReceipts": false,
       "serverUrl": "http://127.0.0.1:1234",
-      "webhookPath": "[REDACTED]"
+      "webhookPath": "/bluebubbles-webhook"
     },
     "discord": {
       "accounts": {
@@ -344,10 +333,7 @@
     "nativeSkills": "auto"
   },
   "gateway": {
-    "auth": {
-      "mode": "token",
-      "token": "[REDACTED]"
-    },
+    "auth": "[REDACTED]",
     "bind": "loopback",
     "mode": "local",
     "port": 18789,

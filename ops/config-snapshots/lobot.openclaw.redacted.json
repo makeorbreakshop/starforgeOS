@@ -423,7 +423,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-12T11:40:08.057Z",
-    "lastTouchedVersion": "[REDACTED]"
+    "lastTouchedVersion": "2026.2.9"
   },
   "plugins": {
     "entries": {
@@ -462,6 +462,6 @@
     "lastRunAt": "2026-02-11T19:23:26.286Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "[REDACTED]"
+    "lastRunVersion": "2026.2.9"
   }
 }

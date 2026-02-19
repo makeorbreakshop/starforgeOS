@@ -1,38 +1,44 @@
 {
-  "meta": {
-    "lastTouchedVersion": "2026.2.15",
-    "lastTouchedAt": "2026-02-18T13:32:30.195Z"
-  },
-  "wizard": {
-    "lastRunAt": "2026-02-04T16:55:47.632Z",
-    "lastRunVersion": "2026.2.2-3",
-    "lastRunCommand": "doctor",
-    "lastRunMode": "local"
-  },
-  "auth": {
-    "profiles": {
-      "anthropic:default": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "anthropic:manual": {
-        "provider": "anthropic",
-        "mode": "token"
-      },
-      "openai-codex:default": {
-        "provider": "openai-codex",
-        "mode": "oauth"
-      }
-    },
-    "order": {
-      "openai-codex": ["openai-codex:default"]
-    }
-  },
   "agents": {
     "defaults": {
+      "bootstrapMaxChars": 4000,
+      "compaction": {
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": 4000
+        },
+        "mode": "safeguard",
+        "reserveTokensFloor": 20000
+      },
+      "contextPruning": {
+        "hardClear": {
+          "enabled": true,
+          "placeholder": "[Old process/exec output cleared to control token usage]"
+        },
+        "hardClearRatio": 0.2,
+        "keepLastAssistants": 2,
+        "minPrunableToolChars": 8000,
+        "mode": "cache-ttl",
+        "softTrim": {
+          "headChars": 400,
+          "maxChars": 1200,
+          "tailChars": 400
+        },
+        "softTrimRatio": 0.15,
+        "tools": {
+          "allow": ["process", "exec"]
+        },
+        "ttl": "5m"
+      },
+      "contextTokens": 120000,
+      "heartbeat": {
+        "every": "15m",
+        "target": "last"
+      },
+      "maxConcurrent": 4,
       "model": {
-        "primary": "anthropic/claude-opus-4-6",
-        "fallbacks": ["anthropic/claude-sonnet-4-5"]
+        "fallbacks": ["anthropic/claude-sonnet-4-6"],
+        "primary": "openai-codex/gpt-5.3-codex"
       },
       "models": {
         "anthropic/claude-opus-4-5": {
@@ -45,86 +51,28 @@
           "alias": "sonnet"
         }
       },
-      "workspace": "/Users/brandoncullum/.openclaw/workspace",
-      "bootstrapMaxChars": 4000,
-      "contextTokens": "[REDACTED]",
-      "contextPruning": {
-        "mode": "cache-ttl",
-        "ttl": "5m",
-        "keepLastAssistants": 2,
-        "softTrimRatio": 0.15,
-        "hardClearRatio": 0.2,
-        "minPrunableToolChars": 8000,
-        "tools": {
-          "allow": ["process", "exec"]
-        },
-        "softTrim": {
-          "maxChars": 1200,
-          "headChars": 400,
-          "tailChars": 400
-        },
-        "hardClear": {
-          "enabled": true,
-          "placeholder": "[Old process/exec output cleared to control token usage]"
-        }
-      },
-      "compaction": {
-        "mode": "safeguard",
-        "reserveTokensFloor": "[REDACTED]",
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": "[REDACTED]"
-        }
-      },
-      "heartbeat": {
-        "every": "15m",
-        "target": "last"
-      },
-      "maxConcurrent": 4,
       "subagents": {
         "maxConcurrent": 8
-      }
-    }
-  },
-  "tools": {
-    "exec": {
-      "timeoutSec": 7200
-    }
-  },
-  "messages": {
-    "ackReactionScope": "group-mentions"
-  },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto"
-  },
-  "session": {
-    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
-  },
-  "hooks": {
-    "enabled": true,
-    "path": "/hooks",
-    "token": "[REDACTED]",
-    "defaultSessionKey": "hook:ingress",
-    "presets": ["gmail"],
-    "gmail": {
-      "account": "brandonrcullum@gmail.com",
-      "label": "INBOX",
-      "topic": "projects/admiral-ackbot/topics/gog-gmail-watch",
-      "subscription": "gog-gmail-watch-push-personal",
-      "pushToken": "[REDACTED]",
-      "hookUrl": "http://127.0.0.1:18789/hooks/gmail",
-      "includeBody": true,
-      "maxBytes": 20000,
-      "renewEveryMinutes": 720,
-      "serve": {
-        "bind": "127.0.0.1",
-        "port": 8789,
-        "path": "/"
       },
-      "tailscale": {
-        "mode": "funnel",
-        "path": "/gmail-pubsub"
+      "workspace": "/Users/brandoncullum/.openclaw/workspace"
+    }
+  },
+  "auth": {
+    "order": {
+      "openai-codex": ["openai-codex:default"]
+    },
+    "profiles": {
+      "anthropic:default": {
+        "mode": "token",
+        "provider": "anthropic"
+      },
+      "anthropic:manual": {
+        "mode": "token",
+        "provider": "anthropic"
+      },
+      "openai-codex:default": {
+        "mode": "oauth",
+        "provider": "openai-codex"
       }
     }
   },
@@ -132,12 +80,9 @@
     "discord": {
       "capabilities": ["inlineButtons"],
       "enabled": true,
-      "token": "[REDACTED]",
       "groupPolicy": "allowlist",
       "guilds": {
         "1253735279676756050": {
-          "requireMention": true,
-          "users": ["584579716200267808"],
           "channels": {
             "1253735280159228097": {
               "requireMention": true
@@ -146,13 +91,13 @@
               "requireMention": false
             },
             "1468671572612223238": {
-              "requireMention": false,
               "enabled": true,
+              "requireMention": false,
               "systemPrompt": "This is the #mfm (Machines for Makers) business channel. Use the work email (brandon@makeorbreakshop.com) for email-related tasks. Primary codebase is /Users/brandoncullum/machines-for-makers. Business context: machinesformakers.com, laser/3D printer reviews, Laser Lab SaaS, affiliate income."
             },
             "1468946967211147377": {
-              "requireMention": false,
               "enabled": false,
+              "requireMention": false,
               "systemPrompt": "This is Brandon's #personal channel. When asked about email, always use the personal Gmail account (brandonrcullum@gmail.com), not the work account."
             },
             "1468978750157754411": {
@@ -174,89 +119,118 @@
               "enabled": false
             },
             "1469860225963266069": {
-              "requireMention": true,
               "enabled": true,
+              "requireMention": true,
               "systemPrompt": "This is the #bookmarks channel for reviewing X/Twitter bookmarks. When Brandon shares a bookmark or URL, analyze the content and extract: 1) Key insights relevant to agent workflows, memory systems, or productivity 2) Actionable ideas we could implement 3) Any techniques or patterns worth adopting. Focus on practical takeaways."
             },
             "1471097778531864606": {
-              "requireMention": false,
               "enabled": true,
+              "requireMention": false,
               "systemPrompt": "This is #mfm-audit \u2014 daily structured morning audit reports. Full overnight ops review, cron job results, price extractor status, SEO work, questions and suggestions for Brandon."
             }
-          }
+          },
+          "requireMention": true,
+          "users": ["584579716200267808"]
         }
-      }
+      },
+      "token": "REDACTED"
     }
   },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
   "gateway": {
-    "port": 18789,
-    "mode": "local",
-    "bind": "loopback",
     "auth": {
       "mode": "token",
-      "token": "[REDACTED]"
+      "token": "REDACTED"
     },
+    "bind": "loopback",
+    "mode": "local",
+    "port": 18789,
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
     }
   },
+  "hooks": {
+    "defaultSessionKey": "hook:ingress",
+    "enabled": true,
+    "gmail": {
+      "account": "brandonrcullum@gmail.com",
+      "hookUrl": "http://127.0.0.1:18789/hooks/gmail",
+      "includeBody": true,
+      "label": "INBOX",
+      "maxBytes": 20000,
+      "pushToken": "REDACTED",
+      "renewEveryMinutes": 720,
+      "serve": {
+        "bind": "127.0.0.1",
+        "path": "/",
+        "port": 8789
+      },
+      "subscription": "gog-gmail-watch-push-personal",
+      "tailscale": {
+        "mode": "funnel",
+        "path": "/gmail-pubsub"
+      },
+      "topic": "projects/admiral-ackbot/topics/gog-gmail-watch"
+    },
+    "path": "/hooks",
+    "presets": ["gmail"],
+    "token": "REDACTED"
+  },
   "memory": {
     "backend": "qmd",
     "qmd": {
       "includeDefaultMemory": false,
+      "limits": {
+        "maxInjectedChars": 4000,
+        "maxResults": 6,
+        "maxSnippetChars": 700,
+        "timeoutMs": 45000
+      },
       "paths": [
         {
-          "path": "/Users/brandoncullum/shared-memory",
           "name": "memory-root",
+          "path": "/Users/brandoncullum/shared-memory",
           "pattern": "MEMORY.md"
         },
         {
-          "path": "/Users/brandoncullum/shared-memory/memory",
           "name": "memory-md",
+          "path": "/Users/brandoncullum/shared-memory/memory",
           "pattern": "**/*.md"
         },
         {
-          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "name": "knowledge-md",
+          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.md"
         },
         {
-          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "name": "knowledge-json",
+          "path": "/Users/brandoncullum/shared-memory/knowledge",
           "pattern": "**/*.json"
         }
       ],
-      "update": {
-        "interval": "5m",
-        "commandTimeoutMs": 30000,
-        "updateTimeoutMs": 300000,
-        "embedTimeoutMs": 600000
-      },
-      "limits": {
-        "maxResults": 6,
-        "maxSnippetChars": 700,
-        "maxInjectedChars": 4000,
-        "timeoutMs": 45000
-      },
       "scope": {
         "default": "allow",
         "rules": []
+      },
+      "searchMode": "query",
+      "update": {
+        "commandTimeoutMs": 30000,
+        "embedTimeoutMs": 600000,
+        "interval": "5m",
+        "updateTimeoutMs": 300000
       }
     }
   },
-  "skills": {
-    "install": {
-      "nodeManager": "npm"
-    },
-    "entries": {
-      "goplaces": {
-        "apiKey": "[REDACTED]"
-      },
-      "local-places": {
-        "apiKey": "[REDACTED]"
-      }
-    }
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "meta": {
+    "lastTouchedAt": "2026-02-18T20:39:50.025Z",
+    "lastTouchedVersion": "2026.2.17"
   },
   "plugins": {
     "entries": {
@@ -264,5 +238,32 @@
         "enabled": true
       }
     }
+  },
+  "session": {
+    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
+  },
+  "skills": {
+    "entries": {
+      "goplaces": {
+        "apiKey": "REDACTED"
+      },
+      "local-places": {
+        "apiKey": "REDACTED"
+      }
+    },
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "tools": {
+    "exec": {
+      "timeoutSec": 7200
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-04T16:55:47.632Z",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local",
+    "lastRunVersion": "2026.2.2-3"
   }
 }

@@ -16,8 +16,8 @@
           "placeholder": "[Old process/exec output cleared to control token usage]"
         },
         "hardClearRatio": 0.2,
-        "keepLastAssistants": 2,
-        "minPrunableToolChars": 8000,
+        "keepLastAssistants": 1,
+        "minPrunableToolChars": 2000,
         "mode": "cache-ttl",
         "softTrim": {
           "headChars": 400,
@@ -28,7 +28,7 @@
         "tools": {
           "allow": ["process", "exec"]
         },
-        "ttl": "5m"
+        "ttl": "3m"
       },
       "contextTokens": 120000,
       "heartbeat": {
@@ -38,18 +38,19 @@
       "maxConcurrent": 4,
       "model": {
         "fallbacks": ["anthropic/claude-sonnet-4-6"],
-        "primary": "openai-codex/gpt-5.3-codex"
+        "primary": "anthropic/claude-sonnet-4-6"
       },
       "models": {
         "anthropic/claude-opus-4-5": {
-          "alias": "opus"
+          "alias": "opus45"
         },
         "anthropic/claude-opus-4-6": {
-          "alias": "opus46"
+          "alias": "opus"
         },
         "anthropic/claude-sonnet-4-5": {
-          "alias": "sonnet"
-        }
+          "alias": "sonnet45"
+        },
+        "anthropic/claude-sonnet-4-6": {}
       },
       "subagents": {
         "maxConcurrent": 8
@@ -133,7 +134,7 @@
           "users": ["584579716200267808"]
         }
       },
-      "token": "REDACTED"
+      "token": "[REDACTED]"
     }
   },
   "commands": {
@@ -143,7 +144,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "REDACTED"
+      "token": "[REDACTED]"
     },
     "bind": "loopback",
     "mode": "local",
@@ -162,7 +163,7 @@
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
-      "pushToken": "REDACTED",
+      "pushToken": "[REDACTED]",
       "renewEveryMinutes": 720,
       "serve": {
         "bind": "127.0.0.1",
@@ -178,7 +179,7 @@
     },
     "path": "/hooks",
     "presets": ["gmail"],
-    "token": "REDACTED"
+    "token": "[REDACTED]"
   },
   "memory": {
     "backend": "qmd",
@@ -229,8 +230,8 @@
     "ackReactionScope": "group-mentions"
   },
   "meta": {
-    "lastTouchedAt": "2026-02-18T20:39:50.025Z",
-    "lastTouchedVersion": "2026.2.17"
+    "lastTouchedAt": "2026-02-19T11:41:15.591Z",
+    "lastTouchedVersion": "[REDACTED]"
   },
   "plugins": {
     "entries": {
@@ -245,10 +246,10 @@
   "skills": {
     "entries": {
       "goplaces": {
-        "apiKey": "REDACTED"
+        "apiKey": "[REDACTED]"
       },
       "local-places": {
-        "apiKey": "REDACTED"
+        "apiKey": "[REDACTED]"
       }
     },
     "install": {
@@ -264,6 +265,6 @@
     "lastRunAt": "2026-02-04T16:55:47.632Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "2026.2.2-3"
+    "lastRunVersion": "[REDACTED]"
   }
 }

@@ -266,10 +266,10 @@
       "enabled": true,
       "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupPolicy": "allowlist",
-      "password": "REDACTED",
+      "password": "[REDACTED]",
       "sendReadReceipts": false,
       "serverUrl": "http://127.0.0.1:1234",
-      "webhookPath": "REDACTED"
+      "webhookPath": "[REDACTED]"
     },
     "discord": {
       "accounts": {
@@ -308,7 +308,7 @@
             }
           },
           "name": "Lobot",
-          "token": "REDACTED"
+          "token": "[REDACTED]"
         },
         "threepio": {
           "enabled": true,
@@ -325,7 +325,7 @@
             }
           },
           "name": "Threepio",
-          "token": "REDACTED"
+          "token": "[REDACTED]"
         }
       },
       "enabled": true,
@@ -339,7 +339,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "REDACTED"
+      "token": "[REDACTED]"
     },
     "bind": "loopback",
     "mode": "local",
@@ -416,7 +416,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-18T17:02:31.282Z",
-    "lastTouchedVersion": "2026.2.9"
+    "lastTouchedVersion": "[REDACTED]"
   },
   "plugins": {
     "entries": {
@@ -442,7 +442,7 @@
         "timeoutSeconds": 30
       },
       "search": {
-        "apiKey": "REDACTED",
+        "apiKey": "[REDACTED]",
         "cacheTtlMinutes": 60,
         "enabled": true,
         "maxResults": 8,
@@ -455,6 +455,6 @@
     "lastRunAt": "2026-02-18T17:02:31.279Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "2026.2.9"
+    "lastRunVersion": "[REDACTED]"
   }
 }

@@ -5,10 +5,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": 4000
+          "softThresholdTokens": "***REDACTED***"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": 20000
+        "reserveTokensFloor": "***REDACTED***"
       },
       "contextPruning": {
         "hardClear": {
@@ -30,7 +30,7 @@
         },
         "ttl": "3m"
       },
-      "contextTokens": 120000,
+      "contextTokens": "***REDACTED***",
       "heartbeat": {
         "every": "15m",
         "target": "last"
@@ -134,7 +134,7 @@
           "users": ["584579716200267808"]
         }
       },
-      "token": "[REDACTED]"
+      "token": "***REDACTED***"
     }
   },
   "commands": {
@@ -144,7 +144,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "[REDACTED]"
+      "token": "***REDACTED***"
     },
     "bind": "loopback",
     "mode": "local",
@@ -163,7 +163,7 @@
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
-      "pushToken": "[REDACTED]",
+      "pushToken": "***REDACTED***",
       "renewEveryMinutes": 720,
       "serve": {
         "bind": "127.0.0.1",
@@ -179,7 +179,7 @@
     },
     "path": "/hooks",
     "presets": ["gmail"],
-    "token": "[REDACTED]"
+    "token": "***REDACTED***"
   },
   "memory": {
     "backend": "qmd",
@@ -231,7 +231,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-19T11:41:15.591Z",
-    "lastTouchedVersion": "[REDACTED]"
+    "lastTouchedVersion": "2026.2.17"
   },
   "plugins": {
     "entries": {
@@ -246,10 +246,10 @@
   "skills": {
     "entries": {
       "goplaces": {
-        "apiKey": "[REDACTED]"
+        "apiKey": "***REDACTED***"
       },
       "local-places": {
-        "apiKey": "[REDACTED]"
+        "apiKey": "***REDACTED***"
       }
     },
     "install": {
@@ -265,6 +265,6 @@
     "lastRunAt": "2026-02-04T16:55:47.632Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "[REDACTED]"
+    "lastRunVersion": "2026.2.2-3"
   }
 }

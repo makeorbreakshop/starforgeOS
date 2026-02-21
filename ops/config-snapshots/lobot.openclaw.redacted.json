@@ -1,72 +1,105 @@
 {
+  "meta": {
+    "lastTouchedVersion": "2026.2.9",
+    "lastTouchedAt": "2026-02-18T17:02:31.282Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-18T17:02:31.279Z",
+    "lastRunVersion": "2026.2.9",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "logging": {
+    "redactSensitive": "tools",
+    "redactPatterns": [
+      "\\b(ntn_[A-Za-z0-9]{10,})\\b",
+      "\\b(phx_[A-Za-z0-9]+)\\b",
+      "postgres(ql)?://[^\\s\"']+",
+      "mongodb(\\+srv)?://[^\\s\"']+",
+      "\\b(whsec_[A-Za-z0-9]+)\\b"
+    ]
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "oauth"
+      },
+      "openai-codex:default": {
+        "provider": "openai-codex",
+        "mode": "oauth"
+      }
+    }
+  },
   "agents": {
     "defaults": {
-      "compaction": {
-        "memoryFlush": {
-          "enabled": true,
-          "softThresholdTokens": 4000
-        },
-        "mode": "safeguard",
-        "reserveTokensFloor": 20000
-      },
-      "contextPruning": {
-        "hardClear": {
-          "enabled": true,
-          "placeholder": "[Old process/exec output cleared to control token usage]"
-        },
-        "hardClearRatio": 0.2,
-        "keepLastAssistants": 2,
-        "minPrunableToolChars": 8000,
-        "mode": "cache-ttl",
-        "softTrim": {
-          "headChars": 400,
-          "maxChars": 1200,
-          "tailChars": 400
-        },
-        "softTrimRatio": 0.15,
-        "tools": {
-          "allow": ["process", "exec"]
-        },
-        "ttl": "5m"
-      },
-      "contextTokens": 120000,
-      "heartbeat": {
-        "every": "15m",
-        "session": "agent:main:heartbeat",
-        "target": "last"
-      },
-      "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
-        "primary": "openai-codex/gpt-5.3-codex"
+        "primary": "openai-codex/gpt-5.3-codex",
+        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
       },
       "models": {
         "anthropic/claude-opus-4-6": {
           "alias": "opus"
         },
         "anthropic/claude-sonnet-4-5-20250929": {},
-        "anthropic/claude-sonnet-4-6": {},
         "openai-codex/gpt-5.2": {},
         "openai-codex/gpt-5.3": {},
-        "openai-codex/gpt-5.3-codex": {}
+        "openai-codex/gpt-5.3-codex": {},
+        "anthropic/claude-sonnet-4-6": {}
       },
-      "subagents": {
-        "maxConcurrent": 8
+      "workspace": "/Users/lobot/.openclaw/workspace",
+      "contextTokens": "***REDACTED***",
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "5m",
+        "keepLastAssistants": 2,
+        "softTrimRatio": 0.15,
+        "hardClearRatio": 0.2,
+        "minPrunableToolChars": 8000,
+        "tools": {
+          "allow": ["process", "exec"]
+        },
+        "softTrim": {
+          "maxChars": 1200,
+          "headChars": 400,
+          "tailChars": 400
+        },
+        "hardClear": {
+          "enabled": true,
+          "placeholder": "[Old process/exec output cleared to control token usage]"
+        }
+      },
+      "compaction": {
+        "mode": "safeguard",
+        "reserveTokensFloor": "***REDACTED***",
+        "memoryFlush": {
+          "enabled": true,
+          "softThresholdTokens": "***REDACTED***"
+        }
       },
       "timeoutSeconds": 120,
       "typingIntervalSeconds": 15,
       "typingMode": "instant",
-      "workspace": "/Users/lobot/.openclaw/workspace"
+      "heartbeat": {
+        "every": "15m",
+        "session": "agent:main:heartbeat",
+        "target": "last"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
     },
     "list": [
       {
         "id": "lobot",
-        "identity": {
-          "emoji": "\ud83e\udd16",
-          "name": "Lobot"
-        },
+        "workspace": "/Users/lobot/.openclaw/workspace-lobot",
         "model": {
           "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+        },
+        "identity": {
+          "name": "Lobot",
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -95,18 +128,18 @@
             "cron",
             "image"
           ]
-        },
-        "workspace": "/Users/lobot/.openclaw/workspace-lobot"
+        }
       },
       {
         "id": "threepio",
-        "identity": {
-          "emoji": "\ud83e\udd16",
-          "name": "Threepio"
-        },
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
         "model": {
-          "fallbacks": ["anthropic/claude-opus-4-6"],
-          "primary": "anthropic/claude-sonnet-4-6"
+          "primary": "anthropic/claude-sonnet-4-6",
+          "fallbacks": ["anthropic/claude-opus-4-6"]
+        },
+        "identity": {
+          "name": "Threepio",
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -134,18 +167,18 @@
             "sessions_send",
             "sessions_spawn"
           ]
-        },
-        "workspace": "/Users/lobot/.openclaw/workspace-threepio"
+        }
       },
       {
         "id": "threepio-sonnet-test",
-        "identity": {
-          "emoji": "\ud83e\udd16",
-          "name": "Threepio (Sonnet Test)"
-        },
+        "workspace": "/Users/lobot/.openclaw/workspace-threepio",
         "model": {
-          "fallbacks": ["anthropic/claude-opus-4-6"],
-          "primary": "anthropic/claude-sonnet-4-5-20250929"
+          "primary": "anthropic/claude-sonnet-4-5-20250929",
+          "fallbacks": ["anthropic/claude-opus-4-6"]
+        },
+        "identity": {
+          "name": "Threepio (Sonnet Test)",
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -166,20 +199,26 @@
             "sessions_spawn",
             "write"
           ]
-        },
-        "workspace": "/Users/lobot/.openclaw/workspace-threepio"
+        }
       }
     ]
   },
-  "auth": {
-    "profiles": {
-      "anthropic:default": {
-        "mode": "oauth",
-        "provider": "anthropic"
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": true,
+        "provider": "brave",
+        "apiKey": "***REDACTED***",
+        "maxResults": 8,
+        "timeoutSeconds": 20,
+        "cacheTtlMinutes": 60
       },
-      "openai-codex:default": {
-        "mode": "oauth",
-        "provider": "openai-codex"
+      "fetch": {
+        "enabled": true,
+        "maxChars": 12000,
+        "timeoutSeconds": 30,
+        "cacheTtlMinutes": 60,
+        "maxRedirects": 3
       }
     }
   },
@@ -187,22 +226,22 @@
     {
       "agentId": "threepio",
       "match": {
-        "accountId": "threepio",
         "channel": "discord",
+        "accountId": "threepio",
         "peer": {
-          "id": "584579716200267808",
-          "kind": "dm"
+          "kind": "dm",
+          "id": "584579716200267808"
         }
       }
     },
     {
       "agentId": "lobot",
       "match": {
-        "accountId": "lobot",
         "channel": "discord",
+        "accountId": "lobot",
         "peer": {
-          "id": "channel:1468946967211147377",
-          "kind": "group"
+          "kind": "group",
+          "id": "channel:1468946967211147377"
         }
       }
     },
@@ -215,69 +254,80 @@
     {
       "agentId": "lobot",
       "match": {
-        "accountId": "lobot",
         "channel": "discord",
+        "accountId": "lobot",
         "peer": {
-          "id": "channel:1469069873056448512",
-          "kind": "group"
+          "kind": "group",
+          "id": "channel:1469069873056448512"
         }
       }
     },
     {
       "agentId": "threepio",
       "match": {
-        "accountId": "lobot",
         "channel": "discord",
+        "accountId": "lobot",
         "peer": {
-          "id": "channel:1469418113396244542",
-          "kind": "group"
+          "kind": "group",
+          "id": "channel:1469418113396244542"
         }
       }
     },
     {
       "agentId": "lobot",
       "match": {
-        "accountId": "lobot",
         "channel": "discord",
+        "accountId": "lobot",
         "peer": {
-          "id": "channel:1469286845731962933",
-          "kind": "group"
+          "kind": "group",
+          "id": "channel:1469286845731962933"
         }
       }
     },
     {
       "agentId": "threepio-sonnet-test",
       "match": {
-        "accountId": "threepio",
         "channel": "discord",
+        "accountId": "threepio",
         "peer": {
-          "id": "channel:1469020973201227838",
-          "kind": "group"
+          "kind": "group",
+          "id": "channel:1469020973201227838"
         }
       }
     }
   ],
-  "channels": {
-    "bluebubbles": {
-      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
-      "blockStreaming": false,
-      "chunkMode": "length",
-      "dmPolicy": "allowlist",
-      "enabled": true,
-      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
-      "groupPolicy": "allowlist",
-      "password": "[REDACTED]",
-      "sendReadReceipts": false,
-      "serverUrl": "http://127.0.0.1:1234",
-      "webhookPath": "[REDACTED]"
+  "messages": {
+    "inbound": {
+      "debounceMs": 2000,
+      "byChannel": {
+        "bluebubbles": 5000
+      }
     },
+    "ackReaction": "\ud83d\udc4d",
+    "ackReactionScope": "all"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "session": {
+    "dmScope": "main",
+    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
+  },
+  "channels": {
     "discord": {
+      "enabled": true,
+      "groupPolicy": "allowlist",
       "accounts": {
         "lobot": {
+          "name": "Lobot",
           "enabled": true,
+          "token": "***REDACTED***",
           "groupPolicy": "allowlist",
           "guilds": {
             "1253735279676756050": {
+              "requireMention": true,
+              "users": ["584579716200267808"],
               "channels": {
                 "1253735280159228097": {
                   "requireMention": true
@@ -302,121 +352,100 @@
                   "requireMention": false,
                   "systemPrompt": "This is the #cooking channel. Help with meal planning, recipes, grocery lists, cooking schedules, kid-friendly meals, and kitchen workflow. Ask clarifying questions about servings, dietary restrictions, and timing. Respond without requiring @mentions."
                 }
-              },
-              "requireMention": true,
-              "users": ["584579716200267808"]
+              }
             }
-          },
-          "name": "Lobot",
-          "token": "[REDACTED]"
+          }
         },
         "threepio": {
+          "name": "Threepio",
           "enabled": true,
+          "token": "***REDACTED***",
           "groupPolicy": "allowlist",
           "guilds": {
             "1253735279676756050": {
+              "requireMention": true,
+              "users": ["584579716200267808"],
               "channels": {
                 "1469020973201227838": {
                   "requireMention": true
                 }
-              },
-              "requireMention": true,
-              "users": ["584579716200267808"]
+              }
             }
-          },
-          "name": "Threepio",
-          "token": "[REDACTED]"
+          }
         }
-      },
+      }
+    },
+    "bluebubbles": {
       "enabled": true,
-      "groupPolicy": "allowlist"
+      "serverUrl": "http://127.0.0.1:1234",
+      "password": "***REDACTED***",
+      "webhookPath": "***REDACTED***",
+      "dmPolicy": "allowlist",
+      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "groupPolicy": "allowlist",
+      "chunkMode": "length",
+      "sendReadReceipts": false,
+      "blockStreaming": false
     }
   },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto"
-  },
   "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
     "auth": {
       "mode": "token",
-      "token": "[REDACTED]"
+      "token": "***REDACTED***"
     },
-    "bind": "loopback",
-    "mode": "local",
-    "port": 18789,
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
     }
-  },
-  "logging": {
-    "redactPatterns": [
-      "\\b(ntn_[A-Za-z0-9]{10,})\\b",
-      "\\b(phx_[A-Za-z0-9]+)\\b",
-      "postgres(ql)?://[^\\s\"']+",
-      "mongodb(\\+srv)?://[^\\s\"']+",
-      "\\b(whsec_[A-Za-z0-9]+)\\b"
-    ],
-    "redactSensitive": "tools"
   },
   "memory": {
     "backend": "qmd",
     "qmd": {
       "command": "/Users/lobot/.openclaw/tools/qmd/qmd",
       "includeDefaultMemory": false,
-      "limits": {
-        "maxInjectedChars": 8000,
-        "maxResults": 8,
-        "maxSnippetChars": 900,
-        "timeoutMs": 45000
-      },
       "paths": [
         {
-          "name": "memory-root",
           "path": "/Users/lobot/shared-memory",
+          "name": "memory-root",
           "pattern": "MEMORY.md"
         },
         {
-          "name": "memory-md",
           "path": "/Users/lobot/shared-memory/memory",
+          "name": "memory-md",
           "pattern": "**/*.md"
         },
         {
+          "path": "/Users/lobot/shared-memory/knowledge",
           "name": "knowledge-md",
-          "path": "/Users/lobot/shared-memory/knowledge",
           "pattern": "**/*.md"
         },
         {
-          "name": "knowledge-json",
           "path": "/Users/lobot/shared-memory/knowledge",
+          "name": "knowledge-json",
           "pattern": "**/*.json"
         }
       ],
+      "update": {
+        "interval": "5m",
+        "commandTimeoutMs": 30000,
+        "updateTimeoutMs": 300000,
+        "embedTimeoutMs": 600000
+      },
+      "limits": {
+        "maxResults": 8,
+        "maxSnippetChars": 900,
+        "maxInjectedChars": 8000,
+        "timeoutMs": 45000
+      },
       "scope": {
         "default": "allow",
         "rules": []
-      },
-      "update": {
-        "commandTimeoutMs": 30000,
-        "embedTimeoutMs": 600000,
-        "interval": "5m",
-        "updateTimeoutMs": 300000
       }
     }
-  },
-  "messages": {
-    "ackReaction": "\ud83d\udc4d",
-    "ackReactionScope": "all",
-    "inbound": {
-      "byChannel": {
-        "bluebubbles": 5000
-      },
-      "debounceMs": 2000
-    }
-  },
-  "meta": {
-    "lastTouchedAt": "2026-02-18T17:02:31.282Z",
-    "lastTouchedVersion": "[REDACTED]"
   },
   "plugins": {
     "entries": {
@@ -427,34 +456,5 @@
         "enabled": true
       }
     }
-  },
-  "session": {
-    "dmScope": "main",
-    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
-  },
-  "tools": {
-    "web": {
-      "fetch": {
-        "cacheTtlMinutes": 60,
-        "enabled": true,
-        "maxChars": 12000,
-        "maxRedirects": 3,
-        "timeoutSeconds": 30
-      },
-      "search": {
-        "apiKey": "[REDACTED]",
-        "cacheTtlMinutes": 60,
-        "enabled": true,
-        "maxResults": 8,
-        "provider": "brave",
-        "timeoutSeconds": 20
-      }
-    }
-  },
-  "wizard": {
-    "lastRunAt": "2026-02-18T17:02:31.279Z",
-    "lastRunCommand": "doctor",
-    "lastRunMode": "local",
-    "lastRunVersion": "[REDACTED]"
   }
 }

@@ -5,10 +5,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": 4000
+          "softThresholdTokens": "REDACTED"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": 20000
+        "reserveTokensFloor": "REDACTED"
       },
       "contextPruning": {
         "hardClear": {
@@ -30,7 +30,7 @@
         },
         "ttl": "3m"
       },
-      "contextTokens": 120000,
+      "contextTokens": "REDACTED",
       "heartbeat": {
         "every": "15m",
         "model": "anthropic/claude-haiku-4-5",
@@ -98,7 +98,7 @@
             "1468671572612223238": {
               "enabled": true,
               "requireMention": false,
-              "systemPrompt": "This is the #mfm (Machines for Makers) business channel. Use the work email (brandon@makeorbreakshop.com) for email-related tasks. Primary codebase is /Users/brandoncullum/machines-for-makers. Business context: machinesformakers.com, laser/3D printer reviews, Laser Lab SaaS, affiliate income."
+              "systemPrompt": "REDACTED"
             },
             "1468946967211147377": {
               "enabled": false,
@@ -126,7 +126,7 @@
             "1469860225963266069": {
               "enabled": true,
               "requireMention": true,
-              "systemPrompt": "This is the #bookmarks channel for reviewing X/Twitter bookmarks. When Brandon shares a bookmark or URL, analyze the content and extract: 1) Key insights relevant to agent workflows, memory systems, or productivity 2) Actionable ideas we could implement 3) Any techniques or patterns worth adopting. Focus on practical takeaways."
+              "systemPrompt": "REDACTED"
             },
             "1471097778531864606": {
               "enabled": true,
@@ -161,17 +161,9 @@
   "hooks": {
     "defaultSessionKey": "hook:ingress",
     "enabled": true,
-    "internal": {
-      "entries": {
-        "session-memory": {
-          "enabled": true,
-          "messages": 25
-        }
-      }
-    },
     "gmail": {
       "account": "brandonrcullum@gmail.com",
-      "hookUrl": "http://127.0.0.1:18789/hooks/gmail",
+      "hookUrl": "REDACTED",
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
@@ -188,6 +180,14 @@
         "path": "/gmail-pubsub"
       },
       "topic": "projects/admiral-ackbot/topics/gog-gmail-watch"
+    },
+    "internal": {
+      "entries": {
+        "session-memory": {
+          "enabled": true,
+          "messages": 25
+        }
+      }
     },
     "path": "/hooks",
     "presets": ["gmail"],

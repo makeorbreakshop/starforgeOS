@@ -1,11 +1,11 @@
 {
   "meta": {
-    "lastTouchedVersion": "***REDACTED***",
+    "lastTouchedVersion": "REDACTED",
     "lastTouchedAt": "2026-02-18T17:02:31.282Z"
   },
   "wizard": {
     "lastRunAt": "2026-02-18T17:02:31.279Z",
-    "lastRunVersion": "***REDACTED***",
+    "lastRunVersion": "REDACTED",
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
   },
@@ -48,7 +48,7 @@
         "anthropic/claude-sonnet-4-6": {}
       },
       "workspace": "/Users/lobot/.openclaw/workspace",
-      "contextTokens": "***REDACTED***",
+      "contextTokens": 120000,
       "contextPruning": {
         "mode": "cache-ttl",
         "ttl": "5m",
@@ -71,10 +71,10 @@
       },
       "compaction": {
         "mode": "safeguard",
-        "reserveTokensFloor": "***REDACTED***",
+        "reserveTokensFloor": 20000,
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "***REDACTED***"
+          "softThresholdTokens": 4000
         }
       },
       "timeoutSeconds": 120,
@@ -208,7 +208,7 @@
       "search": {
         "enabled": true,
         "provider": "brave",
-        "apiKey": "***REDACTED***",
+        "apiKey": "REDACTED",
         "maxResults": 8,
         "timeoutSeconds": 20,
         "cacheTtlMinutes": 60
@@ -322,7 +322,7 @@
         "lobot": {
           "name": "Lobot",
           "enabled": true,
-          "token": "***REDACTED***",
+          "token": "REDACTED",
           "groupPolicy": "allowlist",
           "guilds": {
             "1253735279676756050": {
@@ -359,7 +359,7 @@
         "threepio": {
           "name": "Threepio",
           "enabled": true,
-          "token": "***REDACTED***",
+          "token": "REDACTED",
           "groupPolicy": "allowlist",
           "guilds": {
             "1253735279676756050": {
@@ -378,8 +378,8 @@
     "bluebubbles": {
       "enabled": true,
       "serverUrl": "http://127.0.0.1:1234",
-      "password": "***REDACTED***",
-      "webhookPath": "***REDACTED***",
+      "password": "REDACTED",
+      "webhookPath": "REDACTED",
       "dmPolicy": "allowlist",
       "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
@@ -395,7 +395,7 @@
     "bind": "loopback",
     "auth": {
       "mode": "token",
-      "token": "***REDACTED***"
+      "token": "REDACTED"
     },
     "tailscale": {
       "mode": "off",

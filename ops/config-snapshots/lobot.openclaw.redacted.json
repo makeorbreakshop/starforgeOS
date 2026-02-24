@@ -4,10 +4,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "REDACTED"
+          "softThresholdTokens": "***REDACTED***"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": "REDACTED"
+        "reserveTokensFloor": "***REDACTED***"
       },
       "contextPruning": {
         "hardClear": {
@@ -29,7 +29,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": "REDACTED",
+      "contextTokens": "***REDACTED***",
       "heartbeat": {
         "every": "15m",
         "session": "agent:main:heartbeat",
@@ -37,7 +37,7 @@
       },
       "maxConcurrent": 4,
       "model": {
-        "fallbacks": ["REDACTED"],
+        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"],
         "primary": "openai-codex/gpt-5.3-codex"
       },
       "models": {
@@ -66,7 +66,7 @@
           "name": "Lobot"
         },
         "model": {
-          "fallbacks": ["REDACTED"]
+          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
         },
         "tools": {
           "allow": [
@@ -145,7 +145,7 @@
         },
         "model": {
           "fallbacks": ["anthropic/claude-opus-4-6"],
-          "primary": "REDACTED"
+          "primary": "anthropic/claude-sonnet-4-5-20250929"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -266,10 +266,10 @@
       "enabled": true,
       "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupPolicy": "allowlist",
-      "password": "REDACTED",
+      "password": "***REDACTED***",
       "sendReadReceipts": false,
       "serverUrl": "http://127.0.0.1:1234",
-      "webhookPath": "REDACTED"
+      "webhookPath": "***REDACTED***"
     },
     "discord": {
       "accounts": {
@@ -308,7 +308,7 @@
             }
           },
           "name": "Lobot",
-          "token": "REDACTED"
+          "token": "***REDACTED***"
         },
         "threepio": {
           "enabled": true,
@@ -325,7 +325,7 @@
             }
           },
           "name": "Threepio",
-          "token": "REDACTED"
+          "token": "***REDACTED***"
         }
       },
       "enabled": true,
@@ -339,7 +339,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "REDACTED"
+      "token": "***REDACTED***"
     },
     "bind": "loopback",
     "mode": "local",
@@ -416,7 +416,7 @@
   },
   "meta": {
     "lastTouchedAt": "2026-02-18T17:02:31.282Z",
-    "lastTouchedVersion": "REDACTED"
+    "lastTouchedVersion": "2026.2.9"
   },
   "plugins": {
     "entries": {
@@ -442,7 +442,7 @@
         "timeoutSeconds": 30
       },
       "search": {
-        "apiKey": "REDACTED",
+        "apiKey": "***REDACTED***",
         "cacheTtlMinutes": 60,
         "enabled": true,
         "maxResults": 8,
@@ -455,6 +455,6 @@
     "lastRunAt": "2026-02-18T17:02:31.279Z",
     "lastRunCommand": "doctor",
     "lastRunMode": "local",
-    "lastRunVersion": "REDACTED"
+    "lastRunVersion": "2026.2.9"
   }
 }

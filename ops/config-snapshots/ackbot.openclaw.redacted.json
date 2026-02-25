@@ -5,10 +5,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "***REDACTED***"
+          "softThresholdTokens": "[REDACTED]"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": "***REDACTED***"
+        "reserveTokensFloor": "[REDACTED]"
       },
       "contextPruning": {
         "hardClear": {
@@ -30,7 +30,7 @@
         },
         "ttl": "3m"
       },
-      "contextTokens": "***REDACTED***",
+      "contextTokens": "[REDACTED]",
       "heartbeat": {
         "every": "15m",
         "model": "anthropic/claude-haiku-4-5",
@@ -139,7 +139,7 @@
         }
       },
       "streamMode": "off",
-      "token": "***REDACTED***"
+      "token": "[REDACTED]"
     }
   },
   "commands": {
@@ -151,7 +151,7 @@
   "gateway": {
     "auth": {
       "mode": "token",
-      "token": "***REDACTED***"
+      "token": "[REDACTED]"
     },
     "bind": "loopback",
     "mode": "local",
@@ -170,7 +170,7 @@
       "includeBody": true,
       "label": "INBOX",
       "maxBytes": 20000,
-      "pushToken": "***REDACTED***",
+      "pushToken": "[REDACTED]",
       "renewEveryMinutes": 720,
       "serve": {
         "bind": "127.0.0.1",
@@ -194,7 +194,7 @@
     },
     "path": "/hooks",
     "presets": ["gmail"],
-    "token": "***REDACTED***"
+    "token": "[REDACTED]"
   },
   "memory": {
     "backend": "qmd",
@@ -261,10 +261,10 @@
   "skills": {
     "entries": {
       "goplaces": {
-        "apiKey": "***REDACTED***"
+        "apiKey": "[REDACTED]"
       },
       "local-places": {
-        "apiKey": "***REDACTED***"
+        "apiKey": "[REDACTED]"
       }
     },
     "install": {

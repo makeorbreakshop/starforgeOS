@@ -48,7 +48,7 @@
         "anthropic/claude-sonnet-4-6": {}
       },
       "workspace": "/Users/lobot/.openclaw/workspace",
-      "contextTokens": "[REDACTED]",
+      "contextTokens": 120000,
       "contextPruning": {
         "mode": "cache-ttl",
         "ttl": "5m",
@@ -71,10 +71,10 @@
       },
       "compaction": {
         "mode": "safeguard",
-        "reserveTokensFloor": "[REDACTED]",
+        "reserveTokensFloor": 20000,
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": "[REDACTED]"
+          "softThresholdTokens": 4000
         }
       },
       "timeoutSeconds": 120,
@@ -99,7 +99,7 @@
         },
         "identity": {
           "name": "Lobot",
-          "emoji": "\ud83e\udd16"
+          "emoji": "🤖"
         },
         "tools": {
           "allow": [
@@ -139,7 +139,7 @@
         },
         "identity": {
           "name": "Threepio",
-          "emoji": "\ud83e\udd16"
+          "emoji": "🤖"
         },
         "tools": {
           "allow": [
@@ -178,7 +178,7 @@
         },
         "identity": {
           "name": "Threepio (Sonnet Test)",
-          "emoji": "\ud83e\udd16"
+          "emoji": "🤖"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -303,7 +303,7 @@
         "bluebubbles": 5000
       }
     },
-    "ackReaction": "\ud83d\udc4d",
+    "ackReaction": "👍",
     "ackReactionScope": "all"
   },
   "commands": {

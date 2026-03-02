@@ -99,7 +99,7 @@
         },
         "identity": {
           "name": "Lobot",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -139,7 +139,7 @@
         },
         "identity": {
           "name": "Threepio",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -178,7 +178,7 @@
         },
         "identity": {
           "name": "Threepio (Sonnet Test)",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
@@ -303,7 +303,7 @@
         "bluebubbles": 5000
       }
     },
-    "ackReaction": "👍",
+    "ackReaction": "\ud83d\udc4d",
     "ackReactionScope": "all"
   },
   "commands": {

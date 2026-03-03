@@ -25,14 +25,18 @@
       }
     },
     "order": {
-      "openai-codex": ["openai-codex:default"]
+      "openai-codex": [
+        "openai-codex:default"
+      ]
     }
   },
   "agents": {
     "defaults": {
       "model": {
         "primary": "anthropic/claude-sonnet-4-6",
-        "fallbacks": ["anthropic/claude-sonnet-4-6"]
+        "fallbacks": [
+          "anthropic/claude-sonnet-4-6"
+        ]
       },
       "models": {
         "anthropic/claude-haiku-4-5": {
@@ -60,7 +64,10 @@
         "hardClearRatio": 0.2,
         "minPrunableToolChars": 2000,
         "tools": {
-          "allow": ["exec", "process"]
+          "allow": [
+            "exec",
+            "process"
+          ]
         },
         "softTrim": {
           "maxChars": 1200,
@@ -109,14 +116,20 @@
     "ownerDisplay": "raw"
   },
   "session": {
-    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
+    "resetTriggers": [
+      "/new",
+      "/reset",
+      "SESSION_CHECKPOINT_COMPLETE"
+    ]
   },
   "hooks": {
     "enabled": true,
     "path": "/hooks",
     "token": "[REDACTED]",
     "defaultSessionKey": "hook:ingress",
-    "presets": ["gmail"],
+    "presets": [
+      "gmail"
+    ],
     "gmail": {
       "account": "brandonrcullum@gmail.com",
       "label": "INBOX",
@@ -148,14 +161,18 @@
   },
   "channels": {
     "discord": {
-      "capabilities": ["inlineButtons"],
+      "capabilities": [
+        "inlineButtons"
+      ],
       "enabled": true,
       "token": "[REDACTED]",
       "groupPolicy": "allowlist",
       "guilds": {
         "1253735279676756050": {
           "requireMention": true,
-          "users": ["584579716200267808"],
+          "users": [
+            "584579716200267808"
+          ],
           "channels": {
             "1253735280159228097": {
               "requireMention": true
@@ -194,12 +211,12 @@
             "1469860225963266069": {
               "requireMention": true,
               "enabled": true,
-              "systemPrompt": "This is the #bookmarks channel for X/Twitter bookmark analysis.\n\n## MANDATORY WORKFLOW — NO EXCEPTIONS\n\nWhen Brandon shares any URL or bookmark:\n1. **Load and follow `skills/x-bookmarks/SKILL.md`** — this is the canonical process\n2. **NEVER summarize content you haven't fetched** — hallucinating is worse than saying 'I'll fetch it'\n3. For X/Twitter: use `bird read <id> --json` or `bird thread <id> --json`\n4. For external links in tweets: use `web_fetch` on each URL\n5. **Save artifacts** to `knowledge/resources/content-inbox/entries/YYYY-MM-DD/<item-id>/` (summary.md + source.json)\n6. Queue for vectorization via the content inbox pipeline\n\n## Output format (after fetching real content)\n- **Key insights** — 1-3 bullets, core takeaways\n- **Actionable ideas** — concrete things we could implement\n- **Patterns to adopt** — reusable heuristics\n\n## Never\n- Never summarize content without fetching it first\n- Never fabricate author names, quotes, or article content\n- Never suggest things we might already have without checking"
+              "systemPrompt": "This is the #bookmarks channel for X/Twitter bookmark analysis.\n\n## MANDATORY WORKFLOW \u2014 NO EXCEPTIONS\n\nWhen Brandon shares any URL or bookmark:\n1. **Load and follow `skills/x-bookmarks/SKILL.md`** \u2014 this is the canonical process\n2. **NEVER summarize content you haven't fetched** \u2014 hallucinating is worse than saying 'I'll fetch it'\n3. For X/Twitter: use `bird read <id> --json` or `bird thread <id> --json`\n4. For external links in tweets: use `web_fetch` on each URL\n5. **Save artifacts** to `knowledge/resources/content-inbox/entries/YYYY-MM-DD/<item-id>/` (summary.md + source.json)\n6. Queue for vectorization via the content inbox pipeline\n\n## Output format (after fetching real content)\n- **Key insights** \u2014 1-3 bullets, core takeaways\n- **Actionable ideas** \u2014 concrete things we could implement\n- **Patterns to adopt** \u2014 reusable heuristics\n\n## Never\n- Never summarize content without fetching it first\n- Never fabricate author names, quotes, or article content\n- Never suggest things we might already have without checking"
             },
             "1471097778531864606": {
               "requireMention": false,
               "enabled": true,
-              "systemPrompt": "This is #mfm-audit — daily structured morning audit reports. Full overnight ops review, cron job results, price extractor status, SEO work, questions and suggestions for Brandon."
+              "systemPrompt": "This is #mfm-audit \u2014 daily structured morning audit reports. Full overnight ops review, cron job results, price extractor status, SEO work, questions and suggestions for Brandon."
             }
           }
         }

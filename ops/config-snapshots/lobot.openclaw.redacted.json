@@ -35,7 +35,9 @@
     "defaults": {
       "model": {
         "primary": "openai-codex/gpt-5.3-codex",
-        "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+        "fallbacks": [
+          "anthropic/claude-sonnet-4-5-20250929"
+        ]
       },
       "models": {
         "anthropic/claude-opus-4-6": {
@@ -57,7 +59,10 @@
         "hardClearRatio": 0.2,
         "minPrunableToolChars": 8000,
         "tools": {
-          "allow": ["exec", "process"]
+          "allow": [
+            "exec",
+            "process"
+          ]
         },
         "softTrim": {
           "maxChars": 1200,
@@ -95,11 +100,13 @@
         "id": "lobot",
         "workspace": "/Users/lobot/.openclaw/workspace-lobot",
         "model": {
-          "fallbacks": ["anthropic/claude-sonnet-4-5-20250929"]
+          "fallbacks": [
+            "anthropic/claude-sonnet-4-5-20250929"
+          ]
         },
         "identity": {
           "name": "Lobot",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -135,11 +142,13 @@
         "workspace": "/Users/lobot/.openclaw/workspace-threepio",
         "model": {
           "primary": "anthropic/claude-sonnet-4-6",
-          "fallbacks": ["anthropic/claude-opus-4-6"]
+          "fallbacks": [
+            "anthropic/claude-opus-4-6"
+          ]
         },
         "identity": {
           "name": "Threepio",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
           "allow": [
@@ -174,14 +183,23 @@
         "workspace": "/Users/lobot/.openclaw/workspace-threepio",
         "model": {
           "primary": "anthropic/claude-sonnet-4-5-20250929",
-          "fallbacks": ["anthropic/claude-opus-4-6"]
+          "fallbacks": [
+            "anthropic/claude-opus-4-6"
+          ]
         },
         "identity": {
           "name": "Threepio (Sonnet Test)",
-          "emoji": "🤖"
+          "emoji": "\ud83e\udd16"
         },
         "tools": {
-          "allow": ["read", "message", "memory_search", "memory_get", "web_fetch", "web_search"],
+          "allow": [
+            "read",
+            "message",
+            "memory_search",
+            "memory_get",
+            "web_fetch",
+            "web_search"
+          ],
           "deny": [
             "agents_list",
             "browser",
@@ -303,7 +321,7 @@
         "bluebubbles": 5000
       }
     },
-    "ackReaction": "👍",
+    "ackReaction": "\ud83d\udc4d",
     "ackReactionScope": "all"
   },
   "commands": {
@@ -312,7 +330,11 @@
   },
   "session": {
     "dmScope": "main",
-    "resetTriggers": ["/new", "/reset", "SESSION_CHECKPOINT_COMPLETE"]
+    "resetTriggers": [
+      "/new",
+      "/reset",
+      "SESSION_CHECKPOINT_COMPLETE"
+    ]
   },
   "channels": {
     "discord": {
@@ -327,7 +349,9 @@
           "guilds": {
             "1253735279676756050": {
               "requireMention": true,
-              "users": ["584579716200267808"],
+              "users": [
+                "584579716200267808"
+              ],
               "channels": {
                 "1253735280159228097": {
                   "requireMention": true
@@ -364,7 +388,9 @@
           "guilds": {
             "1253735279676756050": {
               "requireMention": true,
-              "users": ["584579716200267808"],
+              "users": [
+                "584579716200267808"
+              ],
               "channels": {
                 "1469020973201227838": {
                   "requireMention": true
@@ -381,8 +407,16 @@
       "password": "[REDACTED]",
       "webhookPath": "[REDACTED]",
       "dmPolicy": "allowlist",
-      "allowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
-      "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
+      "allowFrom": [
+        "brandonrcullum@gmail.com",
+        "brandon@makeorbreakshop.com",
+        "+14043131742"
+      ],
+      "groupAllowFrom": [
+        "brandonrcullum@gmail.com",
+        "brandon@makeorbreakshop.com",
+        "+14043131742"
+      ],
       "groupPolicy": "allowlist",
       "chunkMode": "length",
       "sendReadReceipts": false,

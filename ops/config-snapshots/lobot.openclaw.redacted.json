@@ -4,10 +4,10 @@
       "compaction": {
         "memoryFlush": {
           "enabled": true,
-          "softThresholdTokens": 4000
+          "softThresholdTokens": "[REDACTED]"
         },
         "mode": "safeguard",
-        "reserveTokensFloor": 20000
+        "reserveTokensFloor": "[REDACTED]"
       },
       "contextPruning": {
         "hardClear": {
@@ -29,7 +29,7 @@
         },
         "ttl": "5m"
       },
-      "contextTokens": 120000,
+      "contextTokens": "[REDACTED]",
       "heartbeat": {
         "every": "15m",
         "session": "agent:main:heartbeat",
@@ -174,12 +174,12 @@
   "auth": {
     "profiles": {
       "anthropic:default": {
-        "mode": "***REDACTED***",
-        "provider": "***REDACTED***"
+        "mode": "oauth",
+        "provider": "anthropic"
       },
       "openai-codex:default": {
-        "mode": "***REDACTED***",
-        "provider": "***REDACTED***"
+        "mode": "oauth",
+        "provider": "openai-codex"
       }
     }
   },
@@ -266,10 +266,10 @@
       "enabled": true,
       "groupAllowFrom": ["brandonrcullum@gmail.com", "brandon@makeorbreakshop.com", "+14043131742"],
       "groupPolicy": "allowlist",
-      "password": "***REDACTED***",
+      "password": "[REDACTED]",
       "sendReadReceipts": false,
       "serverUrl": "http://127.0.0.1:1235",
-      "webhookPath": "***REDACTED***"
+      "webhookPath": "[REDACTED]"
     },
     "discord": {
       "accounts": {
@@ -308,7 +308,7 @@
             }
           },
           "name": "Lobot",
-          "token": "***REDACTED***"
+          "token": "[REDACTED]"
         },
         "threepio": {
           "enabled": true,
@@ -325,7 +325,7 @@
             }
           },
           "name": "Threepio",
-          "token": "***REDACTED***"
+          "token": "[REDACTED]"
         }
       },
       "enabled": true,
@@ -338,8 +338,8 @@
   },
   "gateway": {
     "auth": {
-      "mode": "***REDACTED***",
-      "token": "***REDACTED***"
+      "mode": "token",
+      "token": "[REDACTED]"
     },
     "bind": "loopback",
     "mode": "local",
@@ -442,7 +442,7 @@
         "timeoutSeconds": 30
       },
       "search": {
-        "apiKey": "***REDACTED***",
+        "apiKey": "[REDACTED]",
         "cacheTtlMinutes": 60,
         "enabled": true,
         "maxResults": 8,
